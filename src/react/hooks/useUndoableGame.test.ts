@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useUndoableGame } from './useUndoableGame';
-import { hasSavedGame } from '../../games/persistence';
+import { hasSavedGame, saveGame } from '../../games/persistence';
 
 interface G {
   n: number;
@@ -44,10 +44,7 @@ describe('useUndoableGame', () => {
   });
 
   it('reprend une partie déjà sauvegardée au montage', () => {
-    localStorage.setItem(
-      'miss-dice:game:yahtzee',
-      JSON.stringify({ n: 9, over: false })
-    );
+    saveGame<G>('yahtzee', { n: 9, over: false });
     const { result } = renderHook(() => useUndoableGame<G>('yahtzee', isOver));
     expect(result.current.game?.n).toBe(9);
   });

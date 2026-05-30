@@ -19,6 +19,21 @@ const Dice421Game = lazy(() =>
     default: m.Dice421Game,
   }))
 );
+const NotationRoller = lazy(() =>
+  import('./components/NotationRoller').then(m => ({
+    default: m.NotationRoller,
+  }))
+);
+const DecideScreen = lazy(() =>
+  import('./components/DecideScreen').then(m => ({ default: m.DecideScreen }))
+);
+
+const LAZY = {
+  yahtzee: YahtzeeGame,
+  dice421: Dice421Game,
+  notation: NotationRoller,
+  decide: DecideScreen,
+} as const;
 
 /**
  * Aiguille entre le lancer libre (écran par défaut, cliquable partout) et
@@ -34,10 +49,11 @@ export function App() {
     document.documentElement.lang = locale;
   }, [locale]);
 
-  if (mode === 'yahtzee' || mode === 'dice421') {
+  if (mode !== 'roll') {
+    const Screen = LAZY[mode];
     return (
       <Suspense fallback={<div className="game-shell" aria-busy="true" />}>
-        {mode === 'yahtzee' ? <YahtzeeGame /> : <Dice421Game />}
+        <Screen />
       </Suspense>
     );
   }

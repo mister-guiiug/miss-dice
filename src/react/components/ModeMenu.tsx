@@ -65,6 +65,12 @@ export function ModeMenu() {
       hint: t('modes.d421Hint'),
       saveKey: 'dice421',
     },
+    {
+      mode: 'notation',
+      title: t('modes.notation'),
+      hint: t('modes.notationHint'),
+    },
+    { mode: 'decide', title: t('modes.decide'), hint: t('modes.decideHint') },
   ];
 
   return (

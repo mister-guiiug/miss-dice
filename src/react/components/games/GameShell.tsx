@@ -34,7 +34,7 @@ export function GameShell({
           type="button"
           className="icon-button"
           aria-label={t('common.back')}
-          onClick={() => appModeStore.set('roll')}
+          onClick={() => appModeStore.leave()}
         >
           ←
         </button>

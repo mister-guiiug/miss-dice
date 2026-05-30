@@ -114,10 +114,20 @@ miss-dice/
 
 Toutes ces préférences sont persistées localement (`localStorage`).
 
-### Jeux (bouton « dés », en haut à gauche)
+### Modes (bouton « dés », en haut à gauche)
 
-Trois écrans, accessibles depuis le lanceur ; on revient au lancer libre
-par la flèche retour. Pass-and-play **1 à 8 joueurs** (1 joueur = solo).
+Plusieurs écrans, accessibles depuis le lanceur ; on revient au lancer
+libre par la flèche **ou le bouton retour du navigateur/Android** (intégré
+à l'History API). Raccourcis longue-pression sur l'icône installée
+(`shortcuts` du manifest → `?play=`).
+
+- **Notation de dés** (JDR) : `2d6+3`, `1d20`, `4d6kh3`, avantage
+  `2d20kh1`, `1d100`, dés Fudge `4dF`… — parseur pur testé, total + détail
+  des dés gardés/retirés (logique `src/dice/notation.ts`).
+- **Décider** : pile ou face, oui/non, tirer un nom au sort, mélanger une
+  liste (`src/decide/decisions.ts`).
+
+Pass-and-play **1 à 8 joueurs** (1 joueur = solo) pour les jeux suivants.
 
 **Yahtzee** — 5 dés, **jusqu'à 3 lancers** par tour (on garde les dés au
 tap entre les lancers) : on peut s'arrêter et inscrire une case **dès le
@@ -232,6 +242,8 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/react/hooks/useUndoableGame.test.ts` — annuler, persister, reprendre.
 - `src/react/components/Sheet.test.tsx` — dialogue modal, focus, Échap.
 - `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` — préfs et stats.
+- `src/dice/notation.test.ts` — parseur de notation (avantage, drop, Fudge).
+- `src/decide/decisions.test.ts` — pièce, oui/non, tirage, mélange.
 - `e2e/smoke.spec.ts` — fumée Playwright (lancer, menu des jeux).
 
 Domaines purs `src/dice/**` et `src/games/**` couverts à ~99 % (seuil CI ≥ 90 %).

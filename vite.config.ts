@@ -95,6 +95,21 @@ export default defineConfig(({ command }) => {
           scope: basePath,
           lang: 'fr',
           categories: ['games', 'utilities'],
+          launch_handler: { client_mode: 'navigate-existing' },
+          // Raccourcis (longue-pression sur l'icône) — lus via ?play= au boot.
+          shortcuts: [
+            {
+              name: 'Yahtzee',
+              short_name: 'Yahtzee',
+              url: `${basePath}?play=yahtzee`,
+            },
+            { name: '421', short_name: '421', url: `${basePath}?play=dice421` },
+            {
+              name: 'Notation',
+              short_name: 'Notation',
+              url: `${basePath}?play=notation`,
+            },
+          ],
           icons: [
             {
               src: 'icons/icon-192.png',

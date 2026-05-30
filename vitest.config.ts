@@ -17,7 +17,7 @@ const baseTestOptions = {
     // and 421 game engines) are where a regression is most dangerous and
     // most cheaply tested. UI surface is intentionally excluded so the
     // gate stays meaningful rather than diluted.
-    include: ['src/dice/**', 'src/games/**'],
+    include: ['src/dice/**', 'src/games/**', 'src/decide/**'],
     reporter: ['text', 'html'],
     thresholds: {
       statements: 90,

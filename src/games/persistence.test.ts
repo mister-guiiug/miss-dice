@@ -30,4 +30,10 @@ describe('persistence', () => {
     localStorage.setItem('miss-dice:game:yahtzee', '{not json');
     expect(loadGame('yahtzee')).toBeNull();
   });
+
+  it('ignore une sauvegarde d’un schéma périmé', () => {
+    // Ancien format sans enveloppe de version → non repris.
+    localStorage.setItem('miss-dice:game:yahtzee', JSON.stringify({ a: 1 }));
+    expect(loadGame('yahtzee')).toBeNull();
+  });
 });

@@ -97,6 +97,10 @@ export interface Messages {
     yahtzeeHint: string;
     d421: string;
     d421Hint: string;
+    notation: string;
+    notationHint: string;
+    decide: string;
+    decideHint: string;
     resume: string;
   };
   common: {
@@ -169,6 +173,25 @@ export interface Messages {
     handNenette: string;
     handPlain: string;
     roundResult: string;
+  };
+  notation: {
+    placeholder: string;
+    invalid: string;
+    presets: string;
+    total: string;
+  };
+  decide: {
+    coin: string;
+    heads: string;
+    tails: string;
+    yesno: string;
+    yes: string;
+    no: string;
+    pick: string;
+    shuffle: string;
+    optionsLabel: string;
+    optionsPlaceholder: string;
+    empty: string;
   };
 }
 
@@ -250,6 +273,10 @@ const fr: Messages = {
     yahtzeeHint: '5 dés, grille de combinaisons',
     d421: '421',
     d421Hint: '3 dés, jeu à jetons',
+    notation: 'Notation',
+    notationHint: 'Lance « 2d6+3 », avantage…',
+    decide: 'Décider',
+    decideHint: 'Pile ou face, tirer au sort',
     resume: 'Reprendre',
   },
   common: {
@@ -322,6 +349,25 @@ const fr: Messages = {
     handNenette: 'Nénette (2-2-1)',
     handPlain: 'Main simple',
     roundResult: '{winner} remporte la manche, {loser} prend {tokens}',
+  },
+  notation: {
+    placeholder: 'ex. 2d6+3, 1d20, 4d6kh3',
+    invalid: 'Expression invalide',
+    presets: 'Raccourcis',
+    total: 'Total',
+  },
+  decide: {
+    coin: 'Pile ou face',
+    heads: 'Pile',
+    tails: 'Face',
+    yesno: 'Oui / Non',
+    yes: 'Oui',
+    no: 'Non',
+    pick: 'Tirer au sort',
+    shuffle: 'Mélanger l’ordre',
+    optionsLabel: 'Options',
+    optionsPlaceholder: 'Une option par ligne',
+    empty: 'Ajoute des options',
   },
 };
 
@@ -403,6 +449,10 @@ const en: Messages = {
     yahtzeeHint: '5 dice, scorecard',
     d421: '421',
     d421Hint: '3 dice, token game',
+    notation: 'Notation',
+    notationHint: 'Roll "2d6+3", advantage…',
+    decide: 'Decide',
+    decideHint: 'Coin flip, pick at random',
     resume: 'Resume',
   },
   common: {
@@ -475,6 +525,25 @@ const en: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Plain hand',
     roundResult: '{winner} wins the round, {loser} takes {tokens}',
+  },
+  notation: {
+    placeholder: 'e.g. 2d6+3, 1d20, 4d6kh3',
+    invalid: 'Invalid expression',
+    presets: 'Presets',
+    total: 'Total',
+  },
+  decide: {
+    coin: 'Coin flip',
+    heads: 'Heads',
+    tails: 'Tails',
+    yesno: 'Yes / No',
+    yes: 'Yes',
+    no: 'No',
+    pick: 'Pick at random',
+    shuffle: 'Shuffle order',
+    optionsLabel: 'Options',
+    optionsPlaceholder: 'One option per line',
+    empty: 'Add some options',
   },
 };
 
@@ -556,6 +625,10 @@ const es: Messages = {
     yahtzeeHint: '5 dados, tabla de combinaciones',
     d421: '421',
     d421Hint: '3 dados, juego de fichas',
+    notation: 'Notación',
+    notationHint: 'Lanza «2d6+3», ventaja…',
+    decide: 'Decidir',
+    decideHint: 'Cara o cruz, sorteo',
     resume: 'Reanudar',
   },
   common: {
@@ -628,6 +701,25 @@ const es: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mano simple',
     roundResult: '{winner} gana la ronda, {loser} toma {tokens}',
+  },
+  notation: {
+    placeholder: 'ej. 2d6+3, 1d20, 4d6kh3',
+    invalid: 'Expresión no válida',
+    presets: 'Atajos',
+    total: 'Total',
+  },
+  decide: {
+    coin: 'Cara o cruz',
+    heads: 'Cara',
+    tails: 'Cruz',
+    yesno: 'Sí / No',
+    yes: 'Sí',
+    no: 'No',
+    pick: 'Sortear',
+    shuffle: 'Mezclar el orden',
+    optionsLabel: 'Opciones',
+    optionsPlaceholder: 'Una opción por línea',
+    empty: 'Añade opciones',
   },
 };
 
