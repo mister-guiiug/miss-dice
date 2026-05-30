@@ -334,6 +334,15 @@ button {
 
 .sheet {
   width: min(560px, 100%);
+  /* Borne la hauteur au viewport et rend le contenu défilable : sans ça,
+     une feuille plus haute que l'écran (beaucoup de réglages + stats +
+     historique) déborde par le haut et se retrouve tronquée, surtout sur
+     desktop où la fenêtre est plus courte que le contenu. */
+  max-height: 92vh;
+  max-height: 92dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 12px 20px calc(var(--safe-bottom) + 20px);
   background: var(--bg-elevated);
   border-radius: 22px 22px 0 0;
