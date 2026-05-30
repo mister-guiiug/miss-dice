@@ -62,9 +62,9 @@ export function YahtzeeGame() {
 
   const player = game.players[game.current]!;
   const rollLabel = game.rolledThisTurn ? t('game.rollAgain') : t('game.roll');
-  const rollsInfo = game.rolledThisTurn
-    ? t('game.rollsLeft', { n: game.rollsLeft })
-    : t('game.tapToRoll');
+  // On peut s'arrêter et inscrire une case dès le 1er lancer. Le statut le
+  // dit explicitement tant qu'il reste des lancers ; au 3e, on doit choisir.
+  const canStopEarly = game.rolledThisTurn && game.rollsLeft > 0;
 
   const footer = (
     <button
@@ -90,7 +90,20 @@ export function YahtzeeGame() {
       />
 
       <p className="game-status" aria-live="polite">
-        {rollsInfo}
+        {!game.rolledThisTurn ? (
+          t('game.tapToRoll')
+        ) : canStopEarly ? (
+          <>
+            <span>
+              {game.rollsLeft === 1
+                ? t('game.rollsLeftOne')
+                : t('game.rollsLeft', { n: game.rollsLeft })}
+            </span>
+            <span className="game-status__sub">{t('yahtzee.stopHint')}</span>
+          </>
+        ) : (
+          t('yahtzee.pickCategory')
+        )}
       </p>
 
       <ul className="scorecard">

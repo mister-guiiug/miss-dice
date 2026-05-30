@@ -922,6 +922,14 @@ button {
   font-weight: 600;
 }
 
+.game-status__sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
 /* Grille de score Yahtzee */
 .scorecard {
   list-style: none;
@@ -950,6 +958,7 @@ button {
 .scorecard__row--pick {
   cursor: pointer;
   border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
 }
 
 .scorecard__row--pick .scorecard__value {

@@ -112,10 +112,12 @@ Toutes ces préférences sont persistées localement (`localStorage`).
 Trois écrans, accessibles depuis le lanceur ; on revient au lancer libre
 par la flèche retour. Pass-and-play **1 à 8 joueurs** (1 joueur = solo).
 
-**Yahtzee** — 5 dés, 3 lancers par tour (on garde les dés au tap entre
-les lancers), grille de 13 combinaisons, bonus supérieur (+35 si la
-somme des « 1…6 » atteint 63). Chaque joueur remplit sa propre grille ;
-le plus haut total l'emporte. Logique : `src/games/yahtzee/`.
+**Yahtzee** — 5 dés, **jusqu'à 3 lancers** par tour (on garde les dés au
+tap entre les lancers) : on peut s'arrêter et inscrire une case **dès le
+1er ou le 2e lancer** (le statut le rappelle). Grille de 13 combinaisons,
+bonus supérieur (+35 si la somme des « 1…6 » atteint 63). Chaque joueur
+remplit sa propre grille ; le plus haut total l'emporte. Logique :
+`src/games/yahtzee/`.
 
 **421** — 3 dés, jeu à jetons (version classique simplifiée, assumée et
 documentée dans `src/games/dice421/scoring.ts`) :

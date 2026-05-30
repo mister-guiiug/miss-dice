@@ -106,6 +106,7 @@ export interface Messages {
     roll: string;
     rollAgain: string;
     rollsLeft: string;
+    rollsLeftOne: string;
     lastRoll: string;
     turnOf: string;
     tapToRoll: string;
@@ -118,6 +119,7 @@ export interface Messages {
   };
   yahtzee: {
     pickCategory: string;
+    stopHint: string;
     upperTotal: string;
     bonus: string;
     total: string;
@@ -238,6 +240,7 @@ const fr: Messages = {
     roll: 'Lancer',
     rollAgain: 'Relancer',
     rollsLeft: '{n} lancers restants',
+    rollsLeftOne: '1 lancer restant',
     lastRoll: 'Dernier lancer',
     turnOf: 'Au tour de {name}',
     tapToRoll: 'Touche « Lancer » pour commencer',
@@ -250,6 +253,7 @@ const fr: Messages = {
   },
   yahtzee: {
     pickCategory: 'Choisis une case à remplir',
+    stopHint: 'ou inscris une case pour t’arrêter',
     upperTotal: 'Sous-total',
     bonus: 'Bonus',
     total: 'Total',
@@ -370,6 +374,7 @@ const en: Messages = {
     roll: 'Roll',
     rollAgain: 'Roll again',
     rollsLeft: '{n} rolls left',
+    rollsLeftOne: '1 roll left',
     lastRoll: 'Last roll',
     turnOf: '{name}’s turn',
     tapToRoll: 'Tap “Roll” to start',
@@ -382,6 +387,7 @@ const en: Messages = {
   },
   yahtzee: {
     pickCategory: 'Pick a box to fill',
+    stopHint: 'or fill a box to stop here',
     upperTotal: 'Subtotal',
     bonus: 'Bonus',
     total: 'Total',
@@ -502,6 +508,7 @@ const es: Messages = {
     roll: 'Lanzar',
     rollAgain: 'Relanzar',
     rollsLeft: '{n} lanzamientos restantes',
+    rollsLeftOne: '1 lanzamiento restante',
     lastRoll: 'Último lanzamiento',
     turnOf: 'Turno de {name}',
     tapToRoll: 'Toca «Lanzar» para empezar',
@@ -514,6 +521,7 @@ const es: Messages = {
   },
   yahtzee: {
     pickCategory: 'Elige una casilla',
+    stopHint: 'o anota una casilla para parar aquí',
     upperTotal: 'Subtotal',
     bonus: 'Bonificación',
     total: 'Total',
