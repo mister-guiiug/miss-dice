@@ -13,11 +13,11 @@ const baseTestOptions = {
   passWithNoTests: true,
   coverage: {
     provider: 'v8' as const,
-    // The pure dice domain (random draw, pip layout, colour mapping,
-    // roll schedule) is where a regression is most dangerous and most
-    // cheaply tested. UI surface is intentionally excluded so the gate
-    // stays meaningful rather than diluted.
-    include: ['src/dice/**'],
+    // The pure domains (dice draw/layout/colours/schedule + the Yahtzee
+    // and 421 game engines) are where a regression is most dangerous and
+    // most cheaply tested. UI surface is intentionally excluded so the
+    // gate stays meaningful rather than diluted.
+    include: ['src/dice/**', 'src/games/**'],
     reporter: ['text', 'html'],
     thresholds: {
       statements: 90,

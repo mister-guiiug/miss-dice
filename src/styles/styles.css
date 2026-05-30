@@ -576,6 +576,470 @@ button {
   }
 }
 
+/* ════════════════════════════ Jeux ════════════════════════════ */
+.mode-trigger {
+  position: absolute;
+  top: calc(var(--safe-top) + 12px);
+  left: calc(var(--safe-left) + 12px);
+}
+
+.icon-button--sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+}
+
+/* Lanceur de jeux (feuille) */
+.mode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mode-card:active {
+  transform: scale(0.99);
+}
+
+.mode-card__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.mode-card__hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Cadre de jeu */
+.game-shell {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 55%
+    ),
+    var(--bg);
+}
+
+.game-shell__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(var(--safe-top) + 10px) calc(var(--safe-right) + 12px) 10px
+    calc(var(--safe-left) + 12px);
+}
+
+.game-shell__title {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.game-shell__spacer {
+  width: 48px;
+}
+
+.game-shell__body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.game-shell__footer {
+  padding: 12px calc(var(--safe-right) + 16px) calc(var(--safe-bottom) + 14px)
+    calc(var(--safe-left) + 16px);
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+/* Boutons d'action */
+.primary-btn,
+.secondary-btn {
+  width: 100%;
+  padding: 16px;
+  border: 0;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.secondary-btn {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.primary-btn:disabled,
+.secondary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Saisie des joueurs */
+.setup {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.setup__title {
+  margin: 8px 0 4px;
+  text-align: center;
+}
+
+.setup__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setup__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setup__index {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.setup__input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.setup__add {
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.setup__start {
+  margin-top: 4px;
+  padding: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+/* Plateau de dés de jeu */
+.game-dice {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  --tile: clamp(58px, 17vw, 92px);
+}
+
+.game-dice[data-count='3'] {
+  --tile: clamp(74px, 22vw, 120px);
+}
+
+.game-die {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 16px;
+  transition:
+    transform 140ms var(--ease-out),
+    opacity 140ms ease;
+}
+
+.game-die:disabled {
+  cursor: default;
+}
+
+.game-die--held {
+  transform: translateY(6px) scale(0.92);
+  opacity: 0.92;
+}
+
+.game-die--held::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--accent);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.game-die__badge {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.game-turn {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.game-status,
+.game-hand {
+  margin: 0;
+  min-height: 1.4em;
+  color: var(--muted);
+  text-align: center;
+}
+
+.game-hand {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Grille de score Yahtzee */
+.scorecard {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scorecard__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.scorecard__row--pick {
+  cursor: pointer;
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+}
+
+.scorecard__row--pick .scorecard__value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.scorecard__row--filled {
+  opacity: 0.7;
+}
+
+.scorecard__row:disabled {
+  cursor: default;
+}
+
+.scorecard__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.scorecard__subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Tableau des scores / jetons */
+.scoreboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.scoreboard__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.scoreboard__item--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+}
+
+.scoreboard__name {
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: 9ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scoreboard__score {
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 421 : statut, phase, manche */
+.game421-status {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pill {
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.pill--charge {
+  background: color-mix(in srgb, var(--blue, #3b82f6) 22%, var(--surface));
+}
+
+.pill--decharge {
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+}
+
+.round-note {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Résultats de fin de partie */
+.results {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.results__title {
+  margin: 0;
+  color: var(--muted);
+}
+
+.results__headline {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.results__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.results__score {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ───────────────── Respect de prefers-reduced-motion ───────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
