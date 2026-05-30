@@ -1,0 +1,41 @@
+/**
+ * Tokens visuels de miss-dice — source unique du langage graphique.
+ * L'app est volontairement « dark immersive » : un fond sombre stable
+ * laisse la couleur de la face en vedette. Consommer en var(--token).
+ */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #0f1220;
+  --bg-elevated: #1a1f33;
+  --surface: #20263c;
+  --border: rgba(255, 255, 255, 0.12);
+
+  /* Texte */
+  --text: #f3f5fb;
+  --muted: #9aa3bd;
+
+  /* Accent (UI : boutons, switch) */
+  --accent: #7c5cf6;
+  --accent-contrast: #ffffff;
+
+  /* Dé */
+  --die-radius: clamp(20px, 7vw, 38px);
+  --die-size: clamp(180px, min(64vw, 60vh), 420px);
+  --pip: #ffffff;
+
+  /* Profondeur */
+  --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
+  --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+  /* Animation */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Marges de sécurité (encoches, barres système) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
