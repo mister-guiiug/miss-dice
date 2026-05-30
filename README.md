@@ -101,6 +101,9 @@ miss-dice/
 - **Secouer pour lancer** : un coup de poignet lance les dés
   (API DeviceMotion ; demande l'autorisation sur iOS, sinon sans effet).
 - **Vibration** et **réduire les animations** (déjà présents).
+- **À propos** : partager le lien de l'app (Web Share API, repli
+  presse-papiers), lien vers le **code source** (GitHub) et **Buy me a
+  coffee** (sponsor) — cf. `src/share.ts` et `src/links.ts`.
 
 Toutes ces préférences sont persistées localement (`localStorage`).
 
@@ -207,6 +210,7 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/i18n/messages.test.ts` — parité des clés FR/EN/ES, interpolation, détection.
 - `src/games/yahtzee/{scoring,engine}.test.ts` — 13 combinaisons, bonus, tours, fin.
 - `src/games/dice421/{scoring,engine}.test.ts` — classement des mains, charge/décharge, victoire.
+- `src/share.test.ts` — partage natif, annulation, repli presse-papiers.
 
 Domaines purs `src/dice/**` et `src/games/**` couverts à ~99 % (seuil CI ≥ 90 %).
 

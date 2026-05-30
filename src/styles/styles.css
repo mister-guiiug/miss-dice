@@ -576,6 +576,64 @@ button {
   }
 }
 
+/* ───────────────── À propos : partage / source / sponsor ───────────────── */
+.about {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.about__label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.about__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1 1 auto;
+  justify-content: center;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link-btn:active {
+  transform: scale(0.98);
+}
+
+.link-btn--coffee {
+  background: #fbbf24;
+  border-color: transparent;
+  color: #5b3d00;
+}
+
+.about__feedback {
+  margin: 8px 0 0;
+  min-height: 1.2em;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ════════════════════════════ Jeux ════════════════════════════ */
 .mode-trigger {
   position: absolute;

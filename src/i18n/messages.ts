@@ -33,6 +33,12 @@ export interface Messages {
     reduceMotionHint: string;
     close: string;
     open: string;
+    about: string;
+    shareApp: string;
+    shareText: string;
+    sourceCode: string;
+    buyCoffee: string;
+    linkCopied: string;
   };
   screen: {
     hintIdleOne: string;
@@ -161,6 +167,12 @@ const fr: Messages = {
     reduceMotionHint: 'Affiche le résultat sans défilement',
     close: 'Fermer',
     open: 'Réglages',
+    about: 'À propos',
+    shareApp: 'Partager l’app',
+    shareText: 'Miss Dice — lance un dé, joue au Yahtzee ou au 421.',
+    sourceCode: 'Code source',
+    buyCoffee: 'Buy me a coffee',
+    linkCopied: 'Lien copié !',
   },
   screen: {
     hintIdleOne: 'Touche l’écran pour lancer un {die}',
@@ -287,6 +299,12 @@ const en: Messages = {
     reduceMotionHint: 'Show the result without the rolling animation',
     close: 'Close',
     open: 'Settings',
+    about: 'About',
+    shareApp: 'Share the app',
+    shareText: 'Miss Dice — roll a die, play Yahtzee or 421.',
+    sourceCode: 'Source code',
+    buyCoffee: 'Buy me a coffee',
+    linkCopied: 'Link copied!',
   },
   screen: {
     hintIdleOne: 'Tap the screen to roll a {die}',
@@ -413,6 +431,12 @@ const es: Messages = {
     reduceMotionHint: 'Muestra el resultado sin animación',
     close: 'Cerrar',
     open: 'Ajustes',
+    about: 'Acerca de',
+    shareApp: 'Compartir la app',
+    shareText: 'Miss Dice — lanza un dado, juega al Yahtzee o al 421.',
+    sourceCode: 'Código fuente',
+    buyCoffee: 'Buy me a coffee',
+    linkCopied: '¡Enlace copiado!',
   },
   screen: {
     hintIdleOne: 'Toca la pantalla para lanzar un {die}',
