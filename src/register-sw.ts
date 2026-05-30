@@ -1,4 +1,6 @@
 import { registerSW } from 'virtual:pwa-register';
+import { settingsStore } from './settings/settingsStore';
+import { translate } from './i18n/messages';
 
 const BANNER_ID = 'sw-update-banner';
 
@@ -10,15 +12,20 @@ const BANNER_ID = 'sw-update-banner';
 function showUpdateBanner(update: (reload?: boolean) => void): void {
   if (document.getElementById(BANNER_ID)) return;
 
+  const locale = settingsStore.get().locale;
   const bar = document.createElement('div');
   bar.id = BANNER_ID;
   bar.className = 'sw-update-banner';
   bar.setAttribute('role', 'status');
-  bar.innerHTML = `
-    <span>Nouvelle version disponible.</span>
-    <button type="button">Mettre à jour</button>
-  `;
-  bar.querySelector('button')?.addEventListener('click', () => update(true));
+
+  const text = document.createElement('span');
+  text.textContent = translate(locale, 'update.available');
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = translate(locale, 'update.action');
+  button.addEventListener('click', () => update(true));
+
+  bar.append(text, button);
   document.body.appendChild(bar);
 }
 

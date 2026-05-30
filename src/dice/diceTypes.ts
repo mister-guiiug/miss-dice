@@ -10,10 +10,8 @@
  */
 export interface DieType {
   sides: number;
-  /** Étiquette courte, ex. « D6 ». */
+  /** Étiquette courte, neutre linguistiquement, ex. « D6 ». */
   label: string;
-  /** Nom accessible, ex. « dé à 6 faces ». */
-  name: string;
   render: 'pips' | 'numeral';
   /** clip-path CSS de la silhouette ; absent → carré à coins arrondis. */
   clipPath?: string;
@@ -25,37 +23,32 @@ export const DICE_TYPES: readonly DieType[] = [
   {
     sides: 4,
     label: 'D4',
-    name: 'dé à 4 faces',
     render: 'numeral',
     clipPath: 'polygon(50% 4%, 96% 92%, 4% 92%)',
     nudgeY: 14,
   },
-  { sides: 6, label: 'D6', name: 'dé à 6 faces', render: 'pips' },
+  { sides: 6, label: 'D6', render: 'pips' },
   {
     sides: 8,
     label: 'D8',
-    name: 'dé à 8 faces',
     render: 'numeral',
     clipPath: 'polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%)',
   },
   {
     sides: 10,
     label: 'D10',
-    name: 'dé à 10 faces',
     render: 'numeral',
     clipPath: 'polygon(50% 0%, 95% 38%, 50% 100%, 5% 38%)',
   },
   {
     sides: 12,
     label: 'D12',
-    name: 'dé à 12 faces',
     render: 'numeral',
     clipPath: 'polygon(50% 1%, 99% 38%, 81% 99%, 19% 99%, 1% 38%)',
   },
   {
     sides: 20,
     label: 'D20',
-    name: 'dé à 20 faces',
     render: 'numeral',
     clipPath: 'polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)',
   },

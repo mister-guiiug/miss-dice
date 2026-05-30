@@ -4,6 +4,7 @@ import { useDiceRoll } from '../hooks/useDiceRoll';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useShakeToRoll } from '../hooks/useShakeToRoll';
 import { useSettings } from '../../settings/settingsStore';
+import { useI18n } from '../../i18n/useI18n';
 import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
 import { vibrate, HAPTIC_ROLL, HAPTIC_RESULT } from '../feedback/haptics';
@@ -17,6 +18,7 @@ const sum = (values: number[]): number => values.reduce((a, b) => a + b, 0);
  * couleur du premier dé pour un ressenti immersif.
  */
 export function DiceScreen() {
+  const { t } = useI18n();
   const reducedMotion = useReducedMotion();
   const { haptics, sides, diceCount, shake } = useSettings();
 
@@ -44,10 +46,18 @@ export function DiceScreen() {
 
   const hint =
     status === 'idle'
-      ? `Touche l’écran pour lancer ${diceCount > 1 ? `${diceCount} ${type.label}` : `un ${type.label}`}`
+      ? diceCount > 1
+        ? t('screen.hintIdleMany', { count: diceCount, die: type.label })
+        : t('screen.hintIdleOne', { die: type.label })
       : isRolling
-        ? 'Les dés roulent…'
-        : 'Touche pour relancer';
+        ? t('screen.rolling')
+        : t('screen.relaunch');
+
+  const buttonLabel = isRolling
+    ? t('a11y.rollingNow')
+    : diceCount > 1
+      ? t('a11y.rollMany', { count: diceCount, total })
+      : t('a11y.rollOne', { value: values[0] ?? 1 });
 
   return (
     <main className="dice-screen" style={screenStyle}>
@@ -56,21 +66,15 @@ export function DiceScreen() {
         className="dice-screen__zone"
         data-status={status}
         onClick={roll}
-        aria-label={
-          isRolling
-            ? 'Lancer en cours'
-            : `Lancer ${diceCount > 1 ? `${diceCount} dés` : 'le dé'}. ${
-                diceCount > 1
-                  ? `Total précédent : ${total}`
-                  : `Dernier résultat : ${values[0] ?? 1}`
-              }`
-        }
+        aria-label={buttonLabel}
       >
         <DiceTray values={displayValues} sides={sides} status={status} />
 
         <p className="dice-screen__meta" aria-hidden="true">
           {showTotal && (
-            <span className="dice-screen__total">Total {total}</span>
+            <span className="dice-screen__total">
+              {t('screen.total', { total })}
+            </span>
           )}
           <span className="dice-screen__hint">{hint}</span>
         </p>
@@ -81,8 +85,8 @@ export function DiceScreen() {
       <p className="sr-only" role="status" aria-live="polite">
         {status === 'result'
           ? diceCount > 1
-            ? `Résultats : ${values.join(', ')}. Total : ${total}.`
-            : `Résultat : ${values[0]}`
+            ? t('a11y.resultMany', { values: values.join(', '), total })
+            : t('a11y.resultOne', { value: values[0] ?? 1 })
           : ''}
       </p>
     </main>

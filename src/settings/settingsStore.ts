@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { DEFAULT_SIDES, SUPPORTED_SIDES } from '../dice/diceTypes';
+import { detectLocale, type Locale } from '../i18n/messages';
 
 /** Bornes du nombre de dés affichés simultanément. */
 export const MIN_DICE = 1;
@@ -25,6 +26,8 @@ export interface Settings {
   diceCount: number;
   /** Autoriser le lancer en secouant l'appareil. */
   shake: boolean;
+  /** Langue de l'interface. */
+  locale: Locale;
 }
 
 const STORAGE_KEY = 'miss-dice:settings';
@@ -35,6 +38,8 @@ const DEFAULTS: Settings = {
   sides: DEFAULT_SIDES,
   diceCount: 1,
   shake: false,
+  // Détectée depuis la langue du navigateur au premier lancement.
+  locale: detectLocale(),
 };
 
 function clampDice(value: unknown): number {
@@ -61,6 +66,7 @@ function safeRead(): Settings {
       sides: validSides(parsed.sides),
       diceCount: clampDice(parsed.diceCount),
       shake: typeof parsed.shake === 'boolean' ? parsed.shake : DEFAULTS.shake,
+      locale: detectLocale(parsed.locale),
     };
   } catch {
     return DEFAULTS;
@@ -100,6 +106,7 @@ export const settingsStore = {
   setDiceCount: (diceCount: number) =>
     setState({ diceCount: clampDice(diceCount) }),
   setShake: (shake: boolean) => setState({ shake }),
+  setLocale: (locale: Locale) => setState({ locale }),
   toggleHaptics: () => setState({ haptics: !state.haptics }),
 };
 

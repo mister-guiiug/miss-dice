@@ -371,6 +371,10 @@ button {
   gap: 6px;
 }
 
+.segmented--wide {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .segmented__item {
   padding: 10px 0;
   border: 1px solid var(--border);

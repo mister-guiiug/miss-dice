@@ -8,6 +8,8 @@ import {
 import { useSystemReducedMotion } from '../hooks/useReducedMotion';
 import { requestMotionPermission } from '../hooks/useShakeToRoll';
 import { DICE_TYPES } from '../../dice/diceTypes';
+import { useI18n } from '../../i18n/useI18n';
+import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
 
 /** Icône d'engrenage minimaliste (inline, pas de dépendance). */
 function GearIcon() {
@@ -25,13 +27,14 @@ function GearIcon() {
 }
 
 /**
- * Réglages locaux : type de dé, nombre de dés, secouer pour lancer,
+ * Réglages locaux : langue, type de dé, nombre de dés, secouer pour lancer,
  * vibration et mouvement réduit. Volontairement léger (un engrenage + une
  * feuille glissante). Élément autonome, hors de la zone de tap du dé.
  */
 export function SettingsDrawer() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
-  const { haptics, motion, sides, diceCount, shake } = useSettings();
+  const { haptics, motion, sides, diceCount, shake, locale } = useSettings();
   const systemReduced = useSystemReducedMotion();
 
   const onToggleShake = async (next: boolean) => {
@@ -53,7 +56,7 @@ export function SettingsDrawer() {
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Réglages"
+        aria-label={t('settings.open')}
       >
         <GearIcon />
       </button>
@@ -63,20 +66,47 @@ export function SettingsDrawer() {
           <div
             className="sheet"
             role="dialog"
-            aria-label="Réglages"
+            aria-label={t('settings.title')}
             aria-modal="true"
             onClick={event => event.stopPropagation()}
           >
             <div className="sheet__handle" aria-hidden="true" />
-            <h2 className="sheet__title">Réglages</h2>
+            <h2 className="sheet__title">{t('settings.title')}</h2>
+
+            {/* Langue */}
+            <div className="setting-row setting-row--stack">
+              <span className="setting-row__label">
+                {t('settings.language')}
+              </span>
+              <div
+                className="segmented segmented--wide"
+                role="radiogroup"
+                aria-label={t('settings.language')}
+              >
+                {LOCALES.map(code => (
+                  <button
+                    key={code}
+                    type="button"
+                    role="radio"
+                    aria-checked={locale === code}
+                    className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
+                    onClick={() => settingsStore.setLocale(code)}
+                  >
+                    {LOCALE_LABELS[code]}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Type de dé */}
             <div className="setting-row setting-row--stack">
-              <span className="setting-row__label">Type de dé</span>
+              <span className="setting-row__label">
+                {t('settings.dieType')}
+              </span>
               <div
                 className="segmented"
                 role="radiogroup"
-                aria-label="Type de dé"
+                aria-label={t('settings.dieType')}
               >
                 {DICE_TYPES.map(type => (
                   <button
@@ -84,7 +114,7 @@ export function SettingsDrawer() {
                     type="button"
                     role="radio"
                     aria-checked={sides === type.sides}
-                    aria-label={type.name}
+                    aria-label={t('dice.name', { sides: type.sides })}
                     className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
                     onClick={() => settingsStore.setSides(type.sides)}
                   >
@@ -97,16 +127,18 @@ export function SettingsDrawer() {
             {/* Nombre de dés */}
             <div className="setting-row">
               <span>
-                <span className="setting-row__label">Nombre de dés</span>
+                <span className="setting-row__label">
+                  {t('settings.diceCount')}
+                </span>
                 <span className="setting-row__hint">
-                  Lancés tous ensemble (total affiché)
+                  {t('settings.diceCountHint')}
                 </span>
               </span>
-              <div className="stepper" aria-label="Nombre de dés">
+              <div className="stepper" aria-label={t('settings.diceCount')}>
                 <button
                   type="button"
                   className="stepper__btn"
-                  aria-label="Retirer un dé"
+                  aria-label={t('a11y.removeDie')}
                   disabled={diceCount <= MIN_DICE}
                   onClick={() => settingsStore.setDiceCount(diceCount - 1)}
                 >
@@ -118,7 +150,7 @@ export function SettingsDrawer() {
                 <button
                   type="button"
                   className="stepper__btn"
-                  aria-label="Ajouter un dé"
+                  aria-label={t('a11y.addDie')}
                   disabled={diceCount >= MAX_DICE}
                   onClick={() => settingsStore.setDiceCount(diceCount + 1)}
                 >
@@ -130,9 +162,11 @@ export function SettingsDrawer() {
             {/* Secouer pour lancer */}
             <label className="setting-row">
               <span>
-                <span className="setting-row__label">Secouer pour lancer</span>
+                <span className="setting-row__label">
+                  {t('settings.shake')}
+                </span>
                 <span className="setting-row__hint">
-                  Lance les dés en secouant le téléphone
+                  {t('settings.shakeHint')}
                 </span>
               </span>
               <input
@@ -146,9 +180,11 @@ export function SettingsDrawer() {
             {/* Vibration */}
             <label className="setting-row">
               <span>
-                <span className="setting-row__label">Vibration</span>
+                <span className="setting-row__label">
+                  {t('settings.vibration')}
+                </span>
                 <span className="setting-row__hint">
-                  Retour haptique au lancer (si supporté)
+                  {t('settings.vibrationHint')}
                 </span>
               </span>
               <input
@@ -165,12 +201,12 @@ export function SettingsDrawer() {
             <label className="setting-row">
               <span>
                 <span className="setting-row__label">
-                  Réduire les animations
+                  {t('settings.reduceMotion')}
                 </span>
                 <span className="setting-row__hint">
                   {systemReduced
-                    ? 'Déjà activé par votre système'
-                    : 'Affiche le résultat sans défilement'}
+                    ? t('settings.reduceMotionAuto')
+                    : t('settings.reduceMotionHint')}
                 </span>
               </span>
               <input
@@ -191,7 +227,7 @@ export function SettingsDrawer() {
               className="sheet__close"
               onClick={() => setOpen(false)}
             >
-              Fermer
+              {t('settings.close')}
             </button>
           </div>
         </div>

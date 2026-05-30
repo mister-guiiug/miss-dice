@@ -3,6 +3,7 @@ import type { DieValue } from '../../types';
 import { isPipFilled } from '../../dice/pips';
 import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
+import { useI18n } from '../../i18n/useI18n';
 
 interface DiceFaceProps {
   value: DieValue;
@@ -15,14 +16,15 @@ interface DiceFaceProps {
 const CELLS = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
 
 /**
- * Rendu pur d'une face de dé. Pour un D6 : neuf cellules en grille 3×3
- * dont seules les bonnes s'allument. Pour les autres dés : le chiffre,
- * dans la silhouette du polyèdre. Aucune logique métier ici — valeur,
- * type et état d'animation arrivent en props.
+ * Rendu d'une face de dé. Pour un D6 : neuf cellules en grille 3×3 dont
+ * seules les bonnes s'allument. Pour les autres dés : le chiffre, dans la
+ * silhouette du polyèdre. Aucune logique métier — valeur, type et état
+ * d'animation arrivent en props ; seul le libellé a11y est traduit.
  */
 export function DiceFace({ value, sides = 6, rolling = false }: DiceFaceProps) {
+  const { t } = useI18n();
   const type = dieType(sides);
-  const { bg, bgDeep, hue } = colorForValue(value);
+  const { bg, bgDeep, key } = colorForValue(value);
 
   const style = {
     '--face-bg': bg,
@@ -32,9 +34,10 @@ export function DiceFace({ value, sides = 6, rolling = false }: DiceFaceProps) {
 
   // Libellé non dépendant de la couleur : le nombre est énoncé,
   // la teinte n'est qu'un complément.
+  const dieName = t('dice.name', { sides: type.sides });
   const label = rolling
-    ? `${type.name}, en train de rouler`
-    : `${type.name}, résultat ${value} (${hue})`;
+    ? t('a11y.faceRolling', { die: dieName })
+    : t('a11y.faceResult', { die: dieName, value, color: t(`colors.${key}`) });
 
   return (
     <div

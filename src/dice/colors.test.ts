@@ -11,12 +11,12 @@ describe('FACE_COLORS', () => {
     }
   });
 
-  it('expose des couleurs hex valides (bg et bgDeep)', () => {
+  it('expose des couleurs hex valides (bg et bgDeep) et une clé de teinte', () => {
     for (const value of DIE_VALUES) {
       const c = faceColor(value);
       expect(c.bg).toMatch(HEX);
       expect(c.bgDeep).toMatch(HEX);
-      expect(c.hue).not.toHaveLength(0);
+      expect(c.key).not.toHaveLength(0);
     }
   });
 

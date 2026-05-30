@@ -1,12 +1,21 @@
 import type { D6Value, DieValue } from '../types';
 
+/** Clé de teinte stable (traduite côté i18n, jamais affichée brute). */
+export type ColorKey =
+  | 'red'
+  | 'orange'
+  | 'yellow'
+  | 'green'
+  | 'blue'
+  | 'violet';
+
 export interface FaceColor {
   /** Couleur de fond de la face (teinte propre à la valeur). */
   readonly bg: string;
   /** Variante plus sombre pour le dégradé / les ombres de relief. */
   readonly bgDeep: string;
-  /** Libellé de la teinte, pour l'accessibilité et le debug. */
-  readonly hue: string;
+  /** Clé de teinte (pour l'accessibilité, traduite à l'affichage). */
+  readonly key: ColorKey;
 }
 
 /**
@@ -16,12 +25,12 @@ export interface FaceColor {
  * via aria-label. La couleur n'est qu'un repère ludique.
  */
 export const FACE_COLORS: Record<D6Value, FaceColor> = {
-  1: { bg: '#e5484d', bgDeep: '#b21d22', hue: 'rouge' },
-  2: { bg: '#f2711c', bgDeep: '#bd4e05', hue: 'orange' },
-  3: { bg: '#f5b700', bgDeep: '#bd8a00', hue: 'jaune' },
-  4: { bg: '#2bb673', bgDeep: '#178551', hue: 'vert' },
-  5: { bg: '#3b82f6', bgDeep: '#1d5fd0', hue: 'bleu' },
-  6: { bg: '#8b5cf6', bgDeep: '#6635d8', hue: 'violet' },
+  1: { bg: '#e5484d', bgDeep: '#b21d22', key: 'red' },
+  2: { bg: '#f2711c', bgDeep: '#bd4e05', key: 'orange' },
+  3: { bg: '#f5b700', bgDeep: '#bd8a00', key: 'yellow' },
+  4: { bg: '#2bb673', bgDeep: '#178551', key: 'green' },
+  5: { bg: '#3b82f6', bgDeep: '#1d5fd0', key: 'blue' },
+  6: { bg: '#8b5cf6', bgDeep: '#6635d8', key: 'violet' },
 };
 
 const PALETTE: readonly FaceColor[] = [

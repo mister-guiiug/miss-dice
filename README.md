@@ -15,20 +15,21 @@ partagées de [`@mister-guiiug/dev-wpa-config`](https://github.com/mister-guiiug
 
 Séparation stricte **métier / animation / rendu / config**, comme demandé :
 
-| Couche               | Fichier(s)                                            | Rôle                                                          |
-| -------------------- | ----------------------------------------------------- | ------------------------------------------------------------- |
-| Aléa                 | `src/dice/random.ts`                                  | Tirage uniforme 1..N + multi-dés (rng injectable)             |
-| Types de dés         | `src/dice/diceTypes.ts`                               | D4/D6/D8/D10/D12/D20 : faces, silhouette, rendu               |
-| Disposition points   | `src/dice/pips.ts`                                    | Grille 3×3 → points (réservé au D6)                           |
-| Couleurs             | `src/dice/colors.ts`                                  | Une teinte par face (palette cyclée au-delà du D6)            |
-| Cadence d'animation  | `src/dice/rollSchedule.ts`                            | Instants de défilement (pur, testé)                           |
-| Contrôleur de lancer | `src/react/hooks/useDiceRoll.ts`                      | État repos → défilement → résultat multi-dés, anti-double-tap |
-| Secouer pour lancer  | `src/react/hooks/useShakeToRoll.ts`                   | Détection de secousse (DeviceMotion) + permission iOS         |
-| Rendu d'une face     | `src/react/components/DiceFace.tsx`                   | Points (D6) ou chiffre + silhouette (sans logique métier)     |
-| Plateau de dés       | `src/react/components/DiceTray.tsx`                   | Disposition de N dés, taille adaptative                       |
-| Écran principal      | `src/react/components/DiceScreen.tsx`                 | Zone de tap plein écran, total, teinte immersive, a11y        |
-| Réglages             | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx` | Préfs locales (type, nombre, secousse, vibration, mouvement)  |
-| PWA                  | `vite.config.ts`, `src/register-sw.ts`                | Manifest, service worker, base path GH Pages                  |
+| Couche               | Fichier(s)                                            | Rôle                                                                 |
+| -------------------- | ----------------------------------------------------- | -------------------------------------------------------------------- |
+| Aléa                 | `src/dice/random.ts`                                  | Tirage uniforme 1..N + multi-dés (rng injectable)                    |
+| Types de dés         | `src/dice/diceTypes.ts`                               | D4/D6/D8/D10/D12/D20 : faces, silhouette, rendu                      |
+| Disposition points   | `src/dice/pips.ts`                                    | Grille 3×3 → points (réservé au D6)                                  |
+| Couleurs             | `src/dice/colors.ts`                                  | Une teinte par face (palette cyclée au-delà du D6)                   |
+| Cadence d'animation  | `src/dice/rollSchedule.ts`                            | Instants de défilement (pur, testé)                                  |
+| Contrôleur de lancer | `src/react/hooks/useDiceRoll.ts`                      | État repos → défilement → résultat multi-dés, anti-double-tap        |
+| Secouer pour lancer  | `src/react/hooks/useShakeToRoll.ts`                   | Détection de secousse (DeviceMotion) + permission iOS                |
+| Rendu d'une face     | `src/react/components/DiceFace.tsx`                   | Points (D6) ou chiffre + silhouette (sans logique métier)            |
+| Plateau de dés       | `src/react/components/DiceTray.tsx`                   | Disposition de N dés, taille adaptative                              |
+| Écran principal      | `src/react/components/DiceScreen.tsx`                 | Zone de tap plein écran, total, teinte immersive, a11y               |
+| Réglages             | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx` | Préfs locales (langue, type, nombre, secousse, vibration, mouvement) |
+| Traductions          | `src/i18n/messages.ts`, `useI18n.ts`                  | FR/EN/ES, clés typées, détection navigateur, `translate` pur         |
+| PWA                  | `vite.config.ts`, `src/register-sw.ts`                | Manifest, service worker, base path GH Pages                         |
 
 La logique pure (`src/dice/**`) ne connaît ni React ni le DOM : elle est
 testable seule et couverte à ≥ 90 % (seuil CI).
@@ -57,6 +58,7 @@ miss-dice/
     │   ├── pips.ts            rollSchedule.ts
     │   └── *.test.ts
     ├── settings/settingsStore.ts
+    ├── i18n/{messages,useI18n}.ts   # FR/EN/ES + clés typées + tests
     ├── styles/{tokens,styles}.css
     ├── react/
     │   ├── App.tsx
@@ -82,6 +84,9 @@ miss-dice/
 
 ### Réglages (engrenage, en haut à droite)
 
+- **Langue** : Français, English, Español. Détectée depuis le navigateur au
+  premier lancement, puis mémorisée ; tout le texte et les libellés
+  d'accessibilité suivent (l'attribut `<html lang>` aussi).
 - **Type de dé** : D4, D6, D8, D10, D12, D20. Le D6 garde les points ; les
   autres affichent le chiffre dans la silhouette du polyèdre.
 - **Nombre de dés** : de 1 à 6, lancés ensemble, avec le **total** affiché.
@@ -165,6 +170,7 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/react/components/DiceFace.test.tsx` — points (D6) et chiffre (autres) + a11y.
 - `src/react/hooks/useDiceRoll.test.ts` — états, multi-dés, callbacks, anti-double-tap.
 - `src/react/hooks/useShakeToRoll.test.ts` — seuil de secousse + temporisation.
+- `src/i18n/messages.test.ts` — parité des clés FR/EN/ES, interpolation, détection.
 
 Couverture du domaine `src/dice/**` à **100 %** (seuil CI ≥ 90 %).
 
