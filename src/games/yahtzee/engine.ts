@@ -4,7 +4,8 @@
  * Aucune dépendance React/DOM : chaque action renvoie un nouvel état, ce
  * qui rend tout le déroulé testable. L'aléa est injectable.
  */
-import { rollDie, type Rng } from '../../dice/random';
+import { defaultRng, type Rng } from '../../dice/random';
+import { freshDice, freshHeld, reroll, toggleAt } from '../diceTurn';
 import {
   CATEGORIES,
   UPPER_CATEGORIES,
@@ -16,10 +17,14 @@ import {
 
 export const DICE_PER_TURN = 5;
 export const ROLLS_PER_TURN = 3;
+/** Bonus par Yahtzee supplémentaire (après un premier Yahtzee à 50). */
+export const YAHTZEE_BONUS = 100;
 
 export interface YahtzeePlayer {
   name: string;
   scores: Partial<Record<Category, number>>;
+  /** Nombre de Yahtzees bonus obtenus (chacun vaut YAHTZEE_BONUS). */
+  bonusYahtzees: number;
 }
 
 export interface YahtzeeState {
@@ -39,17 +44,17 @@ function freshTurn(): Pick<
   'dice' | 'held' | 'rollsLeft' | 'rolledThisTurn'
 > {
   return {
-    dice: Array.from({ length: DICE_PER_TURN }, () => 1),
-    held: Array.from({ length: DICE_PER_TURN }, () => false),
+    dice: freshDice(DICE_PER_TURN),
+    held: freshHeld(DICE_PER_TURN),
     rollsLeft: ROLLS_PER_TURN,
     rolledThisTurn: false,
   };
 }
 
 export function createYahtzee(names: string[]): YahtzeeState {
-  const players = names.map(name => ({ name, scores: {} }));
+  const list = names.length > 0 ? names : ['Joueur 1'];
   return {
-    players: players.length > 0 ? players : [{ name: 'Joueur 1', scores: {} }],
+    players: list.map(name => ({ name, scores: {}, bonusYahtzees: 0 })),
     current: 0,
     ...freshTurn(),
     rollNonce: 0,
@@ -68,15 +73,12 @@ export function canScore(state: YahtzeeState): boolean {
 /** Relance les dés non gardés (au 1er lancer, tous les dés). */
 export function rollDiceAction(
   state: YahtzeeState,
-  rng: Rng = Math.random
+  rng: Rng = defaultRng
 ): YahtzeeState {
   if (!canRoll(state)) return state;
-  const dice = state.dice.map((value, i) =>
-    state.held[i] && state.rolledThisTurn ? value : rollDie(6, rng)
-  );
   return {
     ...state,
-    dice,
+    dice: reroll(state.dice, state.held, state.rolledThisTurn, 6, rng),
     rollsLeft: state.rollsLeft - 1,
     rolledThisTurn: true,
     rollNonce: state.rollNonce + 1,
@@ -86,10 +88,8 @@ export function rollDiceAction(
 /** Garde/relâche un dé (seulement après un lancer). */
 export function toggleHold(state: YahtzeeState, index: number): YahtzeeState {
   if (!state.rolledThisTurn || state.phase === 'over') return state;
-  if (index < 0 || index >= state.held.length) return state;
-  const held = state.held.slice();
-  held[index] = !held[index];
-  return { ...state, held };
+  const held = toggleAt(state.held, index);
+  return held ? { ...state, held } : state;
 }
 
 export function isCategoryFilled(
@@ -102,6 +102,14 @@ export function isCategoryFilled(
 /** Score que rapporterait la catégorie avec la main courante. */
 export function previewScore(state: YahtzeeState, category: Category): number {
   return scoreCategory(category, state.dice);
+}
+
+/** La main courante est-elle un Yahtzee bonus pour le joueur courant ? */
+export function earnsYahtzeeBonus(state: YahtzeeState): boolean {
+  const player = state.players[state.current]!;
+  return (
+    player.scores.yahtzee === 50 && scoreCategory('yahtzee', state.dice) === 50
+  );
 }
 
 function allCategoriesFilled(player: YahtzeePlayer): boolean {
@@ -117,6 +125,7 @@ export function scoreCategoryAction(
   const player = state.players[state.current]!;
   if (isCategoryFilled(player, category)) return state;
 
+  const bonus = earnsYahtzeeBonus(state) ? 1 : 0;
   const players = state.players.slice();
   players[state.current] = {
     ...player,
@@ -124,10 +133,10 @@ export function scoreCategoryAction(
       ...player.scores,
       [category]: scoreCategory(category, state.dice),
     },
+    bonusYahtzees: player.bonusYahtzees + bonus,
   };
 
-  const everyoneDone = players.every(allCategoriesFilled);
-  if (everyoneDone) {
+  if (players.every(allCategoriesFilled)) {
     return { ...state, players, phase: 'over' };
   }
 
@@ -147,9 +156,13 @@ export function upperBonus(player: YahtzeePlayer): number {
   return upperSum(player) >= UPPER_BONUS_THRESHOLD ? UPPER_BONUS : 0;
 }
 
+export function yahtzeeBonusPoints(player: YahtzeePlayer): number {
+  return player.bonusYahtzees * YAHTZEE_BONUS;
+}
+
 export function totalScore(player: YahtzeePlayer): number {
   const all = CATEGORIES.reduce((acc, c) => acc + (player.scores[c] ?? 0), 0);
-  return all + upperBonus(player);
+  return all + upperBonus(player) + yahtzeeBonusPoints(player);
 }
 
 /** Index du/des joueur(s) en tête (gère les égalités). */

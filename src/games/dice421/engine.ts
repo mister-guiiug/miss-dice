@@ -2,8 +2,9 @@
  * 421 — machine d'état pure (pass-and-play, 1 à N joueurs), jeu à jetons.
  *
  * Déroulé (version classique simplifiée) :
- *  1. « Charge » : un pot de 21 jetons. Chaque manche, le joueur à la plus
- *     petite main prend des jetons du pot (= valeur de la meilleure main).
+ *  1. « Charge » : un pot de jetons (21 par défaut). Chaque manche, le
+ *     joueur à la plus petite main prend des jetons du pot (= valeur de la
+ *     meilleure main).
  *  2. Quand le pot est vide → « Décharge » : le perdant de la manche prend
  *     désormais ses jetons au gagnant de la manche.
  *  3. Le premier joueur à n'avoir plus aucun jeton (en décharge) gagne.
@@ -11,10 +12,12 @@
  * À 1 joueur, pas de jetons : mode entraînement, on affiche la valeur de
  * la main à chaque manche.
  */
-import { rollDie, type Rng } from '../../dice/random';
+import { defaultRng, type Rng } from '../../dice/random';
+import { freshDice, freshHeld, reroll, toggleAt } from '../diceTurn';
 import { classify, type HandValue } from './scoring';
 
 export const STARTING_POT = 21;
+export const POT_OPTIONS: readonly number[] = [11, 21, 31];
 export const DICE_PER_TURN = 3;
 export const ROLLS_PER_TURN = 3;
 
@@ -50,21 +53,24 @@ function freshTurn(): Pick<
   'dice' | 'held' | 'rollsLeft' | 'rolledThisTurn'
 > {
   return {
-    dice: Array.from({ length: DICE_PER_TURN }, () => 1),
-    held: Array.from({ length: DICE_PER_TURN }, () => false),
+    dice: freshDice(DICE_PER_TURN),
+    held: freshHeld(DICE_PER_TURN),
     rollsLeft: ROLLS_PER_TURN,
     rolledThisTurn: false,
   };
 }
 
-export function createDice421(names: string[]): Dice421State {
+export function createDice421(
+  names: string[],
+  pot: number = STARTING_POT
+): Dice421State {
   const players = (names.length > 0 ? names : ['Joueur 1']).map(name => ({
     name,
     tokens: 0,
   }));
   return {
     players,
-    pot: STARTING_POT,
+    pot: Math.max(1, Math.floor(pot)),
     phase: 'charge',
     current: 0,
     ...freshTurn(),
@@ -90,15 +96,12 @@ export function currentHand(state: Dice421State): HandValue {
 
 export function rollDiceAction(
   state: Dice421State,
-  rng: Rng = Math.random
+  rng: Rng = defaultRng
 ): Dice421State {
   if (!canRoll(state)) return state;
-  const dice = state.dice.map((value, i) =>
-    state.held[i] && state.rolledThisTurn ? value : rollDie(6, rng)
-  );
   return {
     ...state,
-    dice,
+    dice: reroll(state.dice, state.held, state.rolledThisTurn, 6, rng),
     rollsLeft: state.rollsLeft - 1,
     rolledThisTurn: true,
     rollNonce: state.rollNonce + 1,
@@ -107,10 +110,8 @@ export function rollDiceAction(
 
 export function toggleHold(state: Dice421State, index: number): Dice421State {
   if (!state.rolledThisTurn || state.phase === 'over') return state;
-  if (index < 0 || index >= state.held.length) return state;
-  const held = state.held.slice();
-  held[index] = !held[index];
-  return { ...state, held };
+  const held = toggleAt(state.held, index);
+  return held ? { ...state, held } : state;
 }
 
 /** Index de la meilleure / pire main parmi celles enregistrées (égalité → 1er). */
@@ -166,7 +167,6 @@ function resolveRound(
     players[worst]!.tokens += give;
     if (pot <= 0) phase = 'decharge';
   } else {
-    // Décharge : le gagnant de la manche se débarrasse de ses jetons.
     const give = Math.min(amount, players[best]!.tokens);
     players[best]!.tokens -= give;
     players[worst]!.tokens += give;
@@ -184,8 +184,7 @@ function resolveRound(
     winner,
     roundHands: players.map(() => null),
     lastRound: { winner: best, loser: worst, tokens: amount, fromPot },
-    // Le perdant de la manche entame la suivante.
-    current: worst,
+    current: worst, // le perdant entame la manche suivante
     ...freshTurn(),
   };
 }
@@ -196,8 +195,7 @@ export function validateTurn(state: Dice421State): Dice421State {
   const hands = state.roundHands.slice();
   hands[state.current] = classify(state.dice);
 
-  const played = hands.filter(Boolean).length;
-  if (played === state.players.length) {
+  if (hands.filter(Boolean).length === state.players.length) {
     return resolveRound(state, hands);
   }
 

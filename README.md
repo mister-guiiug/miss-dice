@@ -95,6 +95,13 @@ miss-dice/
 - **Langue** : Français, English, Español. Détectée depuis le navigateur au
   premier lancement, puis mémorisée ; tout le texte et les libellés
   d'accessibilité suivent (l'attribut `<html lang>` aussi).
+- **Thème** : auto (suit le système), clair ou sombre. Posé avant le 1er
+  rendu (script de pré-peinture, pas de flash) et synchronisé avec la
+  barre système (`theme-color`).
+- **Sons** : petit retour audio synthétisé (WebAudio, aucun asset) au
+  lancer et au résultat, activable.
+- **Statistiques** : distribution des faces du lancer libre + total,
+  réinitialisable.
 - **Type de dé** : D4, D6, D8, D10, D12, D20. Le D6 garde les points ; les
   autres affichent le chiffre dans la silhouette du polyèdre.
 - **Nombre de dés** : de 1 à 6, lancés ensemble, avec le **total** affiché.
@@ -134,6 +141,13 @@ documentée dans `src/games/dice421/scoring.ts`) :
 L'aléa, le score et l'enchaînement des tours sont des fonctions pures
 (`engine.ts`) testées indépendamment de l'UI ; les composants ne font que
 les afficher.
+
+Confort de jeu : **reprise** d'une partie après refresh (sauvegarde
+locale, signalée « Reprendre » dans le menu), **annuler** le dernier coup
+(mistaps), **rejouer** avec les mêmes joueurs, **partager** le résultat, et
+l'écran reste **allumé** pendant la partie (Screen Wake Lock). Le Yahtzee
+gère le **bonus Yahtzee** (+100) ; le 421 reconnaît **suites** et
+**nénette** et laisse choisir la **taille du pot**.
 
 ## 4. Choix techniques
 
@@ -182,6 +196,7 @@ npm run lint            # ESLint
 npm run format          # Prettier --write
 npm run type-check      # tsc -b
 npm run icons           # régénère public/icons/ (dé procédural)
+npm run test:e2e        # e2e Playwright (après `npx playwright install`)
 ```
 
 ## 7. Build & déploiement GitHub Pages
@@ -213,6 +228,11 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/games/yahtzee/{scoring,engine}.test.ts` — 13 combinaisons, bonus, tours, fin.
 - `src/games/dice421/{scoring,engine}.test.ts` — classement des mains, charge/décharge, victoire.
 - `src/share.test.ts` — partage natif, annulation, repli presse-papiers.
+- `src/games/persistence.test.ts` — sauvegarde/reprise/effacement de partie.
+- `src/react/hooks/useUndoableGame.test.ts` — annuler, persister, reprendre.
+- `src/react/components/Sheet.test.tsx` — dialogue modal, focus, Échap.
+- `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` — préfs et stats.
+- `e2e/smoke.spec.ts` — fumée Playwright (lancer, menu des jeux).
 
 Domaines purs `src/dice/**` et `src/games/**` couverts à ~99 % (seuil CI ≥ 90 %).
 
@@ -220,11 +240,14 @@ Couverture du domaine `src/dice/**` à **100 %** (seuil CI ≥ 90 %).
 
 ## 9. Évolutions prévues (sans refonte)
 
-Historique des lancers, statistiques, sons activables, thèmes visuels,
-reprise de partie après rafraîchissement : le découpage métier/rendu et le
-store de préférences sont déjà prêts à les accueillir. Les types de dés, le
-multi-dés, le secouer-pour-lancer, le multilingue (FR/EN/ES) et les jeux
-**Yahtzee** et **421** sont désormais livrés.
+Sont livrés : types de dés, multi-dés, secouer-pour-lancer, multilingue
+(FR/EN/ES), jeux **Yahtzee** et **421**, partage/source/sponsor, **thème
+clair/auto**, **sons**, **statistiques**, **reprise de partie**, **annuler**,
+rejouer, partage de résultat, **wake lock**. Côté technique : jeux en
+**lazy-load**, **error boundary**, **feuilles modales accessibles** (focus
+trap + Échap), husky/lint-staged/commitlint, Lighthouse CI et e2e Playwright
+(smoke). Pistes restantes : thèmes additionnels, règles 421 avancées
+(décideur), joker Yahtzee complet, synchronisation multi-appareils.
 
 ## Licence
 

@@ -8,6 +8,8 @@ import { useI18n } from '../../i18n/useI18n';
 import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
 import { vibrate, HAPTIC_ROLL, HAPTIC_RESULT } from '../feedback/haptics';
+import { useSound } from '../hooks/useSound';
+import { rollStatsStore } from '../../stats/rollStats';
 
 const sum = (values: number[]): number => values.reduce((a, b) => a + b, 0);
 
@@ -21,13 +23,21 @@ export function DiceScreen() {
   const { t } = useI18n();
   const reducedMotion = useReducedMotion();
   const { haptics, sides, diceCount, shake } = useSettings();
+  const playSound = useSound();
 
   const { displayValues, values, status, isRolling, roll } = useDiceRoll({
     count: diceCount,
     sides,
     reducedMotion,
-    onRollStart: () => haptics && vibrate(HAPTIC_ROLL),
-    onResult: () => haptics && vibrate(HAPTIC_RESULT),
+    onRollStart: () => {
+      if (haptics) vibrate(HAPTIC_ROLL);
+      playSound('roll');
+    },
+    onResult: rolled => {
+      if (haptics) vibrate(HAPTIC_RESULT);
+      playSound('result');
+      rollStatsStore.record(rolled);
+    },
   });
 
   // Secouer pour lancer (si l'option est active). Désactivé pendant un

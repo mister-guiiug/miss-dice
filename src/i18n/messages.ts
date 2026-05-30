@@ -33,12 +33,22 @@ export interface Messages {
     reduceMotionHint: string;
     close: string;
     open: string;
+    theme: string;
+    themeAuto: string;
+    themeLight: string;
+    themeDark: string;
+    sounds: string;
+    soundsHint: string;
     about: string;
     shareApp: string;
     shareText: string;
     sourceCode: string;
     buyCoffee: string;
     linkCopied: string;
+    stats: string;
+    statsTotal: string;
+    statsEmpty: string;
+    statsReset: string;
   };
   screen: {
     hintIdleOne: string;
@@ -87,6 +97,7 @@ export interface Messages {
     yahtzeeHint: string;
     d421: string;
     d421Hint: string;
+    resume: string;
   };
   common: {
     back: string;
@@ -116,12 +127,17 @@ export interface Messages {
     winner: string;
     tie: string;
     scores: string;
+    undo: string;
+    replay: string;
+    shareResult: string;
+    copied: string;
   };
   yahtzee: {
     pickCategory: string;
     stopHint: string;
     upperTotal: string;
     bonus: string;
+    yahtzeeBonus: string;
     total: string;
     catOnes: string;
     catTwos: string;
@@ -139,6 +155,7 @@ export interface Messages {
   };
   game421: {
     pot: string;
+    potSize: string;
     charge: string;
     decharge: string;
     validate: string;
@@ -148,6 +165,8 @@ export interface Messages {
     hand421: string;
     handAces: string;
     handTrips: string;
+    handSuite: string;
+    handNenette: string;
     handPlain: string;
     roundResult: string;
   };
@@ -169,12 +188,22 @@ const fr: Messages = {
     reduceMotionHint: 'Affiche le résultat sans défilement',
     close: 'Fermer',
     open: 'Réglages',
+    theme: 'Thème',
+    themeAuto: 'Auto',
+    themeLight: 'Clair',
+    themeDark: 'Sombre',
+    sounds: 'Sons',
+    soundsHint: 'Petit retour audio au lancer',
     about: 'À propos',
     shareApp: 'Partager l’app',
     shareText: 'Miss Dice — lance un dé, joue au Yahtzee ou au 421.',
     sourceCode: 'Code source',
     buyCoffee: 'Buy me a coffee',
     linkCopied: 'Lien copié !',
+    stats: 'Statistiques',
+    statsTotal: '{n} lancers',
+    statsEmpty: 'Aucun lancer pour le moment',
+    statsReset: 'Réinitialiser',
   },
   screen: {
     hintIdleOne: 'Touche l’écran pour lancer un {die}',
@@ -221,6 +250,7 @@ const fr: Messages = {
     yahtzeeHint: '5 dés, grille de combinaisons',
     d421: '421',
     d421Hint: '3 dés, jeu à jetons',
+    resume: 'Reprendre',
   },
   common: {
     back: 'Retour',
@@ -250,12 +280,17 @@ const fr: Messages = {
     winner: '{name} gagne !',
     tie: 'Égalité !',
     scores: 'Scores',
+    undo: 'Annuler',
+    replay: 'Rejouer (mêmes joueurs)',
+    shareResult: 'Partager le résultat',
+    copied: 'Copié !',
   },
   yahtzee: {
     pickCategory: 'Choisis une case à remplir',
     stopHint: 'ou inscris une case pour t’arrêter',
     upperTotal: 'Sous-total',
     bonus: 'Bonus',
+    yahtzeeBonus: 'Bonus Yahtzee',
     total: 'Total',
     catOnes: 'Les 1',
     catTwos: 'Les 2',
@@ -273,6 +308,7 @@ const fr: Messages = {
   },
   game421: {
     pot: 'Pot : {n}',
+    potSize: 'Jetons de départ',
     charge: 'Charge',
     decharge: 'Décharge',
     validate: 'Valider',
@@ -282,6 +318,8 @@ const fr: Messages = {
     hand421: '421 !',
     handAces: 'Brelan d’as',
     handTrips: 'Brelan de {value}',
+    handSuite: 'Suite',
+    handNenette: 'Nénette (2-2-1)',
     handPlain: 'Main simple',
     roundResult: '{winner} remporte la manche, {loser} prend {tokens}',
   },
@@ -303,12 +341,22 @@ const en: Messages = {
     reduceMotionHint: 'Show the result without the rolling animation',
     close: 'Close',
     open: 'Settings',
+    theme: 'Theme',
+    themeAuto: 'Auto',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    sounds: 'Sounds',
+    soundsHint: 'Small audio feedback on roll',
     about: 'About',
     shareApp: 'Share the app',
     shareText: 'Miss Dice — roll a die, play Yahtzee or 421.',
     sourceCode: 'Source code',
     buyCoffee: 'Buy me a coffee',
     linkCopied: 'Link copied!',
+    stats: 'Statistics',
+    statsTotal: '{n} rolls',
+    statsEmpty: 'No rolls yet',
+    statsReset: 'Reset',
   },
   screen: {
     hintIdleOne: 'Tap the screen to roll a {die}',
@@ -355,6 +403,7 @@ const en: Messages = {
     yahtzeeHint: '5 dice, scorecard',
     d421: '421',
     d421Hint: '3 dice, token game',
+    resume: 'Resume',
   },
   common: {
     back: 'Back',
@@ -384,12 +433,17 @@ const en: Messages = {
     winner: '{name} wins!',
     tie: 'It’s a tie!',
     scores: 'Scores',
+    undo: 'Undo',
+    replay: 'Play again (same players)',
+    shareResult: 'Share the result',
+    copied: 'Copied!',
   },
   yahtzee: {
     pickCategory: 'Pick a box to fill',
     stopHint: 'or fill a box to stop here',
     upperTotal: 'Subtotal',
     bonus: 'Bonus',
+    yahtzeeBonus: 'Yahtzee bonus',
     total: 'Total',
     catOnes: 'Ones',
     catTwos: 'Twos',
@@ -407,6 +461,7 @@ const en: Messages = {
   },
   game421: {
     pot: 'Pot: {n}',
+    potSize: 'Starting tokens',
     charge: 'Charging',
     decharge: 'Discharging',
     validate: 'Keep',
@@ -416,6 +471,8 @@ const en: Messages = {
     hand421: '421!',
     handAces: 'Three aces',
     handTrips: 'Three {value}s',
+    handSuite: 'Straight',
+    handNenette: 'Nenette (2-2-1)',
     handPlain: 'Plain hand',
     roundResult: '{winner} wins the round, {loser} takes {tokens}',
   },
@@ -437,12 +494,22 @@ const es: Messages = {
     reduceMotionHint: 'Muestra el resultado sin animación',
     close: 'Cerrar',
     open: 'Ajustes',
+    theme: 'Tema',
+    themeAuto: 'Auto',
+    themeLight: 'Claro',
+    themeDark: 'Oscuro',
+    sounds: 'Sonidos',
+    soundsHint: 'Pequeño sonido al lanzar',
     about: 'Acerca de',
     shareApp: 'Compartir la app',
     shareText: 'Miss Dice — lanza un dado, juega al Yahtzee o al 421.',
     sourceCode: 'Código fuente',
     buyCoffee: 'Buy me a coffee',
     linkCopied: '¡Enlace copiado!',
+    stats: 'Estadísticas',
+    statsTotal: '{n} lanzamientos',
+    statsEmpty: 'Aún no hay lanzamientos',
+    statsReset: 'Reiniciar',
   },
   screen: {
     hintIdleOne: 'Toca la pantalla para lanzar un {die}',
@@ -489,6 +556,7 @@ const es: Messages = {
     yahtzeeHint: '5 dados, tabla de combinaciones',
     d421: '421',
     d421Hint: '3 dados, juego de fichas',
+    resume: 'Reanudar',
   },
   common: {
     back: 'Atrás',
@@ -518,12 +586,17 @@ const es: Messages = {
     winner: '¡{name} gana!',
     tie: '¡Empate!',
     scores: 'Puntuaciones',
+    undo: 'Deshacer',
+    replay: 'Jugar otra vez (mismos jugadores)',
+    shareResult: 'Compartir el resultado',
+    copied: '¡Copiado!',
   },
   yahtzee: {
     pickCategory: 'Elige una casilla',
     stopHint: 'o anota una casilla para parar aquí',
     upperTotal: 'Subtotal',
     bonus: 'Bonificación',
+    yahtzeeBonus: 'Bonificación Yahtzee',
     total: 'Total',
     catOnes: 'Unos',
     catTwos: 'Doses',
@@ -541,6 +614,7 @@ const es: Messages = {
   },
   game421: {
     pot: 'Bote: {n}',
+    potSize: 'Fichas iniciales',
     charge: 'Carga',
     decharge: 'Descarga',
     validate: 'Plantarse',
@@ -550,6 +624,8 @@ const es: Messages = {
     hand421: '¡421!',
     handAces: 'Trío de ases',
     handTrips: 'Trío de {value}',
+    handSuite: 'Escalera',
+    handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mano simple',
     roundResult: '{winner} gana la ronda, {loser} toma {tokens}',
   },

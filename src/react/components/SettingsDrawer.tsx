@@ -12,8 +12,9 @@ import { useI18n } from '../../i18n/useI18n';
 import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
 import { REPO_URL, SPONSOR_URL, appUrl } from '../../links';
 import { shareOrCopy } from '../../share';
+import { rollStatsStore, useRollStats } from '../../stats/rollStats';
+import { Sheet } from './Sheet';
 
-/** Icône d'engrenage minimaliste (inline, pas de dépendance). */
 function GearIcon() {
   return (
     <svg
@@ -27,7 +28,6 @@ function GearIcon() {
     </svg>
   );
 }
-
 function ShareIcon() {
   return (
     <svg
@@ -41,7 +41,6 @@ function ShareIcon() {
     </svg>
   );
 }
-
 function GithubIcon() {
   return (
     <svg
@@ -55,7 +54,6 @@ function GithubIcon() {
     </svg>
   );
 }
-
 function CoffeeIcon() {
   return (
     <svg
@@ -70,17 +68,23 @@ function CoffeeIcon() {
   );
 }
 
-/**
- * Réglages locaux : langue, type de dé, nombre de dés, secouer pour lancer,
- * vibration et mouvement réduit. Volontairement léger (un engrenage + une
- * feuille glissante). Élément autonome, hors de la zone de tap du dé.
- */
+const THEME_KEYS = [
+  { value: 'auto', label: 'settings.themeAuto' },
+  { value: 'light', label: 'settings.themeLight' },
+  { value: 'dark', label: 'settings.themeDark' },
+] as const;
+
+/** Réglages locaux : langue, thème, sons, type de dé, nombre, secousse… */
 export function SettingsDrawer() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { haptics, motion, sides, diceCount, shake, locale } = useSettings();
+  const { haptics, motion, sides, diceCount, shake, locale, theme, sounds } =
+    useSettings();
   const systemReduced = useSystemReducedMotion();
+  const stats = useRollStats();
+  const faces = Array.from({ length: sides }, (_, i) => i + 1);
+  const maxCount = Math.max(1, ...faces.map(v => stats.counts[v] ?? 0));
 
   const onShare = async () => {
     const result = await shareOrCopy({
@@ -99,8 +103,6 @@ export function SettingsDrawer() {
       settingsStore.setShake(false);
       return;
     }
-    // L'appel part d'un geste utilisateur (changement de case) → iOS peut
-    // demander l'autorisation DeviceMotion à cet instant.
     const granted = await requestMotionPermission();
     settingsStore.setShake(granted);
   };
@@ -118,213 +120,270 @@ export function SettingsDrawer() {
         <GearIcon />
       </button>
 
-      {open && (
-        <div className="sheet-backdrop" onClick={() => setOpen(false)}>
+      <Sheet
+        open={open}
+        onClose={() => setOpen(false)}
+        label={t('settings.title')}
+      >
+        <h2 className="sheet__title">{t('settings.title')}</h2>
+
+        {/* Langue */}
+        <div className="setting-row setting-row--stack">
+          <span className="setting-row__label">{t('settings.language')}</span>
           <div
-            className="sheet"
-            role="dialog"
-            aria-label={t('settings.title')}
-            aria-modal="true"
-            onClick={event => event.stopPropagation()}
+            className="segmented segmented--wide"
+            role="radiogroup"
+            aria-label={t('settings.language')}
           >
-            <div className="sheet__handle" aria-hidden="true" />
-            <h2 className="sheet__title">{t('settings.title')}</h2>
-
-            {/* Langue */}
-            <div className="setting-row setting-row--stack">
-              <span className="setting-row__label">
-                {t('settings.language')}
-              </span>
-              <div
-                className="segmented segmented--wide"
-                role="radiogroup"
-                aria-label={t('settings.language')}
+            {LOCALES.map(code => (
+              <button
+                key={code}
+                type="button"
+                role="radio"
+                aria-checked={locale === code}
+                className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
+                onClick={() => settingsStore.setLocale(code)}
               >
-                {LOCALES.map(code => (
-                  <button
-                    key={code}
-                    type="button"
-                    role="radio"
-                    aria-checked={locale === code}
-                    className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
-                    onClick={() => settingsStore.setLocale(code)}
-                  >
-                    {LOCALE_LABELS[code]}
-                  </button>
-                ))}
-              </div>
-            </div>
+                {LOCALE_LABELS[code]}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            {/* Type de dé */}
-            <div className="setting-row setting-row--stack">
-              <span className="setting-row__label">
-                {t('settings.dieType')}
-              </span>
-              <div
-                className="segmented"
-                role="radiogroup"
-                aria-label={t('settings.dieType')}
+        {/* Thème */}
+        <div className="setting-row setting-row--stack">
+          <span className="setting-row__label">{t('settings.theme')}</span>
+          <div
+            className="segmented segmented--wide"
+            role="radiogroup"
+            aria-label={t('settings.theme')}
+          >
+            {THEME_KEYS.map(item => (
+              <button
+                key={item.value}
+                type="button"
+                role="radio"
+                aria-checked={theme === item.value}
+                className={`segmented__item${theme === item.value ? ' segmented__item--active' : ''}`}
+                onClick={() => settingsStore.setTheme(item.value)}
               >
-                {DICE_TYPES.map(type => (
-                  <button
-                    key={type.sides}
-                    type="button"
-                    role="radio"
-                    aria-checked={sides === type.sides}
-                    aria-label={t('dice.name', { sides: type.sides })}
-                    className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
-                    onClick={() => settingsStore.setSides(type.sides)}
-                  >
-                    {type.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+                {t(item.label)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            {/* Nombre de dés */}
-            <div className="setting-row">
-              <span>
-                <span className="setting-row__label">
-                  {t('settings.diceCount')}
-                </span>
-                <span className="setting-row__hint">
-                  {t('settings.diceCountHint')}
-                </span>
-              </span>
-              <div className="stepper" aria-label={t('settings.diceCount')}>
-                <button
-                  type="button"
-                  className="stepper__btn"
-                  aria-label={t('a11y.removeDie')}
-                  disabled={diceCount <= MIN_DICE}
-                  onClick={() => settingsStore.setDiceCount(diceCount - 1)}
-                >
-                  −
-                </button>
-                <span className="stepper__value" aria-live="polite">
-                  {diceCount}
-                </span>
-                <button
-                  type="button"
-                  className="stepper__btn"
-                  aria-label={t('a11y.addDie')}
-                  disabled={diceCount >= MAX_DICE}
-                  onClick={() => settingsStore.setDiceCount(diceCount + 1)}
-                >
-                  +
-                </button>
-              </div>
-            </div>
+        {/* Type de dé */}
+        <div className="setting-row setting-row--stack">
+          <span className="setting-row__label">{t('settings.dieType')}</span>
+          <div
+            className="segmented"
+            role="radiogroup"
+            aria-label={t('settings.dieType')}
+          >
+            {DICE_TYPES.map(type => (
+              <button
+                key={type.sides}
+                type="button"
+                role="radio"
+                aria-checked={sides === type.sides}
+                aria-label={t('dice.name', { sides: type.sides })}
+                className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
+                onClick={() => settingsStore.setSides(type.sides)}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            {/* Secouer pour lancer */}
-            <label className="setting-row">
-              <span>
-                <span className="setting-row__label">
-                  {t('settings.shake')}
-                </span>
-                <span className="setting-row__hint">
-                  {t('settings.shakeHint')}
-                </span>
-              </span>
-              <input
-                type="checkbox"
-                className="switch"
-                checked={shake}
-                onChange={event => void onToggleShake(event.target.checked)}
-              />
-            </label>
-
-            {/* Vibration */}
-            <label className="setting-row">
-              <span>
-                <span className="setting-row__label">
-                  {t('settings.vibration')}
-                </span>
-                <span className="setting-row__hint">
-                  {t('settings.vibrationHint')}
-                </span>
-              </span>
-              <input
-                type="checkbox"
-                className="switch"
-                checked={haptics}
-                onChange={event =>
-                  settingsStore.setHaptics(event.target.checked)
-                }
-              />
-            </label>
-
-            {/* Mouvement réduit */}
-            <label className="setting-row">
-              <span>
-                <span className="setting-row__label">
-                  {t('settings.reduceMotion')}
-                </span>
-                <span className="setting-row__hint">
-                  {systemReduced
-                    ? t('settings.reduceMotionAuto')
-                    : t('settings.reduceMotionHint')}
-                </span>
-              </span>
-              <input
-                type="checkbox"
-                className="switch"
-                checked={motion === 'reduced' || systemReduced}
-                disabled={systemReduced}
-                onChange={event =>
-                  settingsStore.setMotion(
-                    event.target.checked ? 'reduced' : 'auto'
-                  )
-                }
-              />
-            </label>
-
-            {/* À propos : partage, code source, sponsor */}
-            <div className="about">
-              <span className="about__label">{t('settings.about')}</span>
-              <div className="about__links">
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => void onShare()}
-                >
-                  <ShareIcon />
-                  {t('settings.shareApp')}
-                </button>
-                <a
-                  className="link-btn"
-                  href={REPO_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <GithubIcon />
-                  {t('settings.sourceCode')}
-                </a>
-                <a
-                  className="link-btn link-btn--coffee"
-                  href={SPONSOR_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <CoffeeIcon />
-                  {t('settings.buyCoffee')}
-                </a>
-              </div>
-              <p className="about__feedback" role="status" aria-live="polite">
-                {copied ? t('settings.linkCopied') : ''}
-              </p>
-            </div>
-
+        {/* Nombre de dés */}
+        <div className="setting-row">
+          <span>
+            <span className="setting-row__label">
+              {t('settings.diceCount')}
+            </span>
+            <span className="setting-row__hint">
+              {t('settings.diceCountHint')}
+            </span>
+          </span>
+          <div className="stepper" aria-label={t('settings.diceCount')}>
             <button
               type="button"
-              className="sheet__close"
-              onClick={() => setOpen(false)}
+              className="stepper__btn"
+              aria-label={t('a11y.removeDie')}
+              disabled={diceCount <= MIN_DICE}
+              onClick={() => settingsStore.setDiceCount(diceCount - 1)}
             >
-              {t('settings.close')}
+              −
+            </button>
+            <span className="stepper__value" aria-live="polite">
+              {diceCount}
+            </span>
+            <button
+              type="button"
+              className="stepper__btn"
+              aria-label={t('a11y.addDie')}
+              disabled={diceCount >= MAX_DICE}
+              onClick={() => settingsStore.setDiceCount(diceCount + 1)}
+            >
+              +
             </button>
           </div>
         </div>
-      )}
+
+        {/* Sons */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">{t('settings.sounds')}</span>
+            <span className="setting-row__hint">
+              {t('settings.soundsHint')}
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={sounds}
+            onChange={event => settingsStore.setSounds(event.target.checked)}
+          />
+        </label>
+
+        {/* Secouer pour lancer */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">{t('settings.shake')}</span>
+            <span className="setting-row__hint">{t('settings.shakeHint')}</span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={shake}
+            onChange={event => void onToggleShake(event.target.checked)}
+          />
+        </label>
+
+        {/* Vibration */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">
+              {t('settings.vibration')}
+            </span>
+            <span className="setting-row__hint">
+              {t('settings.vibrationHint')}
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={haptics}
+            onChange={event => settingsStore.setHaptics(event.target.checked)}
+          />
+        </label>
+
+        {/* Mouvement réduit */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">
+              {t('settings.reduceMotion')}
+            </span>
+            <span className="setting-row__hint">
+              {systemReduced
+                ? t('settings.reduceMotionAuto')
+                : t('settings.reduceMotionHint')}
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={motion === 'reduced' || systemReduced}
+            disabled={systemReduced}
+            onChange={event =>
+              settingsStore.setMotion(event.target.checked ? 'reduced' : 'auto')
+            }
+          />
+        </label>
+
+        {/* Statistiques du lancer libre */}
+        <div className="about">
+          <span className="about__label">{t('settings.stats')}</span>
+          {stats.rolls === 0 ? (
+            <p className="setting-row__hint">{t('settings.statsEmpty')}</p>
+          ) : (
+            <>
+              <p className="stats__total">
+                {t('settings.statsTotal', { n: stats.rolls })}
+              </p>
+              <div className="stats__bars">
+                {faces.map(v => {
+                  const count = stats.counts[v] ?? 0;
+                  return (
+                    <div className="stats__row" key={v}>
+                      <span className="stats__face">{v}</span>
+                      <span className="stats__bar">
+                        <span
+                          style={{ width: `${(count / maxCount) * 100}%` }}
+                        />
+                      </span>
+                      <span className="stats__count">{count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={() => rollStatsStore.reset()}
+              >
+                {t('settings.statsReset')}
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* À propos : partage, code source, sponsor */}
+        <div className="about">
+          <span className="about__label">{t('settings.about')}</span>
+          <div className="about__links">
+            <button
+              type="button"
+              className="link-btn"
+              onClick={() => void onShare()}
+            >
+              <ShareIcon />
+              {t('settings.shareApp')}
+            </button>
+            <a
+              className="link-btn"
+              href={REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GithubIcon />
+              {t('settings.sourceCode')}
+            </a>
+            <a
+              className="link-btn link-btn--coffee"
+              href={SPONSOR_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <CoffeeIcon />
+              {t('settings.buyCoffee')}
+            </a>
+          </div>
+          <p className="about__feedback" role="status" aria-live="polite">
+            {copied ? t('settings.linkCopied') : ''}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="sheet__close"
+          onClick={() => setOpen(false)}
+        >
+          {t('settings.close')}
+        </button>
+      </Sheet>
     </>
   );
 }

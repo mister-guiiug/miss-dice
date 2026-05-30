@@ -1,30 +1,46 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { InstallPrompt } from './components/InstallPrompt';
 import { ModeMenu } from './components/ModeMenu';
-import { YahtzeeGame } from './components/games/YahtzeeGame';
-import { Dice421Game } from './components/games/Dice421Game';
 import { useAppMode } from '../app/appMode';
 import { useI18n } from '../i18n/useI18n';
+import { useApplyTheme } from './hooks/useTheme';
+
+// Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
+// garde un bundle initial minimal et un accès au dé immédiat.
+const YahtzeeGame = lazy(() =>
+  import('./components/games/YahtzeeGame').then(m => ({
+    default: m.YahtzeeGame,
+  }))
+);
+const Dice421Game = lazy(() =>
+  import('./components/games/Dice421Game').then(m => ({
+    default: m.Dice421Game,
+  }))
+);
 
 /**
  * Aiguille entre le lancer libre (écran par défaut, cliquable partout) et
- * les jeux (Yahtzee, 421). En mode lancer, les contrôles en surimpression
- * (jeux, réglages, installation) sont des frères du dé pour ne pas
- * déclencher de lancer au tap.
+ * les jeux (Yahtzee, 421). Applique le thème et la langue choisis.
  */
 export function App() {
   const { locale } = useI18n();
   const mode = useAppMode();
+  useApplyTheme();
 
   // Garde l'attribut lang du document aligné sur la langue choisie.
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
-  if (mode === 'yahtzee') return <YahtzeeGame />;
-  if (mode === 'dice421') return <Dice421Game />;
+  if (mode === 'yahtzee' || mode === 'dice421') {
+    return (
+      <Suspense fallback={<div className="game-shell" aria-busy="true" />}>
+        {mode === 'yahtzee' ? <YahtzeeGame /> : <Dice421Game />}
+      </Suspense>
+    );
+  }
 
   return (
     <div className="app">

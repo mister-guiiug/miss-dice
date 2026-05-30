@@ -634,7 +634,107 @@ button {
   text-align: center;
 }
 
+/* Statistiques (distribution des faces) */
+.stats__total {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.stats__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stats__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats__face {
+  width: 1.5em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.stats__bar {
+  flex: 1;
+  height: 9px;
+  border-radius: 99px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.stats__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--accent);
+  transition: width 240ms var(--ease-out);
+}
+
+.stats__count {
+  min-width: 2.4em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ───────────────── Écran d'erreur (ErrorBoundary) ───────────────── */
+.crash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  text-align: center;
+}
+
+.crash__emoji {
+  font-size: 3rem;
+}
+
+.crash__btn {
+  width: auto;
+  padding: 14px 22px;
+}
+
 /* ════════════════════════════ Jeux ════════════════════════════ */
+.mode-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mode-card__badge {
+  padding: 2px 9px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.setup-extra {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .mode-trigger {
   position: absolute;
   top: calc(var(--safe-top) + 12px);

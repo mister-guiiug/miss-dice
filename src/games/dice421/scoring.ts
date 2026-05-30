@@ -5,13 +5,14 @@
  *  - 4-2-1 : la meilleure main, vaut 10 jetons.
  *  - 1-1-1 (brelan d'as) : vaut 7 jetons.
  *  - autre brelan d-d-d : vaut la valeur du dé (2..6).
+ *  - suite de 3 dés consécutifs : vaut 2 jetons.
+ *  - nénette 2-2-1 : vaut 2 jetons.
  *  - toute autre main (« quelconque ») : vaut 1 jeton.
  *
  * `rank` ordonne totalement les mains (plus grand = meilleur) :
- *  421 > 111 > brelans (6→2) > mains quelconques (comparées par dés
- *  triés décroissants).
+ *  421 > 111 > brelans (6→2) > suites > mains quelconques > nénette.
  */
-export type HandKind = '421' | 'aces' | 'trips' | 'plain';
+export type HandKind = '421' | 'aces' | 'trips' | 'suite' | 'nenette' | 'plain';
 
 export interface HandValue {
   /** Dés triés décroissants, ex. [6,5,2]. */
@@ -31,17 +32,22 @@ export function classify(dice: readonly number[]): HandValue {
   const d = sortedDesc(dice);
   const [a, b, c] = d as [number, number, number];
 
-  // 4-2-1
   if (a === 4 && b === 2 && c === 1) {
     return { dice: d, kind: '421', rank: 1000, tokens: 10 };
   }
-  // Brelan d'as 1-1-1
   if (a === 1 && b === 1 && c === 1) {
     return { dice: d, kind: 'aces', rank: 900, tokens: 7 };
   }
-  // Brelan d-d-d (2..6)
   if (a === b && b === c) {
     return { dice: d, kind: 'trips', rank: 800 + a, tokens: a };
+  }
+  // Suite : trois faces consécutives (rang dominé par la plus haute).
+  if (a - 1 === b && b - 1 === c) {
+    return { dice: d, kind: 'suite', rank: 700 + a, tokens: 2 };
+  }
+  // Nénette 2-2-1 : main basse particulière.
+  if (a === 2 && b === 2 && c === 1) {
+    return { dice: d, kind: 'nenette', rank: 100, tokens: 2 };
   }
   // Main quelconque : rang = dés triés décroissants concaténés (ex. 652).
   return { dice: d, kind: 'plain', rank: a * 100 + b * 10 + c, tokens: 1 };

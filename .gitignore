@@ -8,3 +8,6 @@ dev-dist/
 !.env.example
 coverage/
 .vite/
+playwright-report/
+test-results/
+e2e/__snapshots__/

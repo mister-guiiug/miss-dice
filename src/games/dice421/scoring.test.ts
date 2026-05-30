@@ -45,4 +45,25 @@ describe('421 classify', () => {
   it('compareHands renvoie 0 pour deux mains équivalentes', () => {
     expect(compareHands(classify([6, 5, 2]), classify([2, 5, 6]))).toBe(0);
   });
+
+  it('reconnaît une suite de 3 dés consécutifs (2 jetons)', () => {
+    expect(classify([3, 2, 1]).kind).toBe('suite');
+    expect(classify([4, 6, 5]).kind).toBe('suite');
+    expect(classify([4, 6, 5]).tokens).toBe(2);
+    // une suite bat une main quelconque mais pas un brelan
+    expect(compareHands(classify([6, 5, 4]), classify([6, 6, 6]))).toBeLessThan(
+      0
+    );
+    expect(
+      compareHands(classify([6, 5, 4]), classify([6, 5, 1]))
+    ).toBeGreaterThan(0);
+  });
+
+  it('reconnaît la nénette 2-2-1 (2 jetons, main basse)', () => {
+    const n = classify([1, 2, 2]);
+    expect(n.kind).toBe('nenette');
+    expect(n.tokens).toBe(2);
+    // la nénette est la plus basse : battue par une main quelconque
+    expect(compareHands(classify([2, 1, 1]), n)).toBeGreaterThan(0);
+  });
 });

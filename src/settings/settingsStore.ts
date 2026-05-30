@@ -28,6 +28,10 @@ export interface Settings {
   shake: boolean;
   /** Langue de l'interface. */
   locale: Locale;
+  /** Thème visuel : `auto` suit le système, sinon forcé. */
+  theme: 'auto' | 'light' | 'dark';
+  /** Sons activés (petit retour audio au lancer / résultat). */
+  sounds: boolean;
 }
 
 const STORAGE_KEY = 'miss-dice:settings';
@@ -40,7 +44,15 @@ const DEFAULTS: Settings = {
   shake: false,
   // Détectée depuis la langue du navigateur au premier lancement.
   locale: detectLocale(),
+  theme: 'auto',
+  sounds: false,
 };
+
+function validTheme(value: unknown): Settings['theme'] {
+  return value === 'light' || value === 'dark' || value === 'auto'
+    ? value
+    : DEFAULTS.theme;
+}
 
 function clampDice(value: unknown): number {
   const n = typeof value === 'number' ? Math.floor(value) : DEFAULTS.diceCount;
@@ -67,6 +79,9 @@ function safeRead(): Settings {
       diceCount: clampDice(parsed.diceCount),
       shake: typeof parsed.shake === 'boolean' ? parsed.shake : DEFAULTS.shake,
       locale: detectLocale(parsed.locale),
+      theme: validTheme(parsed.theme),
+      sounds:
+        typeof parsed.sounds === 'boolean' ? parsed.sounds : DEFAULTS.sounds,
     };
   } catch {
     return DEFAULTS;
@@ -107,6 +122,9 @@ export const settingsStore = {
     setState({ diceCount: clampDice(diceCount) }),
   setShake: (shake: boolean) => setState({ shake }),
   setLocale: (locale: Locale) => setState({ locale }),
+  setTheme: (theme: Settings['theme']) =>
+    setState({ theme: validTheme(theme) }),
+  setSounds: (sounds: boolean) => setState({ sounds }),
   toggleHaptics: () => setState({ haptics: !state.haptics }),
 };
 

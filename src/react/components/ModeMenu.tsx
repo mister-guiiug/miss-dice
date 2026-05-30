@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { appModeStore, type AppMode } from '../../app/appMode';
 import { useI18n } from '../../i18n/useI18n';
+import { hasSavedGame, type GameKey } from '../../games/persistence';
+import { Sheet } from './Sheet';
 
-/** Icône « jeux » : deux petits dés. */
 function GamesIcon() {
   return (
     <svg
@@ -23,9 +24,9 @@ function GamesIcon() {
         stroke="currentColor"
         strokeWidth="1.6"
       />
-      <circle cx="6.2" cy="10.2" r="1.1" fill="#0f1220" />
-      <circle cx="10.8" cy="14.8" r="1.1" fill="#0f1220" />
-      <circle cx="8.5" cy="12.5" r="1.1" fill="#0f1220" />
+      <circle cx="6.2" cy="10.2" r="1.1" fill="var(--surface)" />
+      <circle cx="10.8" cy="14.8" r="1.1" fill="var(--surface)" />
+      <circle cx="8.5" cy="12.5" r="1.1" fill="var(--surface)" />
     </svg>
   );
 }
@@ -34,11 +35,12 @@ interface ModeItem {
   mode: AppMode;
   title: string;
   hint: string;
+  saveKey?: GameKey;
 }
 
 /**
  * Lanceur de jeux : un bouton ouvre une feuille proposant le lancer libre,
- * le Yahtzee ou le 421. Sélectionner un mode bascule l'écran de l'app.
+ * le Yahtzee ou le 421. Une partie sauvegardée est signalée « Reprendre ».
  */
 export function ModeMenu() {
   const { t } = useI18n();
@@ -55,8 +57,14 @@ export function ModeMenu() {
       mode: 'yahtzee',
       title: t('modes.yahtzee'),
       hint: t('modes.yahtzeeHint'),
+      saveKey: 'yahtzee',
     },
-    { mode: 'dice421', title: t('modes.d421'), hint: t('modes.d421Hint') },
+    {
+      mode: 'dice421',
+      title: t('modes.d421'),
+      hint: t('modes.d421Hint'),
+      saveKey: 'dice421',
+    },
   ];
 
   return (
@@ -72,33 +80,36 @@ export function ModeMenu() {
         <GamesIcon />
       </button>
 
-      {open && (
-        <div className="sheet-backdrop" onClick={() => setOpen(false)}>
-          <div
-            className="sheet"
-            role="dialog"
-            aria-label={t('modes.title')}
-            aria-modal="true"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="sheet__handle" aria-hidden="true" />
-            <h2 className="sheet__title">{t('modes.title')}</h2>
-            <div className="mode-list">
-              {items.map(item => (
-                <button
-                  key={item.mode}
-                  type="button"
-                  className="mode-card"
-                  onClick={() => choose(item.mode)}
-                >
+      <Sheet
+        open={open}
+        onClose={() => setOpen(false)}
+        label={t('modes.title')}
+      >
+        <h2 className="sheet__title">{t('modes.title')}</h2>
+        <div className="mode-list">
+          {items.map(item => {
+            const resumable = item.saveKey ? hasSavedGame(item.saveKey) : false;
+            return (
+              <button
+                key={item.mode}
+                type="button"
+                className="mode-card"
+                onClick={() => choose(item.mode)}
+              >
+                <span className="mode-card__head">
                   <span className="mode-card__title">{item.title}</span>
-                  <span className="mode-card__hint">{item.hint}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+                  {resumable && (
+                    <span className="mode-card__badge">
+                      {t('modes.resume')}
+                    </span>
+                  )}
+                </span>
+                <span className="mode-card__hint">{item.hint}</span>
+              </button>
+            );
+          })}
         </div>
-      )}
+      </Sheet>
     </>
   );
 }

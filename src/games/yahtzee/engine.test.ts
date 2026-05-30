@@ -9,6 +9,7 @@ import {
   upperBonus,
   leaders,
   isCategoryFilled,
+  yahtzeeBonusPoints,
   ROLLS_PER_TURN,
 } from './engine';
 import { CATEGORIES } from './scoring';
@@ -132,6 +133,21 @@ describe('yahtzee engine — score et tours', () => {
     expect(leaders(state)).toEqual([0, 1]);
     state.players[1]!.scores = { chance: 30 };
     expect(leaders(state)).toEqual([1]);
+  });
+
+  it('accorde +100 par Yahtzee supplémentaire (premier Yahtzee déjà à 50)', () => {
+    let state = createYahtzee(['A']);
+    // 1er Yahtzee → inscrit 50, aucun bonus.
+    state = rollDiceAction(state, fixedFace(5)); // [5,5,5,5,5]
+    state = scoreCategoryAction(state, 'yahtzee');
+    expect(state.players[0]!.scores.yahtzee).toBe(50);
+    expect(yahtzeeBonusPoints(state.players[0]!)).toBe(0);
+    // 2e Yahtzee → bonus de 100, inscrit ailleurs.
+    state = rollDiceAction(state, fixedFace(5));
+    state = scoreCategoryAction(state, 'fives');
+    expect(state.players[0]!.bonusYahtzees).toBe(1);
+    expect(yahtzeeBonusPoints(state.players[0]!)).toBe(100);
+    expect(totalScore(state.players[0]!)).toBe(50 + 25 + 100);
   });
 
   it('mélange réel : un rng quelconque reste dans 1..6', () => {
