@@ -5,6 +5,7 @@ import { InstallPrompt } from './components/InstallPrompt';
 import { ModeMenu } from './components/ModeMenu';
 import { useAppMode } from '../app/appMode';
 import { useI18n } from '../i18n/useI18n';
+import { localeDir } from '../i18n/messages';
 import { useApplyTheme } from './hooks/useTheme';
 
 // Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
@@ -50,9 +51,11 @@ export function App() {
   const mode = useAppMode();
   useApplyTheme();
 
-  // Garde l'attribut lang du document aligné sur la langue choisie.
+  // Garde les attributs lang et dir du document alignés sur la langue
+  // choisie (dir prêt pour une éventuelle langue RTL future).
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.documentElement.dir = localeDir(locale);
   }, [locale]);
 
   if (mode !== 'roll') {

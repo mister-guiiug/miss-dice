@@ -15,6 +15,7 @@ import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
 import { vibrate, HAPTIC_ROLL, HAPTIC_RESULT } from '../feedback/haptics';
 import { useSound } from '../hooks/useSound';
+import { useSpeak } from '../hooks/useSpeak';
 import { rollStatsStore } from '../../stats/rollStats';
 import { rollLogStore } from '../../log/rollLog';
 
@@ -31,6 +32,7 @@ export function DiceScreen() {
   const reducedMotion = useReducedMotion();
   const { haptics, sides, diceCount, shake } = useSettings();
   const playSound = useSound();
+  const speak = useSpeak();
 
   const { displayValues, values, status, isRolling, roll } = useDiceRoll({
     count: diceCount,
@@ -45,6 +47,15 @@ export function DiceScreen() {
       playSound('result');
       rollStatsStore.record(rolled);
       rollLogStore.record(sides, rolled);
+      // Annonce vocale (si activée) : même contenu que la région live.
+      speak(
+        rolled.length > 1
+          ? t('a11y.resultMany', {
+              values: rolled.join(', '),
+              total: sum(rolled),
+            })
+          : t('a11y.resultOne', { value: rolled[0] ?? 1 })
+      );
     },
   });
 

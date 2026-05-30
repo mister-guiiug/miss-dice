@@ -21,3 +21,23 @@ test('@smoke ouverture du menu des jeux', async ({ page }) => {
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByText(/yahtzee/i)).toBeVisible();
 });
+
+test('@smoke Cochon : démarrer une partie et lancer le dé', async ({
+  page,
+}) => {
+  await page.goto('/?play=pig');
+  await page
+    .getByRole('button', { name: /commencer|^start$|empezar/i })
+    .click();
+  const rollBtn = page
+    .getByRole('button', { name: /^(lancer|roll|lanzar)$/i })
+    .first();
+  await expect(rollBtn).toBeVisible();
+  await rollBtn.click();
+  // Le cumul du tour s'affiche après un lancer réussi (animation réduite
+  // en e2e : le résultat est immédiat, mais on laisse de la marge au cold
+  // start du serveur de dev partagé entre workers).
+  await expect(
+    page.getByText(/cumul du tour|turn total|acumulado del turno/i)
+  ).toBeVisible({ timeout: 10000 });
+});

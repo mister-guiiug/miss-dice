@@ -32,6 +32,10 @@ export interface Settings {
   theme: 'auto' | 'light' | 'dark';
   /** Sons activés (petit retour audio au lancer / résultat). */
   sounds: boolean;
+  /** Annonce vocale du résultat (synthèse vocale du navigateur). */
+  tts: boolean;
+  /** Mode daltonien : ajoute la valeur chiffrée sur chaque face. */
+  colorblind: boolean;
 }
 
 const STORAGE_KEY = 'miss-dice:settings';
@@ -46,6 +50,8 @@ const DEFAULTS: Settings = {
   locale: detectLocale(),
   theme: 'auto',
   sounds: false,
+  tts: false,
+  colorblind: false,
 };
 
 function validTheme(value: unknown): Settings['theme'] {
@@ -82,6 +88,11 @@ function safeRead(): Settings {
       theme: validTheme(parsed.theme),
       sounds:
         typeof parsed.sounds === 'boolean' ? parsed.sounds : DEFAULTS.sounds,
+      tts: typeof parsed.tts === 'boolean' ? parsed.tts : DEFAULTS.tts,
+      colorblind:
+        typeof parsed.colorblind === 'boolean'
+          ? parsed.colorblind
+          : DEFAULTS.colorblind,
     };
   } catch {
     return DEFAULTS;
@@ -115,6 +126,8 @@ export const settingsStore = {
   setTheme: (theme: Settings['theme']) =>
     setState({ theme: validTheme(theme) }),
   setSounds: (sounds: boolean) => setState({ sounds }),
+  setTts: (tts: boolean) => setState({ tts }),
+  setColorblind: (colorblind: boolean) => setState({ colorblind }),
   toggleHaptics: () => setState({ haptics: !store.get().haptics }),
 };
 

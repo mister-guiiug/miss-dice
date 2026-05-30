@@ -93,8 +93,18 @@ export function SettingsDrawer() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { haptics, motion, sides, diceCount, shake, locale, theme, sounds } =
-    useSettings();
+  const {
+    haptics,
+    motion,
+    sides,
+    diceCount,
+    shake,
+    locale,
+    theme,
+    sounds,
+    tts,
+    colorblind,
+  } = useSettings();
   const systemReduced = useSystemReducedMotion();
   const stats = useRollStats();
   const log = useRollLog();
@@ -263,6 +273,40 @@ export function SettingsDrawer() {
             className="switch"
             checked={sounds}
             onChange={event => settingsStore.setSounds(event.target.checked)}
+          />
+        </label>
+
+        {/* Annonce vocale du résultat */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">{t('settings.tts')}</span>
+            <span className="setting-row__hint">{t('settings.ttsHint')}</span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={tts}
+            onChange={event => settingsStore.setTts(event.target.checked)}
+          />
+        </label>
+
+        {/* Mode daltonien */}
+        <label className="setting-row">
+          <span>
+            <span className="setting-row__label">
+              {t('settings.colorblind')}
+            </span>
+            <span className="setting-row__hint">
+              {t('settings.colorblindHint')}
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            className="switch"
+            checked={colorblind}
+            onChange={event =>
+              settingsStore.setColorblind(event.target.checked)
+            }
           />
         </label>
 

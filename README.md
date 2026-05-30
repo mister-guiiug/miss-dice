@@ -1,5 +1,8 @@
 # 🎲 Miss Dice
 
+[![CI](https://github.com/mister-guiiug/miss-dice/actions/workflows/ci.yml/badge.svg)](https://github.com/mister-guiiug/miss-dice/actions/workflows/ci.yml)
+[![Deploy](https://github.com/mister-guiiug/miss-dice/actions/workflows/deploy.yml/badge.svg)](https://github.com/mister-guiiug/miss-dice/actions/workflows/deploy.yml)
+
 Lanceur de **dé à 6 faces**, _mobile-first_, 100 % offline, installable.
 Toute la surface de l'écran est une zone de tap : on touche, le dé roule,
 une face se pose. Sans pub, sans tracking, sans backend — seules les

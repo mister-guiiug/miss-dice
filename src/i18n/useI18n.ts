@@ -1,11 +1,20 @@
 import { useCallback } from 'react';
 import { useSettings } from '../settings/settingsStore';
-import { translate, type Locale, type MessageKey } from './messages';
+import {
+  translate,
+  type Locale,
+  type MessageKey,
+  type ParamsArg,
+} from './messages';
 
 export interface I18n {
   locale: Locale;
-  /** Traduit une clé typée, avec interpolation des `{paramètres}`. */
-  t: (key: MessageKey, params?: Record<string, string | number>) => string;
+  /**
+   * Traduit une clé typée avec interpolation des `{paramètres}`. Les clés
+   * qui attendent des paramètres les exigent à la compilation (voir
+   * `MessageParams`).
+   */
+  t: <K extends MessageKey>(key: K, ...params: ParamsArg<K>) => string;
 }
 
 /**
@@ -16,7 +25,7 @@ export interface I18n {
 export function useI18n(): I18n {
   const { locale } = useSettings();
   const t = useCallback<I18n['t']>(
-    (key, params) => translate(locale, key, params),
+    (key, ...params) => translate(locale, key, params[0]),
     [locale]
   );
   return { locale, t };

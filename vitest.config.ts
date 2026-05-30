@@ -22,6 +22,7 @@ const baseTestOptions = {
       'src/games/**',
       'src/decide/**',
       'src/log/**',
+      'src/a11y/**',
       'src/store/createStore.ts',
     ],
     reporter: ['text', 'html'],

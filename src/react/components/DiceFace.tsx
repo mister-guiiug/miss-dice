@@ -4,6 +4,7 @@ import { isPipFilled } from '../../dice/pips';
 import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
+import { useSettings } from '../../settings/settingsStore';
 
 interface DiceFaceProps {
   value: DieValue;
@@ -23,8 +24,13 @@ const CELLS = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
  */
 export function DiceFace({ value, sides = 6, rolling = false }: DiceFaceProps) {
   const { t } = useI18n();
+  const { colorblind } = useSettings();
   const type = dieType(sides);
   const { bg, bgDeep, key } = colorForValue(value);
+
+  // Mode daltonien : un repère chiffré redondant sur les dés à pips (où la
+  // couleur, sinon, est le seul indice rapide de la valeur d'une face).
+  const showValueBadge = colorblind && type.render === 'pips' && !rolling;
 
   const style = {
     '--face-bg': bg,
@@ -61,6 +67,11 @@ export function DiceFace({ value, sides = 6, rolling = false }: DiceFaceProps) {
           aria-hidden="true"
           style={{ '--nudge-y': `${type.nudgeY ?? 0}%` } as CSSProperties}
         >
+          {value}
+        </span>
+      )}
+      {showValueBadge && (
+        <span className="dice-face__badge" aria-hidden="true">
           {value}
         </span>
       )}
