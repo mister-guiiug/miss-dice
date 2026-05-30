@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { DieValue, RollStatus } from '../../types';
-import { defaultRng, rollDie, type Rng } from '../../dice/random';
+import { defaultRng, rollDice, type Rng } from '../../dice/random';
 import {
   buildRollSchedule,
   DEFAULT_ROLL_DURATION_MS,
 } from '../../dice/rollSchedule';
 
 export interface UseDiceRollOptions {
-  /** Si vrai, aucun défilement : la face finale s'affiche directement. */
+  /** Nombre de dés lancés simultanément (défaut 1). */
+  count?: number;
+  /** Nombre de faces de chaque dé (défaut 6). */
+  sides?: number;
+  /** Si vrai, aucun défilement : les faces finales s'affichent directement. */
   reducedMotion?: boolean;
   /** Durée du défilement (ms). Ignorée en mouvement réduit. */
   durationMs?: number;
@@ -15,30 +19,35 @@ export interface UseDiceRollOptions {
   rng?: Rng;
   /** Appelé quand un lancer démarre (utile pour un retour haptique). */
   onRollStart?: () => void;
-  /** Appelé avec la face finale une fois le dé posé. */
-  onResult?: (value: DieValue) => void;
+  /** Appelé avec les faces finales une fois les dés posés. */
+  onResult?: (values: DieValue[]) => void;
 }
 
 export interface DiceRoll {
-  /** Dernière face validée (stable hors animation). */
-  value: DieValue;
-  /** Face à afficher maintenant : défile pendant le lancer, sinon = value. */
-  displayValue: DieValue;
+  /** Dernières faces validées (stables hors animation). */
+  values: DieValue[];
+  /** Faces à afficher maintenant : défilent pendant le lancer, sinon = values. */
+  displayValues: DieValue[];
   status: RollStatus;
   isRolling: boolean;
   /** Déclenche un lancer. Sans effet si un lancer est déjà en cours. */
   roll: () => void;
 }
 
+function initialValues(count: number): DieValue[] {
+  return Array.from({ length: Math.max(1, count) }, () => 1);
+}
+
 /**
- * RollAnimationController : orchestre l'état d'un lancer (repos →
- * défilement → résultat). Sépare strictement le « quoi » (tirage via
- * `rollDie`, cadence via `buildRollSchedule`) du « comment c'est rendu »
- * (laissé aux composants). Réentrance bloquée pendant l'animation pour
- * neutraliser les doubles taps.
+ * RollAnimationController : orchestre l'état d'un lancer multi-dés (repos
+ * → défilement → résultat). Sépare strictement le « quoi » (tirage via
+ * `rollDice`, cadence via `buildRollSchedule`) du « comment c'est rendu ».
+ * Réentrance bloquée pendant l'animation pour neutraliser les doubles taps.
  */
 export function useDiceRoll(options: UseDiceRollOptions = {}): DiceRoll {
   const {
+    count = 1,
+    sides = 6,
     reducedMotion = false,
     durationMs = DEFAULT_ROLL_DURATION_MS,
     rng = defaultRng,
@@ -46,8 +55,10 @@ export function useDiceRoll(options: UseDiceRollOptions = {}): DiceRoll {
     onResult,
   } = options;
 
-  const [value, setValue] = useState<DieValue>(1);
-  const [displayValue, setDisplayValue] = useState<DieValue>(1);
+  const [values, setValues] = useState<DieValue[]>(() => initialValues(count));
+  const [displayValues, setDisplayValues] = useState<DieValue[]>(() =>
+    initialValues(count)
+  );
   const [status, setStatus] = useState<RollStatus>('idle');
 
   const timers = useRef<number[]>([]);
@@ -63,14 +74,22 @@ export function useDiceRoll(options: UseDiceRollOptions = {}): DiceRoll {
   // Nettoyage au démontage : aucun timer ne survit au composant.
   useEffect(() => clearTimers, [clearTimers]);
 
+  // Changer de type ou de nombre de dés au repos réinitialise l'affichage.
+  useEffect(() => {
+    if (rollingRef.current) return;
+    setValues(initialValues(count));
+    setDisplayValues(initialValues(count));
+    setStatus('idle');
+  }, [count, sides]);
+
   const roll = useCallback(() => {
     if (rollingRef.current) return; // anti double-tap
-    const final = rollDie(rng);
+    const final = rollDice(count, sides, rng);
     onRollStart?.();
 
     if (reducedMotion) {
-      setValue(final);
-      setDisplayValue(final);
+      setValues(final);
+      setDisplayValues(final);
       setStatus('result');
       onResult?.(final);
       return;
@@ -83,24 +102,36 @@ export function useDiceRoll(options: UseDiceRollOptions = {}): DiceRoll {
     const schedule = buildRollSchedule({ durationMs });
     for (const at of schedule) {
       timers.current.push(
-        window.setTimeout(() => setDisplayValue(rollDie(rng)), at)
+        window.setTimeout(
+          () => setDisplayValues(rollDice(count, sides, rng)),
+          at
+        )
       );
     }
 
     timers.current.push(
       window.setTimeout(() => {
         rollingRef.current = false;
-        setValue(final);
-        setDisplayValue(final);
+        setValues(final);
+        setDisplayValues(final);
         setStatus('result');
         onResult?.(final);
       }, durationMs)
     );
-  }, [reducedMotion, durationMs, rng, onRollStart, onResult, clearTimers]);
+  }, [
+    count,
+    sides,
+    reducedMotion,
+    durationMs,
+    rng,
+    onRollStart,
+    onResult,
+    clearTimers,
+  ]);
 
   return {
-    value,
-    displayValue: status === 'rolling' ? displayValue : value,
+    values,
+    displayValues: status === 'rolling' ? displayValues : values,
     status,
     isRolling: status === 'rolling',
     roll,

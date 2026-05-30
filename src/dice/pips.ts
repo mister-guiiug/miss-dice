@@ -1,7 +1,7 @@
-import type { DieValue } from '../types';
+import type { D6Value } from '../types';
 
 /**
- * Position d'un point (pip) sur la grille 3×3 d'une face de dé,
+ * Position d'un point (pip) sur la grille 3×3 d'une face de D6,
  * indexée de 0 à 8 :
  *
  *   0 1 2
@@ -9,9 +9,10 @@ import type { DieValue } from '../types';
  *   6 7 8
  *
  * Le rendu place neuf cellules dans une grille CSS et n'allume que
- * celles listées ici — la disposition reflète un vrai dé.
+ * celles listées ici — la disposition reflète un vrai dé. Réservé au D6 ;
+ * les autres dés affichent un chiffre.
  */
-export const PIP_LAYOUT: Record<DieValue, readonly number[]> = {
+export const PIP_LAYOUT: Record<D6Value, readonly number[]> = {
   1: [4],
   2: [0, 8],
   3: [0, 4, 8],
@@ -20,7 +21,11 @@ export const PIP_LAYOUT: Record<DieValue, readonly number[]> = {
   6: [0, 2, 3, 5, 6, 8],
 };
 
+function isD6Value(value: number): value is D6Value {
+  return Number.isInteger(value) && value >= 1 && value <= 6;
+}
+
 /** Vrai si la cellule `index` (0..8) doit afficher un point pour `value`. */
-export function isPipFilled(value: DieValue, index: number): boolean {
-  return PIP_LAYOUT[value].includes(index);
+export function isPipFilled(value: number, index: number): boolean {
+  return isD6Value(value) && PIP_LAYOUT[value].includes(index);
 }

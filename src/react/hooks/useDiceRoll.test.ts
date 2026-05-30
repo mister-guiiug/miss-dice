@@ -17,8 +17,8 @@ describe('useDiceRoll', () => {
 
     expect(result.current.status).toBe('result');
     expect(result.current.isRolling).toBe(false);
-    expect(result.current.value).toBe(4);
-    expect(onResult).toHaveBeenCalledWith(4);
+    expect(result.current.values).toEqual([4]);
+    expect(onResult).toHaveBeenCalledWith([4]);
   });
 
   it('passe par rolling puis result, et appelle les callbacks', () => {
@@ -35,8 +35,36 @@ describe('useDiceRoll', () => {
 
     act(() => vi.advanceTimersByTime(600));
     expect(result.current.status).toBe('result');
-    expect(result.current.value).toBe(4);
-    expect(onResult).toHaveBeenCalledWith(4);
+    expect(result.current.values).toEqual([4]);
+    expect(onResult).toHaveBeenCalledWith([4]);
+  });
+
+  it('lance plusieurs dés à la fois (count) avec le bon nombre de faces (sides)', () => {
+    const onResult = vi.fn();
+    const { result } = renderHook(() =>
+      useDiceRoll({
+        count: 3,
+        sides: 20,
+        reducedMotion: true,
+        rng: () => 0.5,
+        onResult,
+      })
+    );
+
+    act(() => result.current.roll());
+    // floor(0.5 * 20) + 1 = 11
+    expect(result.current.values).toEqual([11, 11, 11]);
+    expect(onResult).toHaveBeenCalledWith([11, 11, 11]);
+  });
+
+  it('réinitialise l’affichage quand le nombre de dés change au repos', () => {
+    const { result, rerender } = renderHook(
+      ({ count }) => useDiceRoll({ count, rng: () => 0.5 }),
+      { initialProps: { count: 1 } }
+    );
+    expect(result.current.values).toHaveLength(1);
+    rerender({ count: 4 });
+    expect(result.current.values).toHaveLength(4);
   });
 
   it('ignore les taps pendant une animation (anti double-tap)', () => {
@@ -46,12 +74,10 @@ describe('useDiceRoll', () => {
     );
 
     act(() => result.current.roll());
-    act(() => result.current.roll()); // doit être ignoré
-    act(() => result.current.roll()); // idem
-
+    act(() => result.current.roll()); // ignoré
+    act(() => result.current.roll()); // ignoré
     expect(onRollStart).toHaveBeenCalledTimes(1);
 
-    // Une fois posé, un nouveau lancer est de nouveau possible.
     act(() => vi.advanceTimersByTime(600));
     act(() => result.current.roll());
     expect(onRollStart).toHaveBeenCalledTimes(2);

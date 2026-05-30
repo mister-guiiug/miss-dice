@@ -1,6 +1,13 @@
 import { useState } from 'react';
-import { settingsStore, useSettings } from '../../settings/settingsStore';
+import {
+  MAX_DICE,
+  MIN_DICE,
+  settingsStore,
+  useSettings,
+} from '../../settings/settingsStore';
 import { useSystemReducedMotion } from '../hooks/useReducedMotion';
+import { requestMotionPermission } from '../hooks/useShakeToRoll';
+import { DICE_TYPES } from '../../dice/diceTypes';
 
 /** Icône d'engrenage minimaliste (inline, pas de dépendance). */
 function GearIcon() {
@@ -18,14 +25,25 @@ function GearIcon() {
 }
 
 /**
- * Réglages locaux : vibration et mouvement réduit. Volontairement léger
- * (un engrenage + une feuille glissante). Élément autonome, hors de la
- * zone de tap du dé.
+ * Réglages locaux : type de dé, nombre de dés, secouer pour lancer,
+ * vibration et mouvement réduit. Volontairement léger (un engrenage + une
+ * feuille glissante). Élément autonome, hors de la zone de tap du dé.
  */
 export function SettingsDrawer() {
   const [open, setOpen] = useState(false);
-  const { haptics, motion } = useSettings();
+  const { haptics, motion, sides, diceCount, shake } = useSettings();
   const systemReduced = useSystemReducedMotion();
+
+  const onToggleShake = async (next: boolean) => {
+    if (!next) {
+      settingsStore.setShake(false);
+      return;
+    }
+    // L'appel part d'un geste utilisateur (changement de case) → iOS peut
+    // demander l'autorisation DeviceMotion à cet instant.
+    const granted = await requestMotionPermission();
+    settingsStore.setShake(granted);
+  };
 
   return (
     <>
@@ -52,6 +70,80 @@ export function SettingsDrawer() {
             <div className="sheet__handle" aria-hidden="true" />
             <h2 className="sheet__title">Réglages</h2>
 
+            {/* Type de dé */}
+            <div className="setting-row setting-row--stack">
+              <span className="setting-row__label">Type de dé</span>
+              <div
+                className="segmented"
+                role="radiogroup"
+                aria-label="Type de dé"
+              >
+                {DICE_TYPES.map(type => (
+                  <button
+                    key={type.sides}
+                    type="button"
+                    role="radio"
+                    aria-checked={sides === type.sides}
+                    aria-label={type.name}
+                    className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
+                    onClick={() => settingsStore.setSides(type.sides)}
+                  >
+                    {type.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Nombre de dés */}
+            <div className="setting-row">
+              <span>
+                <span className="setting-row__label">Nombre de dés</span>
+                <span className="setting-row__hint">
+                  Lancés tous ensemble (total affiché)
+                </span>
+              </span>
+              <div className="stepper" aria-label="Nombre de dés">
+                <button
+                  type="button"
+                  className="stepper__btn"
+                  aria-label="Retirer un dé"
+                  disabled={diceCount <= MIN_DICE}
+                  onClick={() => settingsStore.setDiceCount(diceCount - 1)}
+                >
+                  −
+                </button>
+                <span className="stepper__value" aria-live="polite">
+                  {diceCount}
+                </span>
+                <button
+                  type="button"
+                  className="stepper__btn"
+                  aria-label="Ajouter un dé"
+                  disabled={diceCount >= MAX_DICE}
+                  onClick={() => settingsStore.setDiceCount(diceCount + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Secouer pour lancer */}
+            <label className="setting-row">
+              <span>
+                <span className="setting-row__label">Secouer pour lancer</span>
+                <span className="setting-row__hint">
+                  Lance les dés en secouant le téléphone
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                className="switch"
+                checked={shake}
+                onChange={event => void onToggleShake(event.target.checked)}
+              />
+            </label>
+
+            {/* Vibration */}
             <label className="setting-row">
               <span>
                 <span className="setting-row__label">Vibration</span>
@@ -69,6 +161,7 @@ export function SettingsDrawer() {
               />
             </label>
 
+            {/* Mouvement réduit */}
             <label className="setting-row">
               <span>
                 <span className="setting-row__label">

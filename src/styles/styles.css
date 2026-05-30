@@ -109,9 +109,23 @@ button {
   transform: scale(0.96);
 }
 
-.dice-screen__hint {
+.dice-screen__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   margin: 0;
-  min-height: 1.4em;
+  min-height: 2.4em;
+}
+
+.dice-screen__total {
+  font-size: clamp(1.4rem, 7vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+.dice-screen__hint {
   color: var(--muted);
   font-size: clamp(0.95rem, 4vw, 1.15rem);
   letter-spacing: 0.01em;
@@ -132,11 +146,35 @@ button {
   animation: dice-pop 440ms var(--ease-pop);
 }
 
+/* Grille de dés : la taille des tuiles s'adapte au nombre de dés. */
+.dice-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 22px);
+  max-width: 92vw;
+  --tile: clamp(180px, min(64vw, 52vh), 380px);
+}
+
+.dice-tray[data-count='2'],
+.dice-tray[data-count='3'],
+.dice-tray[data-count='4'] {
+  --tile: clamp(110px, 36vw, 200px);
+}
+
+.dice-tray[data-count='5'],
+.dice-tray[data-count='6'] {
+  --tile: clamp(84px, 27vw, 158px);
+}
+
 .dice-face {
-  display: block;
-  width: var(--die-size);
-  height: var(--die-size);
-  padding: clamp(14px, 5%, 28px);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--tile, var(--die-size));
+  height: var(--tile, var(--die-size));
+  padding: clamp(10px, 5%, 28px);
   border-radius: var(--die-radius);
   background: radial-gradient(
     circle at 30% 24%,
@@ -150,8 +188,33 @@ button {
     box-shadow 220ms var(--ease-out);
 }
 
+/* Dés à silhouette (clip-path) : le box-shadow serait rogné par le clip,
+   on passe donc par un drop-shadow qui épouse la forme. */
+.dice-face--shaped {
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.45));
+}
+
+/* Chiffre des dés non-D6. */
+.dice-numeral {
+  font-weight: 800;
+  font-size: calc(var(--tile, var(--die-size)) * 0.46);
+  line-height: 1;
+  color: #fff;
+  transform: translateY(var(--nudge-y, 0%));
+  text-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.4),
+    0 0 1px rgba(0, 0, 0, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
 .dice-face--rolling {
   filter: saturate(1.05);
+}
+
+.dice-face--shaped.dice-face--rolling {
+  filter: saturate(1.05) drop-shadow(0 12px 18px rgba(0, 0, 0, 0.45));
 }
 
 .dice-face__grid {
@@ -292,6 +355,73 @@ button {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+/* Ligne empilée (label au-dessus du contrôle pleine largeur). */
+.setting-row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+/* Sélecteur segmenté (type de dé). */
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.segmented__item {
+  padding: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    color 140ms ease;
+}
+
+.segmented__item--active {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-contrast);
+}
+
+/* Incrément/décrément (nombre de dés). */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.stepper__btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepper__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stepper__value {
+  min-width: 1.6em;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .sheet__close {

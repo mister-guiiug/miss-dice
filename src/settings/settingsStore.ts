@@ -1,4 +1,9 @@
 import { useSyncExternalStore } from 'react';
+import { DEFAULT_SIDES, SUPPORTED_SIDES } from '../dice/diceTypes';
+
+/** Bornes du nombre de dés affichés simultanément. */
+export const MIN_DICE = 1;
+export const MAX_DICE = 6;
 
 /**
  * Préférences locales de l'utilisateur. Volontairement minimal :
@@ -14,6 +19,12 @@ export interface Settings {
    *  - `reduced` : force le mode sans animation, quel que soit le système
    */
   motion: 'auto' | 'reduced';
+  /** Nombre de faces du dé (4, 6, 8, 10, 12, 20). */
+  sides: number;
+  /** Nombre de dés lancés simultanément. */
+  diceCount: number;
+  /** Autoriser le lancer en secouant l'appareil. */
+  shake: boolean;
 }
 
 const STORAGE_KEY = 'miss-dice:settings';
@@ -21,7 +32,21 @@ const STORAGE_KEY = 'miss-dice:settings';
 const DEFAULTS: Settings = {
   haptics: true,
   motion: 'auto',
+  sides: DEFAULT_SIDES,
+  diceCount: 1,
+  shake: false,
 };
+
+function clampDice(value: unknown): number {
+  const n = typeof value === 'number' ? Math.floor(value) : DEFAULTS.diceCount;
+  return Math.min(MAX_DICE, Math.max(MIN_DICE, n));
+}
+
+function validSides(value: unknown): number {
+  return typeof value === 'number' && SUPPORTED_SIDES.includes(value)
+    ? value
+    : DEFAULTS.sides;
+}
 
 /** localStorage tolérant aux modes navigation privée / quota plein. */
 function safeRead(): Settings {
@@ -33,6 +58,9 @@ function safeRead(): Settings {
       haptics:
         typeof parsed.haptics === 'boolean' ? parsed.haptics : DEFAULTS.haptics,
       motion: parsed.motion === 'reduced' ? 'reduced' : 'auto',
+      sides: validSides(parsed.sides),
+      diceCount: clampDice(parsed.diceCount),
+      shake: typeof parsed.shake === 'boolean' ? parsed.shake : DEFAULTS.shake,
     };
   } catch {
     return DEFAULTS;
@@ -68,6 +96,10 @@ export const settingsStore = {
   },
   setHaptics: (haptics: boolean) => setState({ haptics }),
   setMotion: (motion: Settings['motion']) => setState({ motion }),
+  setSides: (sides: number) => setState({ sides: validSides(sides) }),
+  setDiceCount: (diceCount: number) =>
+    setState({ diceCount: clampDice(diceCount) }),
+  setShake: (shake: boolean) => setState({ shake }),
   toggleHaptics: () => setState({ haptics: !state.haptics }),
 };
 

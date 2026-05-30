@@ -1,4 +1,4 @@
-import type { DieValue } from '../types';
+import type { D6Value, DieValue } from '../types';
 
 export interface FaceColor {
   /** Couleur de fond de la face (teinte propre à la valeur). */
@@ -10,12 +10,12 @@ export interface FaceColor {
 }
 
 /**
- * Une teinte distincte par face. Les points restent toujours blancs et
- * portent une ombre, si bien que la lisibilité ne dépend jamais de cette
- * couleur : la valeur se lit au nombre de points (et via aria-label).
- * La couleur n'est qu'un repère ludique supplémentaire.
+ * Une teinte distincte par face. Les points/chiffres restent toujours
+ * blancs et portent une ombre : la lisibilité ne dépend jamais de cette
+ * couleur. La valeur se lit au nombre de points (D6) ou au chiffre, et
+ * via aria-label. La couleur n'est qu'un repère ludique.
  */
-export const FACE_COLORS: Record<DieValue, FaceColor> = {
+export const FACE_COLORS: Record<D6Value, FaceColor> = {
   1: { bg: '#e5484d', bgDeep: '#b21d22', hue: 'rouge' },
   2: { bg: '#f2711c', bgDeep: '#bd4e05', hue: 'orange' },
   3: { bg: '#f5b700', bgDeep: '#bd8a00', hue: 'jaune' },
@@ -24,6 +24,23 @@ export const FACE_COLORS: Record<DieValue, FaceColor> = {
   6: { bg: '#8b5cf6', bgDeep: '#6635d8', hue: 'violet' },
 };
 
-export function faceColor(value: DieValue): FaceColor {
-  return FACE_COLORS[value];
+const PALETTE: readonly FaceColor[] = [
+  FACE_COLORS[1],
+  FACE_COLORS[2],
+  FACE_COLORS[3],
+  FACE_COLORS[4],
+  FACE_COLORS[5],
+  FACE_COLORS[6],
+];
+
+/**
+ * Teinte d'une valeur quelconque (au-delà du D6, la palette de 6 couleurs
+ * cycle). Les faces 1..6 conservent leur teinte d'origine.
+ */
+export function colorForValue(value: DieValue): FaceColor {
+  const index = (Math.max(1, Math.floor(value)) - 1) % PALETTE.length;
+  return PALETTE[index]!;
 }
+
+/** Alias rétro-compatible (rendu d'une face). */
+export const faceColor = colorForValue;
