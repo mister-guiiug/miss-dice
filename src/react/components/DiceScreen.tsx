@@ -3,13 +3,20 @@ import { DiceTray } from './DiceTray';
 import { useDiceRoll } from '../hooks/useDiceRoll';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useShakeToRoll } from '../hooks/useShakeToRoll';
-import { useSettings } from '../../settings/settingsStore';
+import { useKeyboardRoll } from '../hooks/useKeyboardRoll';
+import {
+  MAX_DICE,
+  MIN_DICE,
+  settingsStore,
+  useSettings,
+} from '../../settings/settingsStore';
 import { useI18n } from '../../i18n/useI18n';
 import { colorForValue } from '../../dice/colors';
 import { dieType } from '../../dice/diceTypes';
 import { vibrate, HAPTIC_ROLL, HAPTIC_RESULT } from '../feedback/haptics';
 import { useSound } from '../hooks/useSound';
 import { rollStatsStore } from '../../stats/rollStats';
+import { rollLogStore } from '../../log/rollLog';
 
 const sum = (values: number[]): number => values.reduce((a, b) => a + b, 0);
 
@@ -37,12 +44,23 @@ export function DiceScreen() {
       if (haptics) vibrate(HAPTIC_RESULT);
       playSound('result');
       rollStatsStore.record(rolled);
+      rollLogStore.record(sides, rolled);
     },
   });
 
   // Secouer pour lancer (si l'option est active). Désactivé pendant un
   // lancer pour ne pas empiler les déclenchements.
   useShakeToRoll(shake && !isRolling, roll);
+
+  // Raccourcis clavier desktop : Espace/Entrée lance, +/− ajuste le nombre
+  // de dés. La réentrance est déjà neutralisée dans useDiceRoll.
+  useKeyboardRoll({
+    onRoll: roll,
+    onAddDie: () =>
+      settingsStore.setDiceCount(Math.min(MAX_DICE, diceCount + 1)),
+    onRemoveDie: () =>
+      settingsStore.setDiceCount(Math.max(MIN_DICE, diceCount - 1)),
+  });
 
   const type = dieType(sides);
   const tint = colorForValue(displayValues[0] ?? 1);

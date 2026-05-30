@@ -105,6 +105,11 @@ export default defineConfig(({ command }) => {
             },
             { name: '421', short_name: '421', url: `${basePath}?play=dice421` },
             {
+              name: 'Cochon',
+              short_name: 'Cochon',
+              url: `${basePath}?play=pig`,
+            },
+            {
               name: 'Notation',
               short_name: 'Notation',
               url: `${basePath}?play=notation`,

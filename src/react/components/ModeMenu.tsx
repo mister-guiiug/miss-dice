@@ -66,6 +66,12 @@ export function ModeMenu() {
       saveKey: 'dice421',
     },
     {
+      mode: 'pig',
+      title: t('modes.pig'),
+      hint: t('modes.pigHint'),
+      saveKey: 'pig',
+    },
+    {
       mode: 'notation',
       title: t('modes.notation'),
       hint: t('modes.notationHint'),

@@ -1,5 +1,5 @@
 /** Sauvegarde/restauration d'une partie en cours (reprise après refresh). */
-export type GameKey = 'yahtzee' | 'dice421';
+export type GameKey = 'yahtzee' | 'dice421' | 'pig';
 
 /**
  * Version du schéma des parties sauvegardées. À incrémenter dès que la

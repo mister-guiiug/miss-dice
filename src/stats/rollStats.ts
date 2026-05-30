@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { createStore, useStore } from '../store/createStore';
 
 /** Statistiques cumulées des lancers libres (persistées localement). */
 export interface RollStats {
@@ -37,42 +37,27 @@ function write(value: RollStats): void {
   }
 }
 
-let state: RollStats = read();
-const listeners = new Set<() => void>();
-
-function emit(): void {
-  for (const listener of listeners) listener();
-}
+const store = createStore<RollStats>(read(), write);
 
 export const rollStatsStore = {
-  get: (): RollStats => state,
-  subscribe(listener: () => void): () => void {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
+  get: store.get,
+  subscribe: store.subscribe,
   /** Enregistre le résultat d'un lancer (une ou plusieurs faces). */
   record(values: number[]): void {
+    const state = store.get();
     const counts = { ...state.counts };
     for (const v of values) counts[v] = (counts[v] ?? 0) + 1;
-    state = {
+    store.set({
       rolls: state.rolls + 1,
       dice: state.dice + values.length,
       counts,
-    };
-    write(state);
-    emit();
+    });
   },
   reset(): void {
-    state = { rolls: 0, dice: 0, counts: {} };
-    write(state);
-    emit();
+    store.set({ rolls: 0, dice: 0, counts: {} });
   },
 };
 
 export function useRollStats(): RollStats {
-  return useSyncExternalStore(
-    rollStatsStore.subscribe,
-    rollStatsStore.get,
-    rollStatsStore.get
-  );
+  return useStore(store);
 }

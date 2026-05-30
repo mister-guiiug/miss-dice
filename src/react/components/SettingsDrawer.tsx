@@ -13,7 +13,21 @@ import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
 import { REPO_URL, SPONSOR_URL, appUrl } from '../../links';
 import { shareOrCopy } from '../../share';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
+import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
 import { Sheet } from './Sheet';
+
+/** Déclenche le téléchargement d'un fichier texte (sans dépendance). */
+function downloadText(filename: string, text: string, mime: string): void {
+  const blob = new Blob([text], { type: `${mime};charset=utf-8` });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
 
 function GearIcon() {
   return (
@@ -83,8 +97,12 @@ export function SettingsDrawer() {
     useSettings();
   const systemReduced = useSystemReducedMotion();
   const stats = useRollStats();
+  const log = useRollLog();
   const faces = Array.from({ length: sides }, (_, i) => i + 1);
   const maxCount = Math.max(1, ...faces.map(v => stats.counts[v] ?? 0));
+
+  const onExport = () =>
+    downloadText('miss-dice-historique.csv', toCsv(log), 'text/csv');
 
   const onShare = async () => {
     const result = await shareOrCopy({
@@ -339,6 +357,36 @@ export function SettingsDrawer() {
             </>
           )}
         </div>
+
+        {/* Historique des lancers libres + export CSV */}
+        {log.length > 0 && (
+          <div className="about">
+            <span className="about__label">{t('settings.history')}</span>
+            <ul className="rolllog">
+              {log.slice(0, 8).map((entry, i) => (
+                <li className="rolllog__row" key={i}>
+                  <span className="rolllog__die">d{entry.sides}</span>
+                  <span className="rolllog__values">
+                    {entry.values.join(' ')}
+                  </span>
+                  <span className="rolllog__total">{entry.total}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="about__links">
+              <button type="button" className="link-btn" onClick={onExport}>
+                {t('settings.historyExport')}
+              </button>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={() => rollLogStore.clear()}
+              >
+                {t('settings.historyClear')}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* À propos : partage, code source, sponsor */}
         <div className="about">

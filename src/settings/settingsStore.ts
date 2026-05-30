@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { createStore, useStore } from '../store/createStore';
 import { DEFAULT_SIDES, SUPPORTED_SIDES } from '../dice/diceTypes';
 import { detectLocale, type Locale } from '../i18n/messages';
 
@@ -96,25 +96,15 @@ function safeWrite(value: Settings): void {
   }
 }
 
-let state: Settings = safeRead();
-const listeners = new Set<() => void>();
-
-function emit(): void {
-  for (const listener of listeners) listener();
-}
+const store = createStore<Settings>(safeRead(), safeWrite);
 
 function setState(patch: Partial<Settings>): void {
-  state = { ...state, ...patch };
-  safeWrite(state);
-  emit();
+  store.set({ ...store.get(), ...patch });
 }
 
 export const settingsStore = {
-  get: (): Settings => state,
-  subscribe(listener: () => void): () => void {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
+  get: store.get,
+  subscribe: store.subscribe,
   setHaptics: (haptics: boolean) => setState({ haptics }),
   setMotion: (motion: Settings['motion']) => setState({ motion }),
   setSides: (sides: number) => setState({ sides: validSides(sides) }),
@@ -125,14 +115,10 @@ export const settingsStore = {
   setTheme: (theme: Settings['theme']) =>
     setState({ theme: validTheme(theme) }),
   setSounds: (sounds: boolean) => setState({ sounds }),
-  toggleHaptics: () => setState({ haptics: !state.haptics }),
+  toggleHaptics: () => setState({ haptics: !store.get().haptics }),
 };
 
 /** Hook React : relit le store et re-rend au changement. */
 export function useSettings(): Settings {
-  return useSyncExternalStore(
-    settingsStore.subscribe,
-    settingsStore.get,
-    settingsStore.get
-  );
+  return useStore(store);
 }

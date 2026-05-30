@@ -685,6 +685,62 @@ button {
   font-weight: 600;
 }
 
+/* ───────────────── Journal des lancers ───────────────── */
+.rolllog {
+  list-style: none;
+  margin: 6px 0 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rolllog__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.rolllog__die {
+  min-width: 2.6em;
+  font-weight: 700;
+  color: var(--accent, currentColor);
+}
+
+.rolllog__values {
+  flex: 1;
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rolllog__total {
+  min-width: 2.4em;
+  text-align: right;
+  font-weight: 700;
+}
+
+/* ───────────────── Cochon (Pig) ───────────────── */
+.pig-target {
+  text-align: center;
+  margin-top: -4px;
+}
+
+.pig-turn-total {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.pig-bust {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--danger, #d4504e);
+}
+
 /* ───────────────── Écran d'erreur (ErrorBoundary) ───────────────── */
 .crash {
   position: fixed;

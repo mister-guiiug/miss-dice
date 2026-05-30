@@ -49,6 +49,9 @@ export interface Messages {
     statsTotal: string;
     statsEmpty: string;
     statsReset: string;
+    history: string;
+    historyExport: string;
+    historyClear: string;
   };
   screen: {
     hintIdleOne: string;
@@ -97,6 +100,8 @@ export interface Messages {
     yahtzeeHint: string;
     d421: string;
     d421Hint: string;
+    pig: string;
+    pigHint: string;
     notation: string;
     notationHint: string;
     decide: string;
@@ -174,6 +179,14 @@ export interface Messages {
     handPlain: string;
     roundResult: string;
   };
+  pig: {
+    turnTotal: string;
+    bank: string;
+    bust: string;
+    target: string;
+    rollOrBank: string;
+    targetLabel: string;
+  };
   notation: {
     placeholder: string;
     invalid: string;
@@ -227,6 +240,9 @@ const fr: Messages = {
     statsTotal: '{n} lancers',
     statsEmpty: 'Aucun lancer pour le moment',
     statsReset: 'Réinitialiser',
+    history: 'Historique',
+    historyExport: 'Exporter en CSV',
+    historyClear: 'Vider l’historique',
   },
   screen: {
     hintIdleOne: 'Touche l’écran pour lancer un {die}',
@@ -273,6 +289,8 @@ const fr: Messages = {
     yahtzeeHint: '5 dés, grille de combinaisons',
     d421: '421',
     d421Hint: '3 dés, jeu à jetons',
+    pig: 'Cochon',
+    pigHint: 'Stop ou encore, 1 dé',
     notation: 'Notation',
     notationHint: 'Lance « 2d6+3 », avantage…',
     decide: 'Décider',
@@ -350,6 +368,14 @@ const fr: Messages = {
     handPlain: 'Main simple',
     roundResult: '{winner} remporte la manche, {loser} prend {tokens}',
   },
+  pig: {
+    turnTotal: 'Cumul du tour : {n}',
+    bank: 'Banquer',
+    bust: 'Un 1 ! Tour perdu',
+    target: 'Objectif : {n}',
+    rollOrBank: 'Relance ou banque tes points',
+    targetLabel: 'Objectif',
+  },
   notation: {
     placeholder: 'ex. 2d6+3, 1d20, 4d6kh3',
     invalid: 'Expression invalide',
@@ -403,6 +429,9 @@ const en: Messages = {
     statsTotal: '{n} rolls',
     statsEmpty: 'No rolls yet',
     statsReset: 'Reset',
+    history: 'History',
+    historyExport: 'Export as CSV',
+    historyClear: 'Clear history',
   },
   screen: {
     hintIdleOne: 'Tap the screen to roll a {die}',
@@ -449,6 +478,8 @@ const en: Messages = {
     yahtzeeHint: '5 dice, scorecard',
     d421: '421',
     d421Hint: '3 dice, token game',
+    pig: 'Pig',
+    pigHint: 'Push your luck, 1 die',
     notation: 'Notation',
     notationHint: 'Roll "2d6+3", advantage…',
     decide: 'Decide',
@@ -526,6 +557,14 @@ const en: Messages = {
     handPlain: 'Plain hand',
     roundResult: '{winner} wins the round, {loser} takes {tokens}',
   },
+  pig: {
+    turnTotal: 'Turn total: {n}',
+    bank: 'Bank',
+    bust: 'A 1! Turn lost',
+    target: 'Target: {n}',
+    rollOrBank: 'Roll again or bank your points',
+    targetLabel: 'Target',
+  },
   notation: {
     placeholder: 'e.g. 2d6+3, 1d20, 4d6kh3',
     invalid: 'Invalid expression',
@@ -579,6 +618,9 @@ const es: Messages = {
     statsTotal: '{n} lanzamientos',
     statsEmpty: 'Aún no hay lanzamientos',
     statsReset: 'Reiniciar',
+    history: 'Historial',
+    historyExport: 'Exportar en CSV',
+    historyClear: 'Vaciar el historial',
   },
   screen: {
     hintIdleOne: 'Toca la pantalla para lanzar un {die}',
@@ -625,6 +667,8 @@ const es: Messages = {
     yahtzeeHint: '5 dados, tabla de combinaciones',
     d421: '421',
     d421Hint: '3 dados, juego de fichas',
+    pig: 'Cerdo',
+    pigHint: 'Plántate o sigue, 1 dado',
     notation: 'Notación',
     notationHint: 'Lanza «2d6+3», ventaja…',
     decide: 'Decidir',
@@ -701,6 +745,14 @@ const es: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mano simple',
     roundResult: '{winner} gana la ronda, {loser} toma {tokens}',
+  },
+  pig: {
+    turnTotal: 'Acumulado del turno: {n}',
+    bank: 'Plantarse',
+    bust: '¡Un 1! Turno perdido',
+    target: 'Objetivo: {n}',
+    rollOrBank: 'Relanza o plántate con tus puntos',
+    targetLabel: 'Objetivo',
   },
   notation: {
     placeholder: 'ej. 2d6+3, 1d20, 4d6kh3',

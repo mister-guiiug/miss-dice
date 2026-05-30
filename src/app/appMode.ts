@@ -1,12 +1,19 @@
-import { useSyncExternalStore } from 'react';
+import { createStore, useStore } from '../store/createStore';
 
 /** Écran actif de l'application. */
-export type AppMode = 'roll' | 'yahtzee' | 'dice421' | 'notation' | 'decide';
+export type AppMode =
+  | 'roll'
+  | 'yahtzee'
+  | 'dice421'
+  | 'pig'
+  | 'notation'
+  | 'decide';
 
 const MODES: readonly AppMode[] = [
   'roll',
   'yahtzee',
   'dice421',
+  'pig',
   'notation',
   'decide',
 ];
@@ -24,31 +31,18 @@ function initialMode(): AppMode {
 }
 
 // Non persisté : l'app s'ouvre sur le lancer libre (sauf raccourci ?play=).
-let mode: AppMode = initialMode();
-const listeners = new Set<() => void>();
-
-function emit(): void {
-  for (const listener of listeners) listener();
-}
-
-function setInternal(next: AppMode): void {
-  if (next === mode) return;
-  mode = next;
-  emit();
-}
+const store = createStore<AppMode>(initialMode());
 
 export const appModeStore = {
-  get: (): AppMode => mode,
-  subscribe(listener: () => void): () => void {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
+  get: store.get,
+  subscribe: store.subscribe,
   /**
    * Entre dans un mode. Empile une entrée d'historique en quittant le
    * lancer libre, pour que le bouton « retour » du navigateur/Android
    * ramène à l'écran de dé au lieu de fermer l'app.
    */
   set(next: AppMode): void {
+    const mode = store.get();
     if (next === mode) return;
     if (next !== 'roll' && mode === 'roll' && typeof history !== 'undefined') {
       try {
@@ -57,14 +51,14 @@ export const appModeStore = {
         /* ignore */
       }
     }
-    setInternal(next);
+    store.set(next);
   },
   /** Quitte le mode courant (bouton retour) en dépilant l'historique. */
   leave(): void {
-    if (mode !== 'roll' && typeof history !== 'undefined') {
+    if (store.get() !== 'roll' && typeof history !== 'undefined') {
       history.back(); // déclenche popstate → retour au lancer libre
     } else {
-      setInternal('roll');
+      store.set('roll');
     }
   },
 };
@@ -72,14 +66,10 @@ export const appModeStore = {
 // Le bouton retour matériel/navigateur ramène au lancer libre.
 if (typeof window !== 'undefined') {
   window.addEventListener('popstate', () => {
-    if (mode !== 'roll') setInternal('roll');
+    if (store.get() !== 'roll') store.set('roll');
   });
 }
 
 export function useAppMode(): AppMode {
-  return useSyncExternalStore(
-    appModeStore.subscribe,
-    appModeStore.get,
-    appModeStore.get
-  );
+  return useStore(store);
 }

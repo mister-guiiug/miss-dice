@@ -19,6 +19,11 @@ const Dice421Game = lazy(() =>
     default: m.Dice421Game,
   }))
 );
+const PigGame = lazy(() =>
+  import('./components/games/PigGame').then(m => ({
+    default: m.PigGame,
+  }))
+);
 const NotationRoller = lazy(() =>
   import('./components/NotationRoller').then(m => ({
     default: m.NotationRoller,
@@ -31,6 +36,7 @@ const DecideScreen = lazy(() =>
 const LAZY = {
   yahtzee: YahtzeeGame,
   dice421: Dice421Game,
+  pig: PigGame,
   notation: NotationRoller,
   decide: DecideScreen,
 } as const;
