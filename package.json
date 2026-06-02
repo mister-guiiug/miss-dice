@@ -26,7 +26,7 @@
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/js": "^9.39.4",
-    "@mister-guiiug/dev-wpa-config": "^1.2.0",
+    "@mister-guiiug/dev-wpa-config": "^1.4.0",
     "@playwright/test": "^1.49.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
