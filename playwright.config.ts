@@ -1,32 +1,19 @@
 import { defineConfig, devices } from '@playwright/test';
+import { definePwaPlaywrightConfig } from '@mister-guiiug/dev-wpa-config/playwright-base';
 
-/**
- * Config Playwright autonome (n'exige pas une version précise de
- * dev-wpa-config). Les specs e2e vivent dans e2e/. Non exécuté en CI par
- * défaut (run-e2e: false) — disponible en local via `npm run test:e2e`
- * après `npx playwright install`.
- */
-export default defineConfig({
-  testDir: './e2e',
-  testMatch: /.*\.spec\.ts$/,
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  reporter: [['list']],
-  use: {
-    baseURL: 'http://localhost:5173',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    contextOptions: { reducedMotion: 'reduce' },
-  },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
-  ],
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
-});
+// Factory famille : matrice navigateurs, reporters, snapshots, reducedMotion.
+// `preview: true` (dev-wpa-config 3.x) : les e2e testent un BUILD de prod
+// (service worker, minification, cache réels). VITE_BASE_PATH=/ neutralise le
+// base path GitHub Pages ; port 4173 pour ne pas collisionner avec un dev
+// server (5173). Non exécuté en CI (run-e2e: false) — local :
+// `npx playwright install` puis `npm run test:e2e`.
+export default defineConfig(
+  definePwaPlaywrightConfig({
+    devices,
+    testMatch: /.*\.spec\.ts$/,
+    preview: true,
+    port: 4173,
+    command:
+      'cross-env VITE_BASE_PATH=/ npm run build && cross-env VITE_BASE_PATH=/ vite preview --port 4173 --strictPort',
+  })
+);
