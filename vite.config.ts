@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import react from '@vitejs/plugin-react';
+import { pwaSeoPlugin } from '@mister-guiiug/dev-wpa-config/vite-pwa-base';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 const analyze = process.env.ANALYZE === '1';
@@ -49,6 +50,13 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       react(),
+      // SEO partagé famille : canonical/OG via placeholders index.html +
+      // sitemap.xml/robots.txt générés au build (source unique).
+      pwaSeoPlugin({
+        siteName: 'Miss Dice',
+        basePath,
+        logoPath: '/favicon.svg',
+      }),
       // GitHub Pages has no SPA fallback: a refresh on a deep link returns
       // its stock 404. We ship a 404.html identical to index.html so the
       // app shell always boots. miss-dice has a single screen today, but
@@ -76,7 +84,6 @@ export default defineConfig(({ command }) => {
           'icons/icon-192.png',
           'icons/icon-512.png',
           'icons/apple-touch-icon.png',
-          'robots.txt',
         ],
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,svg,png,woff2,webmanifest}'],

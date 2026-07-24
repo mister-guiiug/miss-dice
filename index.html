@@ -58,6 +58,30 @@
       name="description"
       content="Lancer un dé à 6 faces d'un simple tap. Mobile-first, 100 % offline, sans pub ni tracking."
     />
+    <link rel="canonical" href="__SEO_HOME_URL__" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Miss Dice" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:url" content="__SEO_HOME_URL__" />
+    <meta property="og:title" content="Miss Dice — lance un dé" />
+    <meta
+      property="og:description"
+      content="Lancer un dé à 6 faces d'un simple tap. Mobile-first, 100 % offline, sans pub ni tracking."
+    />
+    <meta property="og:image" content="__SEO_LOGO_URL__" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Miss Dice — lance un dé" />
+    <meta
+      name="twitter:description"
+      content="Lancer un dé à 6 faces d'un simple tap, 100 % offline et installable (PWA)."
+    />
+    <meta name="twitter:image" content="__SEO_LOGO_URL__" />
+
+    <!-- Analytics (GTM/GA4) injecté par pwaSeoPlugin() — vide tant qu'aucun
+         VITE_GTM_CONTAINER_ID / VITE_GA_MEASUREMENT_ID n'est configuré. -->
+    __ANALYTICS_HEAD__
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon.png" />
     <link
@@ -68,6 +92,7 @@
     <title>Miss Dice — lance un dé</title>
   </head>
   <body>
+    __ANALYTICS_BODY__
     <div id="app"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
