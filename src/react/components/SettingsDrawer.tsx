@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FamilyApps } from '@mister-guiiug/dev-wpa-config/react';
 import {
   MAX_DICE,
   MIN_DICE,
@@ -466,6 +467,27 @@ export function SettingsDrawer() {
           <p className="about__feedback" role="status" aria-live="polite">
             {copied ? t('settings.linkCopied') : ''}
           </p>
+        </div>
+
+        {/* Nos autres applications : cross-promotion de la famille miss/mister.
+            La carte code source + sponsor existe déjà ci-dessus, on n'affiche
+            donc que la grille. Le titre interne du composant est masqué en CSS
+            au profit du .about__label, cohérent avec les autres sections. */}
+        <div className="about family-apps">
+          <span className="about__label">{t('settings.otherApps')}</span>
+          <FamilyApps
+            currentAppId="miss-dice"
+            showSource={false}
+            showSponsor={false}
+            labels={{
+              otherApps: t('settings.otherApps'),
+              maturity: {
+                alpha: t('settings.maturityAlpha'),
+                beta: t('settings.maturityBeta'),
+                stable: t('settings.maturityStable'),
+              },
+            }}
+          />
         </div>
 
         <button

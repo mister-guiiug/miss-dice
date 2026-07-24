@@ -78,6 +78,10 @@ export interface Messages {
     history: string;
     historyExport: string;
     historyClear: string;
+    otherApps: string;
+    maturityAlpha: string;
+    maturityBeta: string;
+    maturityStable: string;
   };
   screen: {
     hintIdleOne: string;
@@ -273,6 +277,10 @@ const fr: Messages = {
     history: 'Historique',
     historyExport: 'Exporter en CSV',
     historyClear: 'Vider l’historique',
+    otherApps: 'Nos autres applications',
+    maturityAlpha: 'Alpha',
+    maturityBeta: 'Bêta',
+    maturityStable: 'Stable',
   },
   screen: {
     hintIdleOne: 'Touche l’écran pour lancer un {die}',
@@ -466,6 +474,10 @@ const en: Messages = {
     history: 'History',
     historyExport: 'Export as CSV',
     historyClear: 'Clear history',
+    otherApps: 'Our other apps',
+    maturityAlpha: 'Alpha',
+    maturityBeta: 'Beta',
+    maturityStable: 'Stable',
   },
   screen: {
     hintIdleOne: 'Tap the screen to roll a {die}',
@@ -659,6 +671,10 @@ const es: Messages = {
     history: 'Historial',
     historyExport: 'Exportar en CSV',
     historyClear: 'Vaciar el historial',
+    otherApps: 'Nuestras otras apps',
+    maturityAlpha: 'Alpha',
+    maturityBeta: 'Beta',
+    maturityStable: 'Estable',
   },
   screen: {
     hintIdleOne: 'Toca la pantalla para lanzar un {die}',
@@ -852,6 +868,10 @@ const de: Messages = {
     history: 'Verlauf',
     historyExport: 'Als CSV exportieren',
     historyClear: 'Verlauf löschen',
+    otherApps: 'Unsere anderen Apps',
+    maturityAlpha: 'Alpha',
+    maturityBeta: 'Beta',
+    maturityStable: 'Stabil',
   },
   screen: {
     hintIdleOne: 'Tippe auf den Bildschirm für einen {die}',
@@ -1045,6 +1065,10 @@ const it: Messages = {
     history: 'Cronologia',
     historyExport: 'Esporta in CSV',
     historyClear: 'Cancella la cronologia',
+    otherApps: 'Le nostre altre app',
+    maturityAlpha: 'Alpha',
+    maturityBeta: 'Beta',
+    maturityStable: 'Stabile',
   },
   screen: {
     hintIdleOne: 'Tocca lo schermo per lanciare un {die}',
@@ -1238,6 +1262,10 @@ const pt: Messages = {
     history: 'Histórico',
     historyExport: 'Exportar em CSV',
     historyClear: 'Limpar o histórico',
+    otherApps: 'As nossas outras apps',
+    maturityAlpha: 'Alfa',
+    maturityBeta: 'Beta',
+    maturityStable: 'Estável',
   },
   screen: {
     hintIdleOne: 'Toca no ecrã para lançar um {die}',

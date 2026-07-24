@@ -661,6 +661,147 @@ button {
   text-align: center;
 }
 
+/* ───────────── Nos autres applications (famille, cross-promotion) ───────────── */
+/* Grille rendue par <FamilyApps> (non stylée, pose des attributs [data-dwc]).
+   On masque son titre interne — un .about__label le fournit déjà — puis on
+   habille la grille et les badges de maturité au langage visuel de miss-dice.
+   Thème sombre = base (tokens :root) ; le thème clair surcharge les libellés. */
+.family-apps [data-dwc='family-apps'] {
+  display: contents;
+}
+
+.family-apps [data-dwc='family-apps-title'] {
+  display: none;
+}
+
+.family-apps [data-dwc='family-app-list'] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.family-apps [data-dwc='family-app'] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms var(--ease-out);
+}
+
+.family-apps [data-dwc='family-app']:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  .family-apps [data-dwc='family-app']:hover {
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+}
+
+.family-apps [data-dwc='family-app-icon'] {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1.1rem;
+  object-fit: cover;
+}
+
+.family-apps [data-dwc='family-app-body'] {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.family-apps [data-dwc='family-app-head'] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.family-apps [data-dwc='family-app-name'] {
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.family-apps [data-dwc='family-app-desc'] {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.family-apps [data-dwc='family-app-arrow'] {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--muted);
+}
+
+/* Badge de maturité : 3 couleurs (alpha / bêta / stable). Fonds/bordures
+   translucides (valables sur les deux thèmes) ; texte clair par défaut
+   (thème sombre), assombri en thème clair pour garder un contraste AA. */
+.family-apps [data-dwc='maturity'] {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.family-apps [data-maturity='stable'] {
+  background: color-mix(in srgb, #22a05a 15%, transparent);
+  border-color: color-mix(in srgb, #22a05a 30%, transparent);
+  color: #4ade80;
+}
+
+.family-apps [data-maturity='beta'] {
+  background: color-mix(in srgb, #d29614 16%, transparent);
+  border-color: color-mix(in srgb, #d29614 32%, transparent);
+  color: #fbbf24;
+}
+
+.family-apps [data-maturity='alpha'] {
+  background: color-mix(in srgb, #965ad2 15%, transparent);
+  border-color: color-mix(in srgb, #965ad2 30%, transparent);
+  color: #c084fc;
+}
+
+html[data-theme='light'] .family-apps [data-maturity='stable'] {
+  color: #166534;
+}
+
+html[data-theme='light'] .family-apps [data-maturity='beta'] {
+  color: #854d0e;
+}
+
+html[data-theme='light'] .family-apps [data-maturity='alpha'] {
+  color: #6d28d9;
+}
+
 /* Statistiques (distribution des faces) */
 .stats__total {
   margin: 0 0 8px;
