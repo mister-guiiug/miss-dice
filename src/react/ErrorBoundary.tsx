@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { recordError } from '@mister-guiiug/dev-wpa-config/react/observability';
 
 interface Props {
   children: ReactNode;
@@ -21,6 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
     console.error('[miss-dice] erreur de rendu :', error, info.componentStack);
+    recordError(error, { react: info.componentStack });
   }
 
   render(): ReactNode {
