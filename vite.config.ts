@@ -2,6 +2,7 @@ import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import react from '@vitejs/plugin-react';
 import { pwaSeoPlugin } from '@mister-guiiug/dev-wpa-config/vite-pwa-base';
+import { cspPlugin } from '@mister-guiiug/dev-wpa-config/vite-csp';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 const analyze = process.env.ANALYZE === '1';
@@ -56,6 +57,18 @@ export default defineConfig(({ command }) => {
         siteName: 'Miss Dice',
         basePath,
         logoPath: '/favicon.svg',
+      }),
+      // CSP durcie : script-src par hash SHA-256 de l'IIFE anti-FOUC inline
+      // (plus de 'unsafe-inline' en prod). Placé après pwaSeoPlugin pour hasher
+      // aussi d'éventuels scripts injectés au build. Directives portées à
+      // l'identique depuis l'ancienne meta statique de index.html.
+      cspPlugin({
+        dev: command === 'serve',
+        imgSrc: ["'self'", 'data:'],
+        fontSrc: ["'self'"],
+        extraDirectives: {
+          'frame-ancestors': "'none'",
+        },
       }),
       // GitHub Pages has no SPA fallback: a refresh on a deep link returns
       // its stock 404. We ship a 404.html identical to index.html so the

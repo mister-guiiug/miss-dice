@@ -2,15 +2,9 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <!--
-      Tout est self-only : aucun script tiers, aucune police distante,
-      aucun tracking. img-src autorise les data: URIs pour les icônes
-      inline éventuelles. C'est une app de dé : rien ne sort du device.
-    -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
-    />
+    <!-- La Content-Security-Policy est injectée au build par cspPlugin()
+         (@mister-guiiug/dev-wpa-config/vite-csp) : script-src par hash SHA-256
+         de l'IIFE anti-FOUC ci-dessous, plus de 'unsafe-inline'. -->
     <!-- Pas de maximum-scale / user-scalable=no : bloquer le zoom viole
          WCAG 1.4.4 (agrandissement du texte) et nuit à l'accessibilité. -->
     <meta
