@@ -12,23 +12,11 @@ import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
 import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
 import { REPO_URL, SPONSOR_URL, appUrl } from '../../links';
-import { shareOrCopy } from '../../share';
+import { shareOrCopy } from '@mister-guiiug/dev-wpa-config/share';
+import { downloadText } from '@mister-guiiug/dev-wpa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
 import { Sheet } from './Sheet';
-
-/** Déclenche le téléchargement d'un fichier texte (sans dépendance). */
-function downloadText(filename: string, text: string, mime: string): void {
-  const blob = new Blob([text], { type: `${mime};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
 
 function GearIcon() {
   return (
@@ -113,7 +101,11 @@ export function SettingsDrawer() {
   const maxCount = Math.max(1, ...faces.map(v => stats.counts[v] ?? 0));
 
   const onExport = () =>
-    downloadText('miss-dice-historique.csv', toCsv(log), 'text/csv');
+    downloadText(
+      toCsv(log),
+      'miss-dice-historique.csv',
+      'text/csv;charset=utf-8'
+    );
 
   const onShare = async () => {
     const result = await shareOrCopy({
