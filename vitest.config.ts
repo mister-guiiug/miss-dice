@@ -1,39 +1,10 @@
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
-
-// Inlined from @mister-guiiug/dev-wpa-config/vitest-base — the published
-// package's subpath exports weren't reliably resolvable on CI, so the
-// family keeps the base options local to avoid that build-blocking dep.
-const baseTestOptions = {
-  environment: 'jsdom' as const,
-  globals: true,
-  setupFiles: ['./src/test/setup.ts'],
-  include: ['src/**/*.{test,spec}.{ts,tsx}'],
-  passWithNoTests: true,
-  coverage: {
-    provider: 'v8' as const,
-    // The pure domains (dice draw/layout/colours/schedule + the Yahtzee
-    // and 421 game engines) are where a regression is most dangerous and
-    // most cheaply tested. UI surface is intentionally excluded so the
-    // gate stays meaningful rather than diluted.
-    include: [
-      'src/dice/**',
-      'src/games/**',
-      'src/decide/**',
-      'src/log/**',
-      'src/a11y/**',
-      'src/store/createStore.ts',
-    ],
-    reporter: ['text', 'html'],
-    thresholds: {
-      statements: 90,
-      branches: 90,
-      functions: 90,
-      lines: 90,
-    },
-  },
-};
+import {
+  baseTestOptions,
+  coveragePreset,
+} from '@mister-guiiug/dev-wpa-config/vitest-base';
 
 export default defineConfig({
   plugins: [react()],
@@ -48,5 +19,31 @@ export default defineConfig({
       ),
     },
   },
-  test: baseTestOptions,
+  test: {
+    ...baseTestOptions,
+    coverage: {
+      ...coveragePreset,
+      // Le .d.ts du preset élargit `provider` à `string` ; on le re-fixe au
+      // littéral attendu par Vitest (contextuellement contraint à 'v8').
+      provider: 'v8',
+      // The pure domains (dice draw/layout/colours/schedule + the Yahtzee
+      // and 421 game engines) are where a regression is most dangerous and
+      // most cheaply tested. UI surface is intentionally excluded so the
+      // gate stays meaningful rather than diluted.
+      include: [
+        'src/dice/**',
+        'src/games/**',
+        'src/decide/**',
+        'src/log/**',
+        'src/a11y/**',
+        'src/store/createStore.ts',
+      ],
+      thresholds: {
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90,
+      },
+    },
+  },
 });
