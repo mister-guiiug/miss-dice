@@ -5,7 +5,7 @@ import { GameDice } from './GameDice';
 import { useI18n } from '../../../i18n/useI18n';
 import { defaultRng } from '../../../dice/random';
 import { appUrl } from '../../../links';
-import { shareOrCopy } from '../../../share';
+import { shareOrCopy } from '@mister-guiiug/dev-wpa-config/share';
 import { useSound } from '../../hooks/useSound';
 import { useUndoableGame } from '../../hooks/useUndoableGame';
 import {
