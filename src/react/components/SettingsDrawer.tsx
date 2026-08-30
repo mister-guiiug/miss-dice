@@ -11,7 +11,11 @@ import { requestMotionPermission } from '../hooks/useShakeToRoll';
 import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
 import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
-import { REPO_URL, SPONSOR_URL, appUrl } from '../../links';
+import {
+  SPONSOR_URL,
+  repoUrl,
+} from '@mister-guiiug/dev-wpa-config/apps-catalog';
+import { appUrl } from '../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-wpa-config/share';
 import { downloadText } from '@mister-guiiug/dev-wpa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
@@ -439,7 +443,7 @@ export function SettingsDrawer() {
             </button>
             <a
               className="link-btn"
-              href={REPO_URL}
+              href={repoUrl('miss-dice')}
               target="_blank"
               rel="noopener noreferrer"
             >
