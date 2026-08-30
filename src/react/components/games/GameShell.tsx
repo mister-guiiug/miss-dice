@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
+import { useWakeLock } from '@mister-guiiug/dev-wpa-config/react/use-wake-lock';
 import { appModeStore } from '../../../app/appMode';
 import { useI18n } from '../../../i18n/useI18n';
-import { useWakeLock } from '../../hooks/useWakeLock';
 
 interface GameShellProps {
   title: string;
