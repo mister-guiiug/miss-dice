@@ -320,37 +320,60 @@ button {
   right: calc(var(--safe-right) + 12px);
 }
 
-/* ─────────────────────── Feuille de réglages ─────────────────────── */
-.sheet-backdrop {
+/* ─────────────────────── Feuille de réglages ───────────────────────
+   HABILLAGE DU `Sheet` DU SOCLE. miss-dice n'importe pas `components.css`
+   (design maison assumé) : le composant partagé arriverait donc entièrement
+   nu. Ces règles reprennent, à l'identique, ce que `.sheet-backdrop` et
+   `.sheet` habillaient — mais visent les `[data-dwc="sheet-*"]` du paquet.
+
+   La charpente a une pièce de plus : le VOILE est un enfant qui recouvre la
+   racine, là où l'ancienne `.sheet-backdrop` était à la fois le voile et le
+   conteneur de positionnement. D'où la séparation ci-dessous. */
+.sheet-root {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
   z-index: 10;
+}
+
+.sheet-root [data-dwc='sheet-backdrop'] {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
   animation: fade-in 160ms ease;
 }
 
-.sheet {
+.sheet-root [data-dwc='sheet-panel'] {
+  /* `relative` : le panneau doit peindre AU-DESSUS du voile, qui le précède
+     dans le DOM et couvre toute la racine. */
+  position: relative;
   width: min(560px, 100%);
-  /* Borne la hauteur au viewport et rend le contenu défilable : sans ça,
-     une feuille plus haute que l'écran (beaucoup de réglages + stats +
-     historique) déborde par le haut et se retrouve tronquée, surtout sur
-     desktop où la fenêtre est plus courte que le contenu. */
+  /* Borne la hauteur au viewport : sans ça, une feuille plus haute que
+     l'écran (beaucoup de réglages + stats + historique) déborde par le haut
+     et se retrouve tronquée, surtout sur desktop où la fenêtre est plus
+     courte que le contenu. */
   max-height: 92vh;
   max-height: 92dvh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+  /* Colonne : c'est le CORPS qui défile, pas le panneau. L'en-tête (titre +
+     fermeture) et le pied restent donc visibles pendant le défilement — le
+     panneau entier défilait auparavant, emportant le titre hors de l'écran. */
+  display: flex;
+  flex-direction: column;
   padding: 12px 20px calc(var(--safe-bottom) + 20px);
   background: var(--bg-elevated);
   border-radius: 22px 22px 0 0;
   box-shadow: var(--shadow-ui);
+  outline: none;
   animation: sheet-up 240ms var(--ease-out);
 }
 
-.sheet__handle {
+/* La poignée de glissement. Le socle n'a pas de nœud équivalent ; elle était
+   purement décorative (`aria-hidden`), un `::before` la rend à l'identique. */
+.sheet-root [data-dwc='sheet-panel']::before {
+  content: '';
+  flex: none;
   width: 44px;
   height: 5px;
   margin: 4px auto 14px;
@@ -358,9 +381,52 @@ button {
   background: var(--border);
 }
 
-.sheet__title {
-  margin: 0 0 14px;
+.sheet-root [data-dwc='sheet-head'] {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sheet-root [data-dwc='sheet-title'] {
+  margin: 0;
   font-size: 1.1rem;
+}
+
+/* Bouton de fermeture de l'en-tête — 44 px, la cible tactile minimale. */
+.sheet-root [data-dwc='sheet-close'] {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -8px -8px -8px 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.sheet-root [data-dwc='sheet-body'] {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Pied ÉPINGLÉ : il reste visible pendant que le corps défile. Le bouton
+   « Fermer » des réglages y vit désormais — il était auparavant en fin de
+   contenu, donc atteignable seulement après avoir tout fait défiler. Le filet
+   marque la séparation d'avec le corps qui glisse dessous. */
+.sheet-root [data-dwc='sheet-footer'] {
+  flex: none;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
 .setting-row {
@@ -455,9 +521,10 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
+/* Le bouton « Fermer » des réglages, désormais dans le pied épinglé : c'est
+   lui qui porte l'écart au corps, plus sa propre marge haute. */
 .sheet__close {
   width: 100%;
-  margin-top: 18px;
   padding: 14px;
   border: 0;
   border-radius: 14px;

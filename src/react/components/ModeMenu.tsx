@@ -92,12 +92,14 @@ export function ModeMenu() {
         <GamesIcon />
       </button>
 
+      {/* Le titre est une PROP : le socle le rend dans l'en-tête et y branche
+          `aria-labelledby`. Le `<h2 className="sheet__title">` que ce fichier
+          posait lui-même faisait doublon avec l'`aria-label` de la feuille. */}
       <Sheet
         open={open}
         onClose={() => setOpen(false)}
-        label={t('modes.title')}
+        title={t('modes.title')}
       >
-        <h2 className="sheet__title">{t('modes.title')}</h2>
         <div className="mode-list">
           {items.map(item => {
             const resumable = item.saveKey ? hasSavedGame(item.saveKey) : false;
