@@ -144,10 +144,19 @@ export function SettingsDrawer() {
       <Sheet
         open={open}
         onClose={() => setOpen(false)}
-        label={t('settings.title')}
+        title={t('settings.title')}
+        // ÉPINGLÉ. « Fermer » vivait en fin de contenu : sur une feuille de
+        // trente réglages, il fallait tout faire défiler pour l'atteindre.
+        footer={
+          <button
+            type="button"
+            className="sheet__close"
+            onClick={() => setOpen(false)}
+          >
+            {t('settings.close')}
+          </button>
+        }
       >
-        <h2 className="sheet__title">{t('settings.title')}</h2>
-
         {/* Langue */}
         <div className="setting-row setting-row--stack">
           <span className="setting-row__label">{t('settings.language')}</span>
@@ -481,14 +490,6 @@ export function SettingsDrawer() {
             }}
           />
         </div>
-
-        <button
-          type="button"
-          className="sheet__close"
-          onClick={() => setOpen(false)}
-        >
-          {t('settings.close')}
-        </button>
       </Sheet>
     </>
   );
