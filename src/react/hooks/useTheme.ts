@@ -1,41 +1,32 @@
-import { useEffect, useSyncExternalStore } from 'react';
-import { useSettings } from '../../settings/settingsStore';
+import { useThemeContext } from '@mister-guiiug/dev-wpa-config/react/theme-provider';
+import type { ThemePreference } from '@mister-guiiug/dev-wpa-config/react/use-theme';
 
-const THEME_COLOR = { dark: '#0f1220', light: '#f4f5fb' } as const;
-const QUERY = '(prefers-color-scheme: dark)';
-
-function subscribe(callback: () => void): () => void {
-  const mql = globalThis.matchMedia?.(QUERY);
-  if (!mql) return () => {};
-  mql.addEventListener('change', callback);
-  return () => mql.removeEventListener('change', callback);
-}
-
-/** Thème système courant (`dark` ou `light`). */
-export function useSystemTheme(): 'dark' | 'light' {
-  return useSyncExternalStore(
-    subscribe,
-    () => (globalThis.matchMedia?.(QUERY).matches ? 'dark' : 'light'),
-    () => 'dark'
-  );
+export interface AppTheme {
+  /** Le choix de l'utilisateur : `light`, `dark` ou `system`. */
+  theme: ThemePreference;
+  /** Le thème réellement affiché, `system` résolu. */
+  resolved: 'light' | 'dark';
+  setTheme: (theme: ThemePreference) => void;
 }
 
 /**
- * Applique le thème effectif (réglage manuel ou système) sur `data-theme`
- * et synchronise la couleur de la barre système (meta theme-color).
- * Renvoie le thème effectif.
+ * L'état du thème, PARTAGÉ, tel que le tient `ThemeProvider`.
+ *
+ * Ce fichier tenait la mécanique complète : abonnement à `matchMedia` via
+ * `useSyncExternalStore`, résolution `auto → dark|light`, pose de `data-theme`
+ * et de `<meta name="theme-color">`. Tout est passé au socle. Il ne reste que
+ * la lecture du contexte — et la garde ci-dessous.
+ *
+ * ON N'APPELLE PAS `useTheme()` DIRECTEMENT, et c'est le point. Le hook du
+ * socle porte son état dans un `useState` local : deux appels, c'est deux
+ * états indépendants qui écrivent tous deux `data-theme` sur `<html>`. Or il
+ * faut ici deux points d'accès — l'un pour afficher, l'autre pour changer.
+ * Passer par le contexte garantit un seul écrivain.
  */
-export function useApplyTheme(): 'dark' | 'light' {
-  const { theme } = useSettings();
-  const system = useSystemTheme();
-  const effective = theme === 'auto' ? system : theme;
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = effective;
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', THEME_COLOR[effective]);
-  }, [effective]);
-
-  return effective;
+export function useAppTheme(): AppTheme {
+  const ctx = useThemeContext();
+  if (!ctx) {
+    throw new Error('useAppTheme doit être utilisé dans son ThemeProvider');
+  }
+  return ctx as AppTheme;
 }

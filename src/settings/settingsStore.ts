@@ -1,6 +1,5 @@
 import { createStore, useStore } from '../store/createStore';
 import { DEFAULT_SIDES, SUPPORTED_SIDES } from '../dice/diceTypes';
-import { detectLocale, type Locale } from '../i18n/messages';
 
 /** Bornes du nombre de dés affichés simultanément. */
 export const MIN_DICE = 1;
@@ -10,6 +9,13 @@ export const MAX_DICE = 6;
  * Préférences locales de l'utilisateur. Volontairement minimal :
  * miss-dice ne stocke QUE ce qui est nécessaire au confort de jeu,
  * tout reste sur l'appareil (localStorage), rien n'est transmis.
+ *
+ * LA LANGUE ET LE THÈME N'Y SONT PLUS. Ils appartiennent désormais aux modules
+ * du socle qui les pilotent (`react/i18n` et `react/use-theme`), lesquels
+ * possèdent leur propre persistance sous une clé nue. Les garder ici aurait
+ * fait deux sources de vérité pour une même valeur — le plus sûr moyen de les
+ * voir diverger. `legacyMigration.ts` transporte une fois les valeurs déjà
+ * enregistrées dans le blob.
  */
 export interface Settings {
   /** Vibration légère au résultat (si l'appareil la supporte). */
@@ -26,10 +32,6 @@ export interface Settings {
   diceCount: number;
   /** Autoriser le lancer en secouant l'appareil. */
   shake: boolean;
-  /** Langue de l'interface. */
-  locale: Locale;
-  /** Thème visuel : `auto` suit le système, sinon forcé. */
-  theme: 'auto' | 'light' | 'dark';
   /** Sons activés (petit retour audio au lancer / résultat). */
   sounds: boolean;
   /** Annonce vocale du résultat (synthèse vocale du navigateur). */
@@ -46,19 +48,10 @@ const DEFAULTS: Settings = {
   sides: DEFAULT_SIDES,
   diceCount: 1,
   shake: false,
-  // Détectée depuis la langue du navigateur au premier lancement.
-  locale: detectLocale(),
-  theme: 'auto',
   sounds: false,
   tts: false,
   colorblind: false,
 };
-
-function validTheme(value: unknown): Settings['theme'] {
-  return value === 'light' || value === 'dark' || value === 'auto'
-    ? value
-    : DEFAULTS.theme;
-}
 
 function clampDice(value: unknown): number {
   const n = typeof value === 'number' ? Math.floor(value) : DEFAULTS.diceCount;
@@ -84,8 +77,6 @@ function safeRead(): Settings {
       sides: validSides(parsed.sides),
       diceCount: clampDice(parsed.diceCount),
       shake: typeof parsed.shake === 'boolean' ? parsed.shake : DEFAULTS.shake,
-      locale: detectLocale(parsed.locale),
-      theme: validTheme(parsed.theme),
       sounds:
         typeof parsed.sounds === 'boolean' ? parsed.sounds : DEFAULTS.sounds,
       tts: typeof parsed.tts === 'boolean' ? parsed.tts : DEFAULTS.tts,
@@ -122,9 +113,6 @@ export const settingsStore = {
   setDiceCount: (diceCount: number) =>
     setState({ diceCount: clampDice(diceCount) }),
   setShake: (shake: boolean) => setState({ shake }),
-  setLocale: (locale: Locale) => setState({ locale }),
-  setTheme: (theme: Settings['theme']) =>
-    setState({ theme: validTheme(theme) }),
   setSounds: (sounds: boolean) => setState({ sounds }),
   setTts: (tts: boolean) => setState({ tts }),
   setColorblind: (colorblind: boolean) => setState({ colorblind }),

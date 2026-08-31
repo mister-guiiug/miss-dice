@@ -1,12 +1,9 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { InstallPrompt } from './components/InstallPrompt';
 import { ModeMenu } from './components/ModeMenu';
 import { useAppMode } from '../app/appMode';
-import { useI18n } from '../i18n/useI18n';
-import { localeDir } from '../i18n/messages';
-import { useApplyTheme } from './hooks/useTheme';
 
 // Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
 // garde un bundle initial minimal et un accès au dé immédiat.
@@ -44,19 +41,15 @@ const LAZY = {
 
 /**
  * Aiguille entre le lancer libre (écran par défaut, cliquable partout) et
- * les jeux (Yahtzee, 421). Applique le thème et la langue choisis.
+ * les jeux (Yahtzee, 421).
+ *
+ * Le thème et la langue ne sont plus appliqués ici : `ThemeProvider` et
+ * `I18nProvider` (montés dans `main.tsx`) posent respectivement `data-theme`
+ * et `lang`/`dir` sur `<html>`. L'effet qui recopiait la locale dans
+ * `documentElement.lang` faisait double emploi avec le provider du socle.
  */
 export function App() {
-  const { locale } = useI18n();
   const mode = useAppMode();
-  useApplyTheme();
-
-  // Garde les attributs lang et dir du document alignés sur la langue
-  // choisie (dir prêt pour une éventuelle langue RTL future).
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    document.documentElement.dir = localeDir(locale);
-  }, [locale]);
 
   if (mode !== 'roll') {
     const Screen = LAZY[mode];

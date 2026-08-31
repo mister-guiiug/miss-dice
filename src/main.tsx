@@ -11,6 +11,8 @@ import { registerSW } from 'virtual:pwa-register';
 import { App } from './react/App';
 import { AppUpdatesProvider } from './react/AppUpdatesProvider';
 import { ErrorBoundary } from './react/ErrorBoundary';
+import { I18nProvider } from './i18n/useI18n';
+import { ThemeProvider } from './react/ThemeProvider';
 
 installErrorReporter();
 void initSentry({
@@ -31,15 +33,24 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ErrorBoundary>
-        {/* En développement, `registerSW` vaut `undefined` : le hook du socle
-            sort de son effet, aucun worker n'est enregistré, et le bandeau ne
-            peut pas apparaître. C'est le versant « ne pas enregistrer en dev »
-            de la purge ci-dessus. */}
-        <AppUpdatesProvider
-          registerSW={import.meta.env.PROD ? registerSW : undefined}
-        >
-          <App />
-        </AppUpdatesProvider>
+        {/* ORDRE IMPOSÉ. `AppUpdatesProvider` appelle `useI18n` pour surcharger
+            les libellés du bandeau : il doit être SOUS `I18nProvider`. Ce
+            dernier pose son propre `LabelsProvider` (sans surcharge) ; celui
+            d'`AppUpdatesProvider`, plus proche, l'emporte pour son sous-arbre —
+            c'est ce qui fait tenir les six langues du bandeau. */}
+        <ThemeProvider>
+          <I18nProvider>
+            {/* En développement, `registerSW` vaut `undefined` : le hook du
+                socle sort de son effet, aucun worker n'est enregistré, et le
+                bandeau ne peut pas apparaître. C'est le versant « ne pas
+                enregistrer en dev » de la purge ci-dessus. */}
+            <AppUpdatesProvider
+              registerSW={import.meta.env.PROD ? registerSW : undefined}
+            >
+              <App />
+            </AppUpdatesProvider>
+          </I18nProvider>
+        </ThemeProvider>
       </ErrorBoundary>
     </StrictMode>
   );

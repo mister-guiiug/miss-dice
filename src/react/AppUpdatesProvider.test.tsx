@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, screen } from '@testing-library/react';
 
 // INDISPENSABLE, et c'est un piège du socle lui-même. `vitest-setup` pose un
 // `vi.mock('virtual:pwa-register')` MUET pour toutes les suites. Or le
@@ -15,8 +15,8 @@ import {
   swStub,
 } from '@mister-guiiug/dev-wpa-config/testing/pwa-register';
 import { LABELS } from '@mister-guiiug/dev-wpa-config/react/labels';
-import { LOCALES, messages } from '../i18n/messages';
-import { settingsStore } from '../settings/settingsStore';
+import { LOCALES, messages, type Locale } from '../i18n/messages';
+import { renderWithProviders } from '../test/renderWithProviders';
 import { AppUpdatesProvider } from './AppUpdatesProvider';
 
 /**
@@ -43,11 +43,20 @@ function socleLabels(locale: string) {
   return group;
 }
 
-function mount(registerSW?: typeof pilotableRegisterSW) {
-  return render(
+/**
+ * `I18nProvider` est INDISPENSABLE ici, et pas seulement pour que `useI18n`
+ * réponde : c'est lui qui fixe la langue dans laquelle
+ * `AppUpdatesProvider` calcule ses surcharges. Il pose aussi son propre
+ * `LabelsProvider`, SANS surcharge — celui d'`AppUpdatesProvider`, plus
+ * proche du bandeau, doit l'emporter. C'est exactement ce que vérifie le test
+ * des six langues ci-dessous.
+ */
+function mount(registerSW?: typeof pilotableRegisterSW, locale: Locale = 'fr') {
+  return renderWithProviders(
     <AppUpdatesProvider registerSW={registerSW}>
       <div data-testid="app" />
-    </AppUpdatesProvider>
+    </AppUpdatesProvider>,
+    locale
   );
 }
 
@@ -57,9 +66,6 @@ describe('AppUpdatesProvider', () => {
     // Identité NEUVE pour `registerSW` : `useUpdatePrompt` mémorise sa
     // connexion par identité de fonction, le report d'un test survivrait sinon.
     swStub.reset();
-    act(() => {
-      settingsStore.setLocale('fr');
-    });
   });
 
   it('le socle ne livre que fr et en — le piège que ces tests ferment', () => {
@@ -80,10 +86,7 @@ describe('AppUpdatesProvider', () => {
   it.each(LOCALES)(
     'locale « %s » : le bandeau affiche les libellés de l’app',
     locale => {
-      act(() => {
-        settingsStore.setLocale(locale);
-      });
-      mount(pilotableRegisterSW);
+      mount(pilotableRegisterSW, locale);
       act(() => {
         swStub.needRefresh();
       });

@@ -2,26 +2,37 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { settingsStore } from './settingsStore';
 
 afterEach(() => {
-  settingsStore.setTheme('auto');
   settingsStore.setSounds(false);
+  settingsStore.setColorblind(false);
 });
 
-describe('settingsStore — thème et sons', () => {
+/**
+ * Le thème et la langue ne sont plus ici : ils appartiennent à
+ * `ThemeProvider` et `I18nProvider`, qui les persistent sous leur propre clé.
+ * Le pont depuis l'ancien blob est couvert par `legacyMigration.test.ts`.
+ */
+describe('settingsStore', () => {
   it('a des valeurs par défaut sûres', () => {
-    expect(['auto', 'light', 'dark']).toContain(settingsStore.get().theme);
     expect(typeof settingsStore.get().sounds).toBe('boolean');
+    expect(typeof settingsStore.get().colorblind).toBe('boolean');
   });
 
-  it('met à jour et persiste le thème', () => {
-    settingsStore.setTheme('dark');
-    expect(settingsStore.get().theme).toBe('dark');
-    const raw = JSON.parse(localStorage.getItem('miss-dice:settings')!);
-    expect(raw.theme).toBe('dark');
+  it('met à jour et persiste un réglage', () => {
+    settingsStore.setSounds(true);
+    expect(settingsStore.get().sounds).toBe(true);
+    const raw = JSON.parse(localStorage.getItem('miss-dice:settings')!) as {
+      sounds: boolean;
+    };
+    expect(raw.sounds).toBe(true);
   });
 
-  it('ignore un thème invalide (repli sur auto)', () => {
-    settingsStore.setTheme('néon' as never);
-    expect(settingsStore.get().theme).toBe('auto');
+  it('ne persiste plus ni thème ni langue', () => {
+    settingsStore.setColorblind(true);
+    const raw = JSON.parse(
+      localStorage.getItem('miss-dice:settings')!
+    ) as Record<string, unknown>;
+    expect(raw).not.toHaveProperty('theme');
+    expect(raw).not.toHaveProperty('locale');
   });
 
   it('active/désactive les sons', () => {

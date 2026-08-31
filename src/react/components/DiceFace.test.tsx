@@ -1,15 +1,13 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { screen } from '@testing-library/react';
 import { DiceFace } from './DiceFace';
 import { DIE_VALUES } from '../../types';
-import { settingsStore } from '../../settings/settingsStore';
+import { renderWithProviders } from '../../test/renderWithProviders';
 
 describe('<DiceFace /> — D6 (points)', () => {
-  beforeEach(() => settingsStore.setLocale('fr'));
-
   it('affiche exactement N points allumés pour la face N', () => {
     for (const value of DIE_VALUES) {
-      const { container, unmount } = render(
+      const { container, unmount } = renderWithProviders(
         <DiceFace value={value} sides={6} />
       );
       expect(container.querySelectorAll('.dice-pip--on')).toHaveLength(value);
@@ -19,7 +17,7 @@ describe('<DiceFace /> — D6 (points)', () => {
   });
 
   it('expose un libellé accessible mentionnant le nombre (pas que la couleur)', () => {
-    render(<DiceFace value={4} sides={6} />);
+    renderWithProviders(<DiceFace value={4} sides={6} />);
     expect(
       screen.getByRole('img', { name: /dé à 6 faces, résultat 4/i })
     ).toBeInTheDocument();
@@ -27,10 +25,10 @@ describe('<DiceFace /> — D6 (points)', () => {
 });
 
 describe('<DiceFace /> — autres dés (chiffre)', () => {
-  beforeEach(() => settingsStore.setLocale('fr'));
-
   it('affiche le chiffre et la silhouette pour un D20', () => {
-    const { container } = render(<DiceFace value={17} sides={20} />);
+    const { container } = renderWithProviders(
+      <DiceFace value={17} sides={20} />
+    );
     const numeral = container.querySelector('.dice-numeral');
     expect(numeral?.textContent).toBe('17');
     expect(container.querySelector('.dice-pip')).toBeNull();
@@ -38,7 +36,7 @@ describe('<DiceFace /> — autres dés (chiffre)', () => {
   });
 
   it('annonce l’état de roulement plutôt qu’une valeur figée', () => {
-    render(<DiceFace value={3} sides={8} rolling />);
+    renderWithProviders(<DiceFace value={3} sides={8} rolling />);
     expect(
       screen.getByRole('img', { name: /en train de rouler/i })
     ).toBeInTheDocument();
@@ -47,13 +45,10 @@ describe('<DiceFace /> — autres dés (chiffre)', () => {
 
 describe('<DiceFace /> — traduction du libellé', () => {
   it('localise le libellé accessible selon la langue choisie', () => {
-    settingsStore.setLocale('en');
     // value 4 → vert/green dans la palette
-    const { unmount } = render(<DiceFace value={4} sides={6} />);
+    renderWithProviders(<DiceFace value={4} sides={6} />, 'en');
     expect(
       screen.getByRole('img', { name: /6-sided die, result 4 \(green\)/i })
     ).toBeInTheDocument();
-    unmount();
-    settingsStore.setLocale('fr');
   });
 });
