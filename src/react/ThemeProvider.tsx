@@ -37,11 +37,19 @@ migrateLegacySettings(LOCALES);
  * fournisseur ne peint aucune variable `--dwc-*` et ne charge pas le catalogue
  * des dix-sept thèmes — il ne sert qu'à unifier l'état et la barre système.
  *
- * ON RESTE SUR `defaultTheme: 'system'` (le défaut, donc non passé).
- * `theme-boot` du socle ignore `defaultTheme` quand rien n'est stocké : le
- * correctif existe sur `main` du socle mais n'est PAS dans la 3.26.0, seule
- * version publiée. Tout autre défaut ferait diverger le script anti-FOUC et
- * React au premier chargement.
+ * ON RESTE SUR `defaultTheme: 'system'` (le défaut, donc non passé) — mais
+ * pas pour la raison qui était écrite ici.
+ *
+ * Ce commentaire affirmait que `theme-boot` du socle ignore `defaultTheme`
+ * quand rien n'est stocké, et que le correctif « n'est PAS dans la 3.26.0 ».
+ * **C'est faux** : il y est depuis cette version (`resolveEmpty`, PR #98 du
+ * socle), et il a été recopié ici depuis un brief erroné. Vérifiable en une
+ * ligne — `themeBootSource({ defaultTheme: 'light' })` n'émet aucun
+ * `prefers-color-scheme` dans le tarball 3.26.0.
+ *
+ * La vraie raison de rester sur `'system'` est plus simple : c'est ce que
+ * miss-dice a toujours fait, et le script anti-FOUC comme React le résolvent
+ * désormais de la même façon. Rien à changer, donc rien à risquer.
  *
  * `legacyKeys` N'EST PAS PASSÉ, et ce n'est pas un oubli : l'option relit
  * d'anciennes clés portant chacune une chaîne nue, alors que l'ancien thème de
