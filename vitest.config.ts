@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import {
   baseTestOptions,
@@ -10,12 +10,18 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // vite-plugin-pwa injects this virtual module at dev/build time.
-      // vitest never runs the plugin, so anything importing register-sw.ts
-      // would fail to resolve it. Point it at a tiny stub.
-      'virtual:pwa-register': resolve(
-        __dirname,
-        'src/test/stub-pwa-register.ts'
+      // vite-plugin-pwa n'injecte ce module virtuel qu'au dev/build : vitest
+      // ne lance jamais le plugin, et tout module qui l'importe échouerait à
+      // la RÉSOLUTION. Il faut donc un vrai fichier, désigné ici.
+      //
+      // C'était un stub MAISON et MUET (`src/test/stub-pwa-register.ts`, l'un
+      // des douze du parc). Le socle en publie un PILOTABLE : `swStub` rejoue
+      // ce qu'un vrai worker fait quand une version attend, et LÈVE si
+      // personne n'a injecté `registerSW` — un bandeau incapable de
+      // s'afficher fait donc rougir le test au lieu de passer inaperçu.
+      'virtual:pwa-register': fileURLToPath(
+        import.meta
+          .resolve('@mister-guiiug/dev-wpa-config/testing/pwa-register')
       ),
     },
   },
