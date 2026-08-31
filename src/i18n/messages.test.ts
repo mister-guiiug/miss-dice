@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import {
-  LOCALES,
-  LOCALE_LABELS,
-  detectLocale,
-  messages,
-  translate,
-} from './messages';
+import { createTranslator } from '@mister-guiiug/dev-wpa-config/react/i18n';
+import { LOCALES, LOCALE_LABELS, messages, type Locale } from './messages';
+
+/**
+ * Le traducteur du socle, dans la langue demandée. `translate()` maison a
+ * disparu ; ces tests visent désormais le code réellement exécuté par l'app.
+ */
+const translate = (
+  locale: Locale,
+  key: string,
+  params?: Record<string, string | number>
+) => createTranslator(messages, locale, 'fr')(key as never, params);
 
 /** Aplati récursivement les clés « a.b.c » d'un objet de messages. */
 function flattenKeys(obj: unknown, prefix = ''): string[] {
@@ -54,14 +59,14 @@ describe('translate', () => {
   });
 });
 
-describe('detectLocale', () => {
-  it('retient une valeur stockée valide', () => {
-    expect(detectLocale('es')).toBe('es');
-    expect(detectLocale('en')).toBe('en');
-  });
-
-  it('ignore une valeur stockée invalide et reste sur une langue connue', () => {
-    expect(LOCALES).toContain(detectLocale('xx'));
-    expect(LOCALES).toContain(detectLocale(null));
+describe('LOCALES', () => {
+  /**
+   * `LOCALES` est ce que reçoit `createI18n` : une langue présente au
+   * dictionnaire mais absente de cette liste serait injoignable (ni par le
+   * sélecteur, ni par la détection navigateur), et l'inverse ferait retomber
+   * le traducteur sur le français sans rien signaler.
+   */
+  it('recouvre exactement les langues du dictionnaire', () => {
+    expect([...LOCALES].sort()).toEqual(Object.keys(messages).sort());
   });
 });

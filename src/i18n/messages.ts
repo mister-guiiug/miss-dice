@@ -1,11 +1,16 @@
 /**
- * Internationalisation — données et résolution pures (sans React).
+ * Internationalisation — DONNÉES SEULES : le dictionnaire des six langues et
+ * les types qui en dérivent.
  *
- * `translate(locale, key, params)` est utilisable partout, y compris hors
- * React (ex. le bandeau de mise à jour du service worker). Le hook
- * `useI18n` n'en est qu'une enveloppe réactive branchée sur la locale du
- * store de préférences.
+ * La mécanique (résolution de clé, interpolation, détection de la langue
+ * initiale, persistance, `lang`/`dir`) vivait ici ; elle vient de
+ * `@mister-guiiug/dev-wpa-config/react/i18n`, câblé dans `useI18n.ts`. Ce
+ * fichier ne porte plus que ce qui est propre à miss-dice : ses messages, et
+ * la table `MessageParams` qui rend obligatoires à la compilation les
+ * paramètres des clés interpolées.
  */
+import type { I18nPaths } from '@mister-guiiug/dev-wpa-config/react/i18n';
+
 export type Locale = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt';
 
 export const LOCALES: readonly Locale[] = ['fr', 'en', 'es', 'de', 'it', 'pt'];
@@ -20,24 +25,13 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   pt: 'Português',
 };
 
-/**
- * Sens d'écriture par locale, pour piloter `document.dir`. Toutes les
- * langues actuelles sont LTR ; l'infrastructure est prête pour l'ajout
- * d'une langue RTL (arabe, hébreu) sans toucher au reste de l'app.
+/*
+ * Le sens d'écriture n'est plus tenu ici. `LOCALE_DIR` énumérait `ltr` six
+ * fois à la main, et il aurait fallu penser à l'étendre en ajoutant une
+ * langue RTL. `I18nProvider` pose `dir` sur `<html>` à partir
+ * d'`Intl.Locale#textInfo` : l'arabe ou l'hébreu s'écriront dans le bon sens
+ * du seul fait d'être ajoutés au dictionnaire.
  */
-export const LOCALE_DIR: Record<Locale, 'ltr' | 'rtl'> = {
-  fr: 'ltr',
-  en: 'ltr',
-  es: 'ltr',
-  de: 'ltr',
-  it: 'ltr',
-  pt: 'ltr',
-};
-
-/** Sens d'écriture de la locale (défaut LTR). */
-export function localeDir(locale: Locale): 'ltr' | 'rtl' {
-  return LOCALE_DIR[locale] ?? 'ltr';
-}
 
 export interface Messages {
   settings: {
@@ -1448,18 +1442,13 @@ export const messages: Record<Locale, Messages> = {
   pt,
 };
 
-/** Chemins typés « a.b.c » vers une chaîne de `Messages`. */
-type Paths<T> = T extends string
-  ? never
-  : {
-      [K in keyof T & string]: T[K] extends string
-        ? K
-        : T[K] extends object
-          ? `${K}.${Paths<T[K]>}`
-          : never;
-    }[keyof T & string];
-
-export type MessageKey = Paths<Messages>;
+/**
+ * Chemins typés « a.b.c » vers une chaîne de `Messages`.
+ *
+ * Le `Paths<T>` maison qui vivait ici était le sosie exact d'`I18nPaths<T>` du
+ * socle — même récursion, même `[keyof T & string]` final.
+ */
+export type MessageKey = I18nPaths<Messages>;
 
 /**
  * Paramètres attendus par clé interpolée. Sert à typer `t(...)` : oublier
@@ -1499,50 +1488,13 @@ export type ParamsArg<K extends MessageKey> = K extends keyof MessageParams
   ? [params: MessageParams[K]]
   : [params?: Record<string, string | number>];
 
-function resolvePath(obj: Messages, path: string): unknown {
-  return path.split('.').reduce<unknown>((acc, key) => {
-    if (
-      acc &&
-      typeof acc === 'object' &&
-      key in (acc as Record<string, unknown>)
-    ) {
-      return (acc as Record<string, unknown>)[key];
-    }
-    return undefined;
-  }, obj as unknown);
-}
-
-function interpolate(
-  template: string,
-  params?: Record<string, string | number>
-): string {
-  if (!params) return template;
-  return template.replace(/\{(\w+)\}/g, (_, key: string) =>
-    String(params[key] ?? `{${key}}`)
-  );
-}
-
-/**
- * Traduit une clé dans la locale donnée. Renvoie la clé brute si elle est
- * introuvable (utile pour repérer un oubli). Interpole les `{paramètres}`.
+/*
+ * `resolvePath`, `interpolate`, `translate` et `detectLocale` vivaient ici.
+ * `createTranslator` du socle fait le même travail — son `interpolate` est à
+ * la lettre le même `replace(/\{(\w+)\}/g, …)`, y compris le placeholder
+ * laissé en place quand le paramètre manque — et sa détection initiale suit la
+ * même règle (valeur stockée valide, sinon `navigator.language`, sinon le
+ * repli). Il ajoute ce que `translate` n'avait pas : une clé absente de la
+ * langue courante est cherchée dans la langue de repli avant d'être rendue
+ * brute.
  */
-export function translate(
-  locale: Locale,
-  key: MessageKey,
-  params?: Record<string, string | number>
-): string {
-  const resolved = resolvePath(messages[locale], key);
-  if (typeof resolved !== 'string') return key;
-  return interpolate(resolved, params);
-}
-
-/** Locale initiale : valeur stockée valide, sinon langue du navigateur, sinon FR. */
-export function detectLocale(stored?: string | null): Locale {
-  if (stored && (LOCALES as readonly string[]).includes(stored)) {
-    return stored as Locale;
-  }
-  const nav = globalThis.navigator?.language?.slice(0, 2).toLowerCase();
-  return nav && (LOCALES as readonly string[]).includes(nav)
-    ? (nav as Locale)
-    : 'fr';
-}

@@ -15,25 +15,34 @@
     <meta name="color-scheme" content="dark light" />
     <script>
       /* Pré-peinture du thème : pose data-theme avant le 1er rendu pour
-         éviter tout flash. Lit la préférence stockée, sinon le système. */
+         éviter tout flash. Lit la préférence stockée, sinon le système.
+
+         DEUX SOURCES, dans cet ordre. La clé nue `miss-dice_theme` est celle
+         qu'écrit `react/use-theme` du socle et fait donc autorité. À défaut,
+         on relit le champ `theme` de l'ancien blob `miss-dice:settings` :
+         sans ce repli, le premier chargement après la mise à jour peindrait
+         le thème système avant que React ne migre la valeur — soit le flash
+         que ce script existe pour éviter, sur le seul chargement où il se
+         verrait le plus. `auto` était le mot de l'app pour `system`. */
       (function () {
         try {
-          var raw = localStorage.getItem('miss-dice:settings');
-          var pref = 'auto';
-          if (raw) {
-            var p = JSON.parse(raw);
-            if (
-              p &&
-              (p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto')
-            )
-              pref = p.theme;
+          var pref = localStorage.getItem('miss-dice_theme');
+          if (pref !== 'light' && pref !== 'dark' && pref !== 'system') {
+            pref = 'system';
+            var raw = localStorage.getItem('miss-dice:settings');
+            if (raw) {
+              var p = JSON.parse(raw);
+              if (p && (p.theme === 'light' || p.theme === 'dark'))
+                pref = p.theme;
+            }
           }
           var dark =
             pref === 'dark' ||
-            (pref === 'auto' &&
+            (pref === 'system' &&
               window.matchMedia('(prefers-color-scheme: dark)').matches);
           var theme = dark ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.setAttribute('content', dark ? '#0f1220' : '#f4f5fb');
         } catch (e) {

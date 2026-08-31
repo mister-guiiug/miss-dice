@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import axe from 'axe-core';
 import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { ModeMenu } from './components/ModeMenu';
+import { renderWithProviders } from '../test/renderWithProviders';
 
 /**
  * Garde-fou accessibilité : on passe les écrans clés au crible d'axe-core
@@ -23,19 +24,19 @@ afterEach(cleanup);
 
 describe('accessibilité (axe-core)', () => {
   it('le lancer libre n’a aucune violation', async () => {
-    const { container } = render(<DiceScreen />);
+    const { container } = renderWithProviders(<DiceScreen />);
     await expectNoViolations(container);
   });
 
   it('le tiroir de réglages ouvert n’a aucune violation', async () => {
-    render(<SettingsDrawer />);
+    renderWithProviders(<SettingsDrawer />);
     fireEvent.click(screen.getByRole('button', { name: /réglages|settings/i }));
     const dialog = await screen.findByRole('dialog');
     await expectNoViolations(dialog);
   });
 
   it('le menu des jeux ouvert n’a aucune violation', async () => {
-    render(<ModeMenu />);
+    renderWithProviders(<ModeMenu />);
     fireEvent.click(screen.getByRole('button', { name: /jeux|games/i }));
     const dialog = await screen.findByRole('dialog');
     await expectNoViolations(dialog);

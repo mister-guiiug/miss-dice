@@ -10,7 +10,8 @@ import { useSystemReducedMotion } from '../hooks/useReducedMotion';
 import { requestMotionPermission } from '../hooks/useShakeToRoll';
 import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
-import { LOCALES, LOCALE_LABELS } from '../../i18n/messages';
+import { LOCALE_LABELS } from '../../i18n/messages';
+import { useAppTheme } from '../hooks/useTheme';
 import {
   SPONSOR_URL,
   repoUrl,
@@ -75,29 +76,24 @@ function CoffeeIcon() {
   );
 }
 
+/**
+ * `system` est le mot du socle pour ce que l'app appelait `auto` ; seul le mot
+ * change, le libellé affiché (`settings.themeAuto`) reste « Automatique ».
+ */
 const THEME_KEYS = [
-  { value: 'auto', label: 'settings.themeAuto' },
+  { value: 'system', label: 'settings.themeAuto' },
   { value: 'light', label: 'settings.themeLight' },
   { value: 'dark', label: 'settings.themeDark' },
 ] as const;
 
 /** Réglages locaux : langue, thème, sons, type de dé, nombre, secousse… */
 export function SettingsDrawer() {
-  const { t } = useI18n();
+  const { t, locale, setLocale, locales } = useI18n();
+  const { theme, setTheme } = useAppTheme();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const {
-    haptics,
-    motion,
-    sides,
-    diceCount,
-    shake,
-    locale,
-    theme,
-    sounds,
-    tts,
-    colorblind,
-  } = useSettings();
+  const { haptics, motion, sides, diceCount, shake, sounds, tts, colorblind } =
+    useSettings();
   const systemReduced = useSystemReducedMotion();
   const stats = useRollStats();
   const log = useRollLog();
@@ -160,14 +156,14 @@ export function SettingsDrawer() {
             role="radiogroup"
             aria-label={t('settings.language')}
           >
-            {LOCALES.map(code => (
+            {locales.map(code => (
               <button
                 key={code}
                 type="button"
                 role="radio"
                 aria-checked={locale === code}
                 className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
-                onClick={() => settingsStore.setLocale(code)}
+                onClick={() => setLocale(code)}
               >
                 {LOCALE_LABELS[code]}
               </button>
@@ -190,7 +186,7 @@ export function SettingsDrawer() {
                 role="radio"
                 aria-checked={theme === item.value}
                 className={`segmented__item${theme === item.value ? ' segmented__item--active' : ''}`}
-                onClick={() => settingsStore.setTheme(item.value)}
+                onClick={() => setTheme(item.value)}
               >
                 {t(item.label)}
               </button>

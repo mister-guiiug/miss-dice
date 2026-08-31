@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import { GameShell } from './GameShell';
 import { DiceScreen } from '../DiceScreen';
+import { renderWithProviders } from '../../../test/renderWithProviders';
 
 /**
  * Usage du verrou d'écran, pas sa mécanique : la ré-acquisition au retour au
@@ -32,7 +33,7 @@ afterEach(() => {
 
 describe('<GameShell /> et le verrou d’écran', () => {
   it('demande le verrou tant qu’une partie est affichée', async () => {
-    render(
+    renderWithProviders(
       <GameShell title="Yam">
         <p>plateau</p>
       </GameShell>
@@ -41,7 +42,7 @@ describe('<GameShell /> et le verrou d’écran', () => {
   });
 
   it('relâche le verrou en quittant la partie', async () => {
-    const { unmount } = render(
+    const { unmount } = renderWithProviders(
       <GameShell title="Yam">
         <p>plateau</p>
       </GameShell>
@@ -52,7 +53,7 @@ describe('<GameShell /> et le verrou d’écran', () => {
   });
 
   it('ne demande rien sur le lancer libre', () => {
-    render(<DiceScreen />);
+    renderWithProviders(<DiceScreen />);
     expect(request).not.toHaveBeenCalled();
   });
 });
