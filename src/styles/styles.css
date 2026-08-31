@@ -547,7 +547,11 @@ button {
   font-weight: 600;
 }
 
-/* ─────────────────── Bandeau mise à jour SW ─────────────────── */
+/* ─────────────────── Bandeau mise à jour SW ───────────────────
+   `UpdatePromptBanner` du socle ne pose que des attributs `data-dwc` : il
+   est livré NU, et Miss Dice n'importe pas `components.css` (design maison
+   assumé). Sans ce bloc, le bandeau n'aurait ni fond, ni filet, ni
+   position. C'est donc ici, et nulle part ailleurs, qu'il est habillé. */
 .sw-update-banner {
   position: fixed;
   left: 50%;
@@ -562,6 +566,7 @@ button {
   border-radius: 16px;
   box-shadow: var(--shadow-ui);
   z-index: 20;
+  max-width: calc(100vw - 28px);
 }
 
 .sw-update-banner button {
@@ -572,6 +577,25 @@ button {
   color: var(--accent-contrast);
   font-weight: 600;
   cursor: pointer;
+}
+
+/* Le bandeau du socle offre TOUJOURS une sortie, là où le bandeau maison
+   n'avait qu'un bouton. Ce second bouton doit se lire comme secondaire,
+   sinon les deux actions se disputent le même poids visuel. */
+.sw-update-banner [data-dwc='update-banner-dismiss'] {
+  background: transparent;
+  /* `--text` et non `--muted` : c'est une commande, elle doit rester
+     lisible. Le poids visuel secondaire vient de l'aplat retiré. */
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+/* Le bouton d'action pendant l'opération : `aria-disabled`, pas `disabled`
+   (le socle garde le bouton dans le parcours clavier, exprès). */
+.sw-update-banner button[aria-disabled='true'] {
+  opacity: 0.65;
+  cursor: default;
 }
 
 @keyframes fade-in {
