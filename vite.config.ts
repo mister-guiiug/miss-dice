@@ -54,6 +54,9 @@ export default defineConfig(({ command }) => {
       // SEO partagé famille : canonical/OG via placeholders index.html +
       // sitemap.xml/robots.txt générés au build (source unique).
       pwaSeoPlugin({
+        // Deux <meta name="theme-color"> par schéma : la barre du navigateur suit
+        // le mode sombre dès le premier rendu (relevé du 02/09/2026 : 5 apps sur 16).
+        themeColor: { light: '#f4f5fb', dark: '#0f1220' },
         siteName: 'Miss Dice',
         basePath,
         logoPath: '/favicon.svg',
