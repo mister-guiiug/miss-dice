@@ -14,7 +14,6 @@
 import { defaultRng, rollDie, type Rng } from '../../dice/random';
 
 export const PIG_TARGET = 100;
-export const TARGET_OPTIONS: readonly number[] = [50, 100, 200];
 
 export interface PigPlayer {
   name: string;
