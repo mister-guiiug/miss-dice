@@ -18,7 +18,7 @@ import {
 export const DICE_PER_TURN = 5;
 export const ROLLS_PER_TURN = 3;
 /** Bonus par Yahtzee supplémentaire (après un premier Yahtzee à 50). */
-export const YAHTZEE_BONUS = 100;
+const YAHTZEE_BONUS = 100;
 
 export interface YahtzeePlayer {
   name: string;
@@ -105,7 +105,7 @@ export function previewScore(state: YahtzeeState, category: Category): number {
 }
 
 /** La main courante est-elle un Yahtzee bonus pour le joueur courant ? */
-export function earnsYahtzeeBonus(state: YahtzeeState): boolean {
+function earnsYahtzeeBonus(state: YahtzeeState): boolean {
   const player = state.players[state.current]!;
   return (
     player.scores.yahtzee === 50 && scoreCategory('yahtzee', state.dice) === 50

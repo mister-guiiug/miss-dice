@@ -6,7 +6,7 @@ export type GameKey = 'yahtzee' | 'dice421' | 'pig';
  * forme de l'état d'un moteur change : une sauvegarde d'une version
  * antérieure est alors ignorée (plutôt que reprise corrompue).
  */
-export const GAME_SCHEMA_VERSION = 2;
+const GAME_SCHEMA_VERSION = 2;
 
 const keyFor = (mode: GameKey): string => `miss-dice:game:${mode}`;
 
