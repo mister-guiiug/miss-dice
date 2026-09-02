@@ -68,10 +68,22 @@ describe('AppUpdatesProvider', () => {
     swStub.reset();
   });
 
-  it('le socle ne livre que fr et en — le piège que ces tests ferment', () => {
-    expect(Object.keys(LABELS).sort()).toEqual(['en', 'fr']);
-    for (const absente of ['es', 'de', 'it', 'pt']) {
-      expect(LABELS[absente]).toBeUndefined();
+  it('le socle livre les sept langues depuis 3.33.0 — le piège que ces tests fermaient', () => {
+    // Jusqu'à 3.32, `react/labels` ne portait que fr et en : les autres
+    // langues retombaient en français sans un mot. Ces tests figeaient ce
+    // piège ; ils figent désormais sa disparition — la règle qu'ils ont
+    // inspirée reste bonne, l'app passe ses propres libellés au bandeau.
+    expect(Object.keys(LABELS).sort()).toEqual([
+      'de',
+      'en',
+      'es',
+      'fr',
+      'it',
+      'nl',
+      'pt',
+    ]);
+    for (const presente of ['es', 'de', 'it', 'pt']) {
+      expect(LABELS[presente]).toBeDefined();
     }
   });
 
