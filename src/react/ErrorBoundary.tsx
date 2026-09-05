@@ -1,6 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { recordError } from '@mister-guiiug/dev-wpa-config/react/observability';
-import { createLogger } from '@mister-guiiug/dev-wpa-config/logger';
+import { recordError } from '@mister-guiiug/dev-pwa-config/react/observability';
+import { createLogger } from '@mister-guiiug/dev-pwa-config/logger';
 
 const log = createLogger('react');
 

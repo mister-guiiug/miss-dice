@@ -4,12 +4,12 @@
  *
  * La mécanique (résolution de clé, interpolation, détection de la langue
  * initiale, persistance, `lang`/`dir`) vivait ici ; elle vient de
- * `@mister-guiiug/dev-wpa-config/react/i18n`, câblé dans `useI18n.ts`. Ce
+ * `@mister-guiiug/dev-pwa-config/react/i18n`, câblé dans `useI18n.ts`. Ce
  * fichier ne porte plus que ce qui est propre à miss-dice : ses messages, et
  * la table `MessageParams` qui rend obligatoires à la compilation les
  * paramètres des clés interpolées.
  */
-import type { I18nPaths } from '@mister-guiiug/dev-wpa-config/react/i18n';
+import type { I18nPaths } from '@mister-guiiug/dev-pwa-config/react/i18n';
 
 export type Locale = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt';
 

@@ -1,4 +1,4 @@
-import { pagesUrl } from '@mister-guiiug/dev-wpa-config/apps-catalog';
+import { pagesUrl } from '@mister-guiiug/dev-pwa-config/apps-catalog';
 
 /**
  * URL canonique de l'app à partager : racine du déploiement (gère le base

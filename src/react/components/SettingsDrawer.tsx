@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FamilyApps } from '@mister-guiiug/dev-wpa-config/react';
+import { FamilyApps } from '@mister-guiiug/dev-pwa-config/react';
 import {
   MAX_DICE,
   MIN_DICE,
@@ -15,10 +15,10 @@ import { useAppTheme } from '../hooks/useTheme';
 import {
   SPONSOR_URL,
   repoUrl,
-} from '@mister-guiiug/dev-wpa-config/apps-catalog';
+} from '@mister-guiiug/dev-pwa-config/apps-catalog';
 import { appUrl } from '../../links';
-import { shareOrCopy } from '@mister-guiiug/dev-wpa-config/share';
-import { downloadText } from '@mister-guiiug/dev-wpa-config/download';
+import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
+import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
 import { Sheet } from './Sheet';

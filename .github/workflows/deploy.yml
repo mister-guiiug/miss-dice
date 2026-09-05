@@ -1,4 +1,4 @@
-# Déploiement GitHub Pages délégué au reusable workflow famille (dev-wpa-config).
+# Déploiement GitHub Pages délégué au reusable workflow famille (dev-pwa-config).
 name: Deploy to GitHub Pages
 
 on:
@@ -13,12 +13,12 @@ permissions:
   packages: read
 
 # La concurrence (group: pages, cancel-in-progress) est portée par le reusable
-# pwa-deploy@v3 lui-même — un bloc `concurrency` au niveau de ce workflow (dont
+# pwa-deploy@v4 lui-même — un bloc `concurrency` au niveau de ce workflow (dont
 # l'unique job est un appel reusable) fait échouer la validation.
 
 jobs:
   deploy:
-    uses: mister-guiiug/dev-wpa-config/.github/workflows/pwa-deploy.yml@v3
+    uses: mister-guiiug/dev-pwa-config/.github/workflows/pwa-deploy.yml@v4
     secrets: inherit
     with:
       use-base-path: true

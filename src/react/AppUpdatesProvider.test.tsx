@@ -13,8 +13,8 @@ vi.unmock('virtual:pwa-register');
 import {
   registerSW as pilotableRegisterSW,
   swStub,
-} from '@mister-guiiug/dev-wpa-config/testing/pwa-register';
-import { LABELS } from '@mister-guiiug/dev-wpa-config/react/labels';
+} from '@mister-guiiug/dev-pwa-config/testing/pwa-register';
+import { LABELS } from '@mister-guiiug/dev-pwa-config/react/labels';
 import { LOCALES, messages, type Locale } from '../i18n/messages';
 import { renderWithProviders } from '../test/renderWithProviders';
 import { AppUpdatesProvider } from './AppUpdatesProvider';

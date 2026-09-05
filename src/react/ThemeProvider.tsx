@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ThemeProvider as DwcThemeProvider } from '@mister-guiiug/dev-wpa-config/react/theme-provider';
+import { ThemeProvider as DwcThemeProvider } from '@mister-guiiug/dev-pwa-config/react/theme-provider';
 import {
   migrateLegacySettings,
   THEME_STORAGE_KEY,

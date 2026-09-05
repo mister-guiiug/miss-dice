@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Sheet as DwcSheet } from '@mister-guiiug/dev-wpa-config/react/sheet';
+import { Sheet as DwcSheet } from '@mister-guiiug/dev-pwa-config/react/sheet';
 import { useI18n } from '../../i18n/useI18n';
 
 interface SheetProps {
