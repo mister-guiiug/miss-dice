@@ -1,4 +1,4 @@
-import baseConfig from '@mister-guiiug/dev-wpa-config/eslint-react';
+import baseConfig from '@mister-guiiug/dev-pwa-config/eslint-react';
 
 export default [
   {

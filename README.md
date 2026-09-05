@@ -9,7 +9,7 @@ une face se pose. Sans pub, sans tracking, sans backend — seules les
 préférences locales sont stockées dans le navigateur.
 
 Membre de la famille PWA `miss-*` / `mister-*`, bâti sur les conventions
-partagées de [`@mister-guiiug/dev-wpa-config`](https://github.com/mister-guiiug/dev-wpa-config)
+partagées de [`@mister-guiiug/dev-pwa-config`](https://github.com/mister-guiiug/dev-pwa-config)
 (ESLint React, Prettier, tsconfig strict, Vitest, PWA).
 
 ---
@@ -47,8 +47,8 @@ miss-dice/
 ├── index.html
 ├── vite.config.ts            # React + PWA + base path + 404 SPA
 ├── vitest.config.ts
-├── tsconfig*.json            # strict (conventions dev-wpa-config inlinées)
-├── eslint.config.js          # @mister-guiiug/dev-wpa-config/eslint-react
+├── tsconfig*.json            # strict (conventions dev-pwa-config inlinées)
+├── eslint.config.js          # @mister-guiiug/dev-pwa-config/eslint-react
 ├── prettier.config.js
 ├── scripts/generate-pwa-icons.mjs
 ├── public/
@@ -196,7 +196,7 @@ npm install             # nécessite l'accès au registre @mister-guiiug
 npm run dev             # http://localhost:5173
 ```
 
-> Le registre GitHub Packages héberge `@mister-guiiug/dev-wpa-config`.
+> Le registre GitHub Packages héberge `@mister-guiiug/dev-pwa-config`.
 > En CI le token est injecté ; en local, exporter `NODE_AUTH_TOKEN`
 > (cf. `.npmrc`).
 

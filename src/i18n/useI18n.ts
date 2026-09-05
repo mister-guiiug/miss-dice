@@ -1,5 +1,5 @@
-import { createI18n } from '@mister-guiiug/dev-wpa-config/react/i18n';
-import type { I18nApi } from '@mister-guiiug/dev-wpa-config/react/i18n';
+import { createI18n } from '@mister-guiiug/dev-pwa-config/react/i18n';
+import type { I18nApi } from '@mister-guiiug/dev-pwa-config/react/i18n';
 import {
   LOCALES,
   messages,

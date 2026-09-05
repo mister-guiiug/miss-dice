@@ -1,4 +1,4 @@
-# CI déléguée au reusable workflow famille (dev-wpa-config).
+# CI déléguée au reusable workflow famille (dev-pwa-config).
 name: CI
 
 on:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   ci:
-    uses: mister-guiiug/dev-wpa-config/.github/workflows/pwa-ci.yml@v3
+    uses: mister-guiiug/dev-pwa-config/.github/workflows/pwa-ci.yml@v4
     secrets: inherit
     with:
       run-e2e: true

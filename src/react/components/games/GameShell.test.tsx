@@ -8,7 +8,7 @@ import { renderWithProviders } from '../../../test/renderWithProviders';
  * Usage du verrou d'écran, pas sa mécanique : la ré-acquisition au retour au
  * premier plan, le silence quand l'API manque et la course « demande
  * aboutie après le démontage » sont testées chez le socle
- * (`@mister-guiiug/dev-wpa-config/react/use-wake-lock`). Ce qui est propre à
+ * (`@mister-guiiug/dev-pwa-config/react/use-wake-lock`). Ce qui est propre à
  * miss-dice, c'est *où* le verrou est demandé : dans le cadre de jeu
  * (pass-and-play, l'écran doit rester allumé entre deux tours) et nulle part
  * ailleurs — surtout pas sur le lancer libre.

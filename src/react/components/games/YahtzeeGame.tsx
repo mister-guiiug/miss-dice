@@ -6,7 +6,7 @@ import { useI18n } from '../../../i18n/useI18n';
 import type { MessageKey } from '../../../i18n/messages';
 import { defaultRng } from '../../../dice/random';
 import { appUrl } from '../../../links';
-import { shareOrCopy } from '@mister-guiiug/dev-wpa-config/share';
+import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { useSound } from '../../hooks/useSound';
 import { useUndoableGame } from '../../hooks/useUndoableGame';
 import { CATEGORIES, type Category } from '../../../games/yahtzee/scoring';

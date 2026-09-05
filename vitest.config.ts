@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import {
   baseTestOptions,
   coveragePreset,
-} from '@mister-guiiug/dev-wpa-config/vitest-base';
+} from '@mister-guiiug/dev-pwa-config/vitest-base';
 
 export default defineConfig({
   plugins: [react()],
@@ -21,7 +21,7 @@ export default defineConfig({
       // s'afficher fait donc rougir le test au lieu de passer inaperçu.
       'virtual:pwa-register': fileURLToPath(
         import.meta
-          .resolve('@mister-guiiug/dev-wpa-config/testing/pwa-register')
+          .resolve('@mister-guiiug/dev-pwa-config/testing/pwa-register')
       ),
     },
   },

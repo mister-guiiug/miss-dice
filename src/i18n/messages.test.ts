@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createTranslator } from '@mister-guiiug/dev-wpa-config/react/i18n';
+import { createTranslator } from '@mister-guiiug/dev-pwa-config/react/i18n';
 import { LOCALES, LOCALE_LABELS, messages, type Locale } from './messages';
 
 /**

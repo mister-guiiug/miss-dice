@@ -1,5 +1,5 @@
-import { useThemeContext } from '@mister-guiiug/dev-wpa-config/react/theme-provider';
-import type { ThemePreference } from '@mister-guiiug/dev-wpa-config/react/use-theme';
+import { useThemeContext } from '@mister-guiiug/dev-pwa-config/react/theme-provider';
+import type { ThemePreference } from '@mister-guiiug/dev-pwa-config/react/use-theme';
 
 export interface AppTheme {
   /** Le choix de l'utilisateur : `light`, `dark` ou `system`. */
