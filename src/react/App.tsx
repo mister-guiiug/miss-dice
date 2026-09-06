@@ -3,6 +3,7 @@ import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { InstallPrompt } from './components/InstallPrompt';
 import { ModeMenu } from './components/ModeMenu';
+import { FamilyLinks } from './components/FamilyLinks';
 import { useAppMode } from '../app/appMode';
 
 // Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
@@ -67,6 +68,14 @@ export function App() {
         <ModeMenu />
         <SettingsDrawer />
         <InstallPrompt />
+        {/* Les deux liens de la règle famille sur le PREMIER écran : ils
+            n'existaient que dans le tiroir de réglages, derrière un bouton.
+            Dans l'overlay, qui ne capte pas les taps : la surface de lancer
+            reste entière.
+            APRÈS l'invite d'installation, qui occupe le même bas d'écran : le
+            sélecteur `~` de la feuille de style efface les liens tant qu'elle
+            est affichée, et il exige cet ordre-là dans le DOM. */}
+        <FamilyLinks />
       </div>
     </div>
   );
