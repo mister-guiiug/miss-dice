@@ -38,7 +38,7 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Jeu 421              | `src/games/dice421/{scoring,engine}.ts`               | Classement des mains + manches à jetons (charge/décharge)            |
 | Jeu Cochon (Pig)     | `src/games/pig/engine.ts`                             | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque       |
 | Aiguillage écrans    | `src/app/appMode.ts`                                  | Lancer libre / Yahtzee / 421 / Cochon / notation / décider           |
-| PWA                  | `vite.config.ts`, `src/register-sw.ts`                | Manifest, service worker, base path GH Pages                         |
+| PWA                  | `vite.config.ts`, `src/main.tsx`                      | Manifest, service worker, base path GH Pages                         |
 
 La logique pure (`src/dice/**`) ne connaît ni React ni le DOM : elle est
 testable seule et couverte à ≥ 90 % (seuil CI).
@@ -59,8 +59,7 @@ miss-dice/
 │   ├── robots.txt
 │   └── icons/                # PNG 192/512/180/64 (générés)
 └── src/
-    ├── main.tsx
-    ├── register-sw.ts
+    ├── main.tsx              # racine React + enregistrement du SW
     ├── types.ts
     ├── dice/                 # logique pure + tests
     │   ├── random.ts          colors.ts       diceTypes.ts
@@ -82,7 +81,7 @@ miss-dice/
     │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion,useInstallPrompt}.ts
     │   └── feedback/haptics.ts
     ├── assets/rive/README.md # comment activer Rive (optionnel)
-    └── test/{setup,stub-pwa-register}.ts
+    └── test/{setup.ts,renderWithProviders.tsx}
 ```
 
 ## 3. Concept fonctionnel
@@ -276,6 +275,7 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` — préfs et stats.
 - `src/dice/notation.test.ts` — parseur de notation (avantage, drop, Fudge).
 - `src/decide/decisions.test.ts` — pièce, oui/non, tirage, mélange.
+- `src/readme.test.ts` — ce document ne cite aucun fichier de `src/` disparu.
 - `e2e/smoke.spec.ts` — fumée Playwright (lancer, menu des jeux).
 
 Domaines purs `src/dice/**` et `src/games/**` couverts à ~99 % (seuil CI ≥ 90 %).
