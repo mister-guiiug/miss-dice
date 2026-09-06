@@ -27,6 +27,8 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Cadence d'animation  | `src/dice/rollSchedule.ts`                            | Instants de défilement (pur, testé)                                  |
 | Contrôleur de lancer | `src/react/hooks/useDiceRoll.ts`                      | État repos → défilement → résultat multi-dés, anti-double-tap        |
 | Secouer pour lancer  | `src/react/hooks/useShakeToRoll.ts`                   | Détection de secousse (DeviceMotion) + permission iOS                |
+| Clavier (desktop)    | `src/react/hooks/useKeyboardRoll.ts`                  | Espace/Entrée lance, `+`/`−`/flèches changent le nombre de dés       |
+| Annonce vocale       | `src/a11y/speech.ts`                                  | Énoncé du résultat (Web Speech), voix choisie selon la langue        |
 | Rendu d'une face     | `src/react/components/DiceFace.tsx`                   | Points (D6) ou chiffre + silhouette (sans logique métier)            |
 | Plateau de dés       | `src/react/components/DiceTray.tsx`                   | Disposition de N dés, taille adaptative                              |
 | Écran principal      | `src/react/components/DiceScreen.tsx`                 | Zone de tap plein écran, total, teinte immersive, a11y               |
@@ -34,7 +36,8 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Traductions          | `src/i18n/messages.ts`, `useI18n.ts`                  | FR/EN/ES, clés typées, détection navigateur, `translate` pur         |
 | Jeu Yahtzee          | `src/games/yahtzee/{scoring,engine}.ts`               | Score des 13 cases + machine d'état pure (pass-and-play)             |
 | Jeu 421              | `src/games/dice421/{scoring,engine}.ts`               | Classement des mains + manches à jetons (charge/décharge)            |
-| Aiguillage écrans    | `src/app/appMode.ts`                                  | Lancer libre / Yahtzee / 421 (store léger, non persisté)             |
+| Jeu Cochon (Pig)     | `src/games/pig/engine.ts`                             | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque       |
+| Aiguillage écrans    | `src/app/appMode.ts`                                  | Lancer libre / Yahtzee / 421 / Cochon / notation / décider           |
 | PWA                  | `vite.config.ts`, `src/register-sw.ts`                | Manifest, service worker, base path GH Pages                         |
 
 La logique pure (`src/dice/**`) ne connaît ni React ni le DOM : elle est
@@ -66,15 +69,17 @@ miss-dice/
     ├── settings/settingsStore.ts
     ├── i18n/{messages,useI18n}.ts   # FR/EN/ES + clés typées + tests
     ├── app/appMode.ts               # écran actif (lancer libre / jeux)
+    ├── a11y/speech.ts               # annonce vocale du résultat (Web Speech)
     ├── games/                       # moteurs purs + tests
     │   ├── yahtzee/{scoring,engine}.ts
-    │   └── dice421/{scoring,engine}.ts
+    │   ├── dice421/{scoring,engine}.ts
+    │   └── pig/engine.ts
     ├── styles/{tokens,styles}.css
     ├── react/
     │   ├── App.tsx
     │   ├── components/{DiceScreen,DiceTray,DiceFace,SettingsDrawer,InstallPrompt,ModeMenu}.tsx
-    │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game}.tsx
-    │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useReducedMotion,useInstallPrompt}.ts
+    │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game,PigGame}.tsx
+    │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion,useInstallPrompt}.ts
     │   └── feedback/haptics.ts
     ├── assets/rive/README.md # comment activer Rive (optionnel)
     └── test/{setup,stub-pwa-register}.ts
@@ -83,6 +88,9 @@ miss-dice/
 ## 3. Concept fonctionnel
 
 - Tap n'importe où → lancer.
+- Au clavier (desktop) : **Espace** ou **Entrée** lance, `+`/`=`/`↑` ajoute un
+  dé, `-`/`↓` en retire — neutralisé pendant la saisie et tant qu'une feuille
+  modale est ouverte (`src/react/hooks/useKeyboardRoll.ts`).
 - Pendant le lancer : défilement rapide des faces, cadence en cloche
   inversée (accélère puis décélère, « le dé se pose »).
 - Fin : une face est figée et mise en avant (animation _pop_ + teinte du
@@ -103,6 +111,9 @@ miss-dice/
   barre système (`theme-color`).
 - **Sons** : petit retour audio synthétisé (WebAudio, aucun asset) au
   lancer et au résultat, activable.
+- **Annonce vocale** : le résultat énoncé à voix haute par la synthèse du
+  navigateur, dans la voix de la langue choisie (`src/a11y/speech.ts`).
+  Silencieuse et sans erreur là où l'API manque.
 - **Statistiques** : distribution des faces du lancer libre + total,
   réinitialisable.
 - **Type de dé** : D4, D6, D8, D10, D12, D20. Le D6 garde les points ; les
@@ -112,8 +123,14 @@ miss-dice/
   (API DeviceMotion ; demande l'autorisation sur iOS, sinon sans effet).
 - **Vibration** et **réduire les animations** (déjà présents).
 - **À propos** : partager le lien de l'app (Web Share API, repli
-  presse-papiers), lien vers le **code source** (GitHub) et **Buy me a
-  coffee** (sponsor) — cf. `src/share.ts` et `src/links.ts`.
+  presse-papiers), lien vers le **code source** (GitHub), **Buy me a coffee**
+  (sponsor) et **Signaler un problème** — cf. `src/links.ts` ; le partage et
+  le signalement viennent des modules `share` et `issue-report` du socle.
+- **Signaler un problème** ouvre le gabarit d'anomalie du compte
+  (`issues/new?template=bug.yml`) **prérempli** avec la version, le commit,
+  l'écran et le navigateur : l'utilisateur n'a plus qu'à décrire ce qui ne va
+  pas. L'URL est recalculée au clic (`currentIssueReportUrl`), jamais figée
+  au chargement.
 
 Toutes ces préférences sont persistées localement (`localStorage`).
 
@@ -151,6 +168,12 @@ documentée dans `src/games/dice421/scoring.ts`) :
   jetons au gagnant de la manche. Le premier à n'avoir **plus aucun
   jeton** gagne la partie.
 
+**Cochon** (« Pig ») — 1 dé, jeu de _stop-ou-encore_ : à son tour, on relance
+autant qu'on veut, chaque face 2–6 s'ajoute au **cumul du tour** ; un **1**
+efface ce cumul et passe la main ; **banquer** verse le cumul au score. Le
+premier à **100** gagne (à un joueur : atteindre la cible en un minimum de
+tours). Logique : `src/games/pig/engine.ts`.
+
 L'aléa, le score et l'enchaînement des tours sont des fonctions pures
 (`engine.ts`) testées indépendamment de l'UI ; les composants ne font que
 les afficher.
@@ -183,8 +206,12 @@ gère le **bonus Yahtzee** (+100) ; le 421 reconnaît **suites** et
 ## 5. Accessibilité
 
 - Zone de tap = vrai `<button>` → clavier (Entrée/Espace) gratuit.
+- Raccourcis clavier globaux au lancer libre (`useKeyboardRoll`) : lancer et
+  changer le nombre de dés sans viser une cible à la souris. Ils se taisent
+  dès qu'un champ ou une feuille modale a le focus.
 - `:focus-visible` net, contrastes sombres élevés.
-- Région `aria-live` annonçant « Résultat : N ».
+- Région `aria-live` annonçant « Résultat : N », doublée au besoin par
+  l'**annonce vocale** (`src/a11y/speech.ts`, réglage « Annonce vocale »).
 - `role="img"` + libellé chiffré sur chaque face.
 - `prefers-reduced-motion` respecté (CSS + logique).
 
@@ -240,7 +267,9 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/i18n/messages.test.ts` — parité des clés FR/EN/ES, interpolation, détection.
 - `src/games/yahtzee/{scoring,engine}.test.ts` — 13 combinaisons, bonus, tours, fin.
 - `src/games/dice421/{scoring,engine}.test.ts` — classement des mains, charge/décharge, victoire.
-- `src/share.test.ts` — partage natif, annulation, repli presse-papiers.
+- `src/games/pig/engine.test.ts` — cumul du tour, perte sur le 1, banque, victoire, solo.
+- `src/a11y/speech.test.ts` — voix par locale, énoncé, silence si l'API manque.
+- `src/react/components/SettingsDrawer.test.tsx` — le lien de signalement et son préremplissage.
 - `src/games/persistence.test.ts` — sauvegarde/reprise/effacement de partie.
 - `src/react/hooks/useUndoableGame.test.ts` — annuler, persister, reprendre.
 - `src/react/components/Sheet.test.tsx` — dialogue modal, focus, Échap.
@@ -256,9 +285,10 @@ Couverture du domaine `src/dice/**` à **100 %** (seuil CI ≥ 90 %).
 ## 9. Évolutions prévues (sans refonte)
 
 Sont livrés : types de dés, multi-dés, secouer-pour-lancer, multilingue
-(FR/EN/ES), jeux **Yahtzee** et **421**, partage/source/sponsor, **thème
-clair/auto**, **sons**, **statistiques**, **reprise de partie**, **annuler**,
-rejouer, partage de résultat, **wake lock**. Côté technique : jeux en
+(FR/EN/ES), jeux **Yahtzee**, **421** et **Cochon**, partage/source/sponsor,
+**signalement d'un problème**, **thème clair/auto**, **sons**, **annonce
+vocale**, **raccourcis clavier**, **statistiques**, **reprise de partie**,
+**annuler**, rejouer, partage de résultat, **wake lock**. Côté technique : jeux en
 **lazy-load**, **error boundary**, **feuilles modales accessibles** (focus
 trap + Échap), husky/lint-staged/commitlint, Lighthouse CI et e2e Playwright
 (smoke). Pistes restantes : thèmes additionnels, règles 421 avancées

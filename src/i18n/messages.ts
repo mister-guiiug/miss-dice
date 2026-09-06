@@ -64,6 +64,7 @@ export interface Messages {
     shareText: string;
     sourceCode: string;
     buyCoffee: string;
+    reportIssue: string;
     linkCopied: string;
     stats: string;
     statsTotal: string;
@@ -270,6 +271,7 @@ const fr: Messages = {
     shareText: 'Miss Dice — lance un dé, joue au Yahtzee ou au 421.',
     sourceCode: 'Code source',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Signaler un problème',
     linkCopied: 'Lien copié !',
     stats: 'Statistiques',
     statsTotal: '{n} lancers',
@@ -469,6 +471,7 @@ const en: Messages = {
     shareText: 'Miss Dice — roll a die, play Yahtzee or 421.',
     sourceCode: 'Source code',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Report a problem',
     linkCopied: 'Link copied!',
     stats: 'Statistics',
     statsTotal: '{n} rolls',
@@ -668,6 +671,7 @@ const es: Messages = {
     shareText: 'Miss Dice — lanza un dado, juega al Yahtzee o al 421.',
     sourceCode: 'Código fuente',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Informar de un problema',
     linkCopied: '¡Enlace copiado!',
     stats: 'Estadísticas',
     statsTotal: '{n} lanzamientos',
@@ -867,6 +871,7 @@ const de: Messages = {
     shareText: 'Miss Dice — wirf einen Würfel, spiele Yahtzee oder 421.',
     sourceCode: 'Quellcode',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Problem melden',
     linkCopied: 'Link kopiert!',
     stats: 'Statistiken',
     statsTotal: '{n} Würfe',
@@ -1066,6 +1071,7 @@ const it: Messages = {
     shareText: 'Miss Dice — lancia un dado, gioca a Yahtzee o 421.',
     sourceCode: 'Codice sorgente',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Segnala un problema',
     linkCopied: 'Link copiato!',
     stats: 'Statistiche',
     statsTotal: '{n} lanci',
@@ -1265,6 +1271,7 @@ const pt: Messages = {
     shareText: 'Miss Dice — lança um dado, joga ao Yahtzee ou 421.',
     sourceCode: 'Código-fonte',
     buyCoffee: 'Buy me a coffee',
+    reportIssue: 'Comunicar um problema',
     linkCopied: 'Link copiado!',
     stats: 'Estatísticas',
     statsTotal: '{n} lançamentos',
