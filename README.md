@@ -275,6 +275,7 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` — préfs et stats.
 - `src/dice/notation.test.ts` — parseur de notation (avantage, drop, Fudge).
 - `src/decide/decisions.test.ts` — pièce, oui/non, tirage, mélange.
+- `src/readme.test.ts` — ce document ne cite aucun fichier de `src/` disparu.
 - `e2e/smoke.spec.ts` — fumée Playwright (lancer, menu des jeux).
 
 Domaines purs `src/dice/**` et `src/games/**` couverts à ~99 % (seuil CI ≥ 90 %).
