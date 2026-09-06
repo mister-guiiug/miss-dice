@@ -1699,3 +1699,46 @@ html[data-theme='light'] .family-apps [data-maturity='alpha'] {
     animation: none;
   }
 }
+
+/* ──────────────────── Liens famille, premier écran ────────────────────
+   Règle famille du 05/09/2026 : le code source et le soutien sont visibles sur
+   le premier écran ET dans les réglages. Ils n'étaient que dans le tiroir.
+
+   Ancrés en bas, au-dessus de la zone sûre, et DISCRETS : tout l'écran est une
+   zone de lancer, ces deux liens ne doivent ni la couper ni attirer le pouce.
+   L'overlay ne capte pas les taps ; seuls ces liens le font. */
+.family-links {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 10px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.75rem;
+  opacity: 0.55;
+  transition: opacity 160ms var(--ease-out);
+}
+
+.family-links:hover,
+.family-links:focus-within {
+  opacity: 1;
+}
+
+.family-links__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.family-links__link:hover {
+  text-decoration: underline;
+}
+
+/* L'invite d'installation occupe le même bas d'écran : quand elle est là, les
+   liens lui laissent la place plutôt que de passer dessous. */
+.install-prompt ~ .family-links {
+  display: none;
+}
