@@ -18,6 +18,7 @@ import {
 } from '@mister-guiiug/dev-pwa-config/apps-catalog';
 import { appUrl } from '../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
+import { currentIssueReportUrl } from '@mister-guiiug/dev-pwa-config/issue-report';
 import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
@@ -62,6 +63,19 @@ function GithubIcon() {
     </svg>
   );
 }
+function IssueIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 5h2v7h-2V7Zm0 9h2v2h-2v-2Z" />
+    </svg>
+  );
+}
 function CoffeeIcon() {
   return (
     <svg
@@ -85,6 +99,24 @@ const THEME_KEYS = [
   { value: 'light', label: 'settings.themeLight' },
   { value: 'dark', label: 'settings.themeDark' },
 ] as const;
+
+/**
+ * L'URL d'un signalement, gabarit `bug.yml` du compte PRÉREMPLI avec ce que
+ * la page sait et que l'utilisateur ne sait jamais dire : la version et le
+ * commit qui tournent (posés par `versionPlugin`), l'écran, le navigateur et
+ * le système (`issue-report` du socle).
+ *
+ * Appelée à CHAQUE besoin, jamais mise en constante : `currentIssueReportUrl`
+ * lit la page à l'instant de l'appel, et une URL figée au chargement du
+ * module décrirait un écran que l'utilisateur a quitté.
+ *
+ * Ce lien n'est pas décoratif. `AppFooter issues` du socle le pose ailleurs
+ * dans la famille, mais cette application n'a pas de pied de page — tout
+ * l'écran est une zone de lancer — et ne déclare pas de bibliothèque
+ * d'icônes : le tiroir de réglages, sous « À propos », est le seul endroit
+ * où il est atteignable sans manger la surface tapable.
+ */
+const issueUrl = () => currentIssueReportUrl({ repoUrl: repoUrl('miss-dice') });
 
 /** Réglages locaux : langue, thème, sons, type de dé, nombre, secousse… */
 export function SettingsDrawer() {
@@ -463,6 +495,22 @@ export function SettingsDrawer() {
             >
               <CoffeeIcon />
               {t('settings.buyCoffee')}
+            </a>
+            {/* L'URL est posée au rendu pour que le lien soit honnête — il se
+                copie et s'ouvre dans un onglet comme n'importe quel `<a>` —
+                puis RECALCULÉE au clic : le tiroir ne se rend pas à nouveau
+                quand l'écran change sous lui. */}
+            <a
+              className="link-btn"
+              href={issueUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={event => {
+                event.currentTarget.href = issueUrl();
+              }}
+            >
+              <IssueIcon />
+              {t('settings.reportIssue')}
             </a>
           </div>
           <p className="about__feedback" role="status" aria-live="polite">
