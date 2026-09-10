@@ -142,18 +142,29 @@ export default defineConfig(({ command }) => {
               url: `${basePath}?play=notation`,
             },
           ],
+          // UNE IMAGE PAR USAGE. Les deux PNG étaient déclarés
+          // `any maskable` : la MÊME image servait au navigateur, qui la
+          // montre telle quelle, et à Android, qui la rogne à son masque. Un
+          // dessin ne peut pas être bon pour les deux — celui-ci a un fond
+          // transparent et des coins arrondis, que le masque révélait.
           icons: [
             {
               src: 'icons/icon-192.png',
               sizes: '192x192',
               type: 'image/png',
-              purpose: 'any maskable',
+              purpose: 'any',
             },
             {
               src: 'icons/icon-512.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any maskable',
+              purpose: 'any',
+            },
+            {
+              src: 'icons/icon-maskable.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
             },
           ],
           screenshots: [

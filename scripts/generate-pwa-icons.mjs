@@ -103,6 +103,66 @@ function renderIcon(size) {
   return png;
 }
 
+/**
+ * LE MASKABLE EST UNE AUTRE IMAGE, PAS LA MÊME EN PLUS PETIT.
+ *
+ * L'icône ci-dessus dessine un dé arrondi sur un fond TRANSPARENT, inséré à
+ * 11 % du bord. Déclarée `maskable`, elle laissait Android faire deux choses
+ * qu'on ne veut pas : remplir la transparence d'un aplat de son choix, puis
+ * rogner au masque de l'appareil — et les coins arrondis du dé, eux, se
+ * voyaient à l'intérieur du masque. Le résultat est un dé rétréci posé sur du
+ * blanc, avec un liseré.
+ *
+ * Ici le dégradé occupe TOUTE la toile : quel que soit le masque — cercle,
+ * squircle, goutte — il n'y a pas de raccord à voir, puisqu'il n'y a pas de
+ * bord. C'est la toile entière qui EST la face du dé.
+ *
+ * LES PIPS TIENNENT DANS LA ZONE DE SÉCURITÉ, le disque de 80 % de la toile.
+ * Le point le plus éloigné du centre est un pip de coin :
+ *   (span/2)·√2 + rayon = 0,22·1,414 + 0,0792 = 0,390 < 0,4 ✅
+ */
+function renderMaskable(size) {
+  const png = new PNG({ width: size, height: size });
+  const d = png.data;
+
+  const span = size * 0.44;
+  const gx0 = size / 2 - span / 2;
+  const gy0 = size / 2 - span / 2;
+  const step = span / 2;
+  const pipR = span * 0.18;
+  const pips = [
+    [gx0, gy0],
+    [gx0 + 2 * step, gy0],
+    [gx0 + step, gy0 + step],
+    [gx0, gy0 + 2 * step],
+    [gx0 + 2 * step, gy0 + 2 * step],
+  ];
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const i = (y * size + x) << 2;
+      const px = x + 0.5;
+      const py = y + 0.5;
+      const t = py / size;
+      let r = mix(BG_TOP[0], BG_BOTTOM[0], t);
+      let g = mix(BG_TOP[1], BG_BOTTOM[1], t);
+      let b = mix(BG_TOP[2], BG_BOTTOM[2], t);
+      let cov = 0;
+      for (const [cx, cy] of pips) {
+        cov = Math.max(cov, pipCoverage(px, py, cx, cy, pipR));
+      }
+      r = mix(r, PIP[0], cov);
+      g = mix(g, PIP[1], cov);
+      b = mix(b, PIP[2], cov);
+      d[i] = r;
+      d[i + 1] = g;
+      d[i + 2] = b;
+      d[i + 3] = 255;
+    }
+  }
+  return png;
+}
+
 const sizes = [
   { s: 192, name: 'icon-192.png' },
   { s: 512, name: 'icon-512.png' },
@@ -114,6 +174,11 @@ for (const { s, name } of sizes) {
   await writeFile(join(outDir, name), PNG.sync.write(renderIcon(s)));
 }
 
+await writeFile(
+  join(outDir, 'icon-maskable.png'),
+  PNG.sync.write(renderMaskable(512))
+);
+
 console.log(
-  'Icônes écrites dans public/icons/ (192, 512, apple-touch 180, favicon 64).'
+  'Icônes écrites dans public/icons/ (192, 512, apple-touch 180, favicon 64, maskable 512).'
 );
