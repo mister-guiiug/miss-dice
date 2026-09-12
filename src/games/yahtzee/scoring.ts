@@ -3,12 +3,7 @@
  * DOM, entièrement testable. Une « main » est un tableau de 5 faces (1..6).
  */
 export type UpperCategory =
-  | 'ones'
-  | 'twos'
-  | 'threes'
-  | 'fours'
-  | 'fives'
-  | 'sixes';
+  'ones' | 'twos' | 'threes' | 'fours' | 'fives' | 'sixes';
 export type LowerCategory =
   | 'threeKind'
   | 'fourKind'

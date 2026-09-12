@@ -2,12 +2,7 @@ import type { D6Value, DieValue } from '../types';
 
 /** Clé de teinte stable (traduite côté i18n, jamais affichée brute). */
 export type ColorKey =
-  | 'red'
-  | 'orange'
-  | 'yellow'
-  | 'green'
-  | 'blue'
-  | 'violet';
+  'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet';
 
 export interface FaceColor {
   /** Couleur de fond de la face (teinte propre à la valeur). */

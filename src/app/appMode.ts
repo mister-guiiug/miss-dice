@@ -2,12 +2,7 @@ import { createStore, useStore } from '../store/createStore';
 
 /** Écran actif de l'application. */
 export type AppMode =
-  | 'roll'
-  | 'yahtzee'
-  | 'dice421'
-  | 'pig'
-  | 'notation'
-  | 'decide';
+  'roll' | 'yahtzee' | 'dice421' | 'pig' | 'notation' | 'decide';
 
 const MODES: readonly AppMode[] = [
   'roll',

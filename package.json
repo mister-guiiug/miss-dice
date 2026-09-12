@@ -28,7 +28,7 @@
     "@axe-core/playwright": "^4.11.3",
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^10.0.1",
     "@mister-guiiug/dev-pwa-config": "^4.10.0",
     "@playwright/test": "^1.49.1",
     "@testing-library/jest-dom": "^6.6.3",
@@ -40,7 +40,7 @@
     "@vitest/coverage-v8": "^4.0.0",
     "axe-core": "^4.11.4",
     "cross-env": "^10.1.0",
-    "eslint": "^9.39.4",
+    "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
@@ -48,7 +48,7 @@
     "jsdom": "^26.0.0",
     "lint-staged": "^16.4.0",
     "pngjs": "^5.0.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.9.6",
     "rollup-plugin-visualizer": "^7.0.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.58.0",
@@ -59,5 +59,10 @@
   "dependencies": {
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
   }
 }
