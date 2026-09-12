@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
-import { InstallPrompt } from './components/InstallPrompt';
+import { PwaInstallPrompt } from '@mister-guiiug/dev-pwa-config/react/pwa-install-prompt';
 import { ModeMenu } from './components/ModeMenu';
 import { FamilyLinks } from './components/FamilyLinks';
 import { useAppMode } from '../app/appMode';
@@ -67,7 +67,10 @@ export function App() {
       <div className="app__overlay">
         <ModeMenu />
         <SettingsDrawer />
-        <InstallPrompt />
+        {/* PAS DE `dismissKey` À REPRENDRE : le bandeau maison ne persistait
+            rien — un `useState`, donc un refus oublié au rechargement suivant.
+            Le socle, lui, reporte d'un mois et s'arrête après trois fois. */}
+        <PwaInstallPrompt />
         {/* Les deux liens de la règle famille sur le PREMIER écran : ils
             n'existaient que dans le tiroir de réglages, derrière un bouton.
             Dans l'overlay, qui ne capte pas les taps : la surface de lancer
