@@ -57,6 +57,7 @@ export function AppUpdatesProvider({
   return (
     <LabelsProvider locale={locale} overrides={overrides}>
       <AppUpdates
+        checkEvery="1h"
         registerSW={registerSW}
         bannerProps={{ className: 'sw-update-banner' }}
       >
