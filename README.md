@@ -76,9 +76,9 @@ miss-dice/
     ├── styles/{tokens,styles}.css
     ├── react/
     │   ├── App.tsx
-    │   ├── components/{DiceScreen,DiceTray,DiceFace,SettingsDrawer,InstallPrompt,ModeMenu}.tsx
+    │   ├── components/{DiceScreen,DiceTray,DiceFace,SettingsDrawer,ModeMenu}.tsx
     │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game,PigGame}.tsx
-    │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion,useInstallPrompt}.ts
+    │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion}.ts
     │   └── feedback/haptics.ts
     ├── assets/rive/README.md # comment activer Rive (optionnel)
     └── test/{setup.ts,renderWithProviders.tsx}

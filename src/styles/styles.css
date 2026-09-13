@@ -573,17 +573,24 @@ button {
   cursor: not-allowed;
 }
 
-/* ──────────────────────── Invite d'install ──────────────────────── */
-.install-prompt {
+/* ──────────────────────── Invite d'install ────────────────────────
+   `PwaInstallPrompt` du socle remplace la pastille maison, et comme
+   `UpdatePromptBanner` juste en dessous, il arrive NU : Miss Dice n'importe
+   pas `components.css` (design maison assumé). C'est donc ici qu'il est
+   habillé, et la pastille garde exactement l'allure qu'elle avait.
+
+   CE N'EST PAS UN SIMPLE RENOMMAGE DE SÉLECTEUR. La pastille maison était une
+   rangée à plat — texte, bouton, bouton. Le socle empile un titre, une
+   description et une barre d'actions, parce que sur iOS la description PORTE
+   la marche à suivre : il n'y a pas de bouton « Installer » à proposer là-bas,
+   seulement des mots. D'où un bloc, et non plus une rangée. */
+[data-dwc='pwa-install-prompt'] {
   position: absolute;
   left: 50%;
   bottom: calc(var(--safe-bottom) + 14px);
   transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
   max-width: calc(100% - 24px);
+  padding: 10px 12px;
   background: color-mix(in srgb, var(--surface) 86%, transparent);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -592,12 +599,31 @@ button {
   animation: slide-up 260ms var(--ease-out);
 }
 
-.install-prompt__text {
+[data-dwc='pwa-install-title'] {
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-.install-prompt__btn {
+[data-dwc='pwa-install-desc'] {
+  margin: 2px 0 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* En mode instructions, cette ligne n'est plus un argument mais LA marche à
+   suivre : elle reprend l'encre du texte courant. */
+[data-dwc='pwa-install-prompt'][data-method='instructions']
+  [data-dwc='pwa-install-desc'] {
+  color: var(--text);
+}
+
+[data-dwc='pwa-install-actions'] {
+  display: flex;
+  gap: 10px;
+}
+
+[data-dwc='pwa-install-actions'] button {
   padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 11px;
@@ -607,7 +633,13 @@ button {
   cursor: pointer;
 }
 
-.install-prompt__btn--primary {
+/* L'aplat ne va qu'au bouton d'installation, et SEULEMENT quand il existe :
+   en mode instructions la seule sortie est « Plus tard », qui ne doit pas
+   hériter du poids visuel de l'action principale. C'est ce que `data-method`
+   permet de dire — un `:first-child` seul l'aurait peint à tort. */
+[data-dwc='pwa-install-prompt'][data-method='prompt']
+  [data-dwc='pwa-install-actions']
+  button:first-child {
   background: var(--accent);
   color: var(--accent-contrast);
   border-color: transparent;
@@ -1739,6 +1771,6 @@ html[data-theme='light'] .family-apps [data-maturity='alpha'] {
 
 /* L'invite d'installation occupe le même bas d'écran : quand elle est là, les
    liens lui laissent la place plutôt que de passer dessous. */
-.install-prompt ~ .family-links {
+[data-dwc='pwa-install-prompt'] ~ .family-links {
   display: none;
 }
