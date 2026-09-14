@@ -1,17 +1,34 @@
 /**
  * Génère les icônes PWA de miss-dice.
  *
- * Contrairement aux autres projets de la famille, miss-dice n'a pas de
- * logo bitmap source : l'icône (un dé affichant la face 5) est dessinée
- * procéduralement en pixels, puis encodée en PNG via pngjs. Aucune
- * dépendance native, rendu identique sur toutes les plateformes.
+ * Contrairement aux autres projets de la famille, miss-dice n'a pas de logo
+ * bitmap source : l'icône (un dé affichant la face 5) est dessinée
+ * procéduralement en pixels. Le dessin reste donc ici, entier ; seul
+ * l'encodage PNG est confié à sharp.
+ *
+ * SHARP PLUTÔT QUE PNGJS. Le dépôt portait DEUX bibliothèques d'images pour un
+ * seul travail : `sharp`, exigé par `pwa-icons` du socle, et `pngjs`, que ce
+ * script était seul à employer. L'en-tête d'alors s'en justifiait par « aucune
+ * dépendance native » — ce qui a cessé d'être vrai le jour où le socle est
+ * entré. Restait le coût : `pngjs` n'a plus rien publié depuis février 2023 et
+ * figurait, à ce titre, parmi les librairies dormantes du parc.
+ *
+ * Les pixels ne bougent pas d'un iota : le dessin est le même, et les deux
+ * encodeurs écrivent le même PNG sans perte. Ce sont les octets qui changent,
+ * sharp compressant mieux — le 512 tombe de 15,1 à 11,8 ko.
+ *
+ * CE QUI EXPLIQUE QUE `public/icons/` NE SOIT PAS REDEVENU IDENTIQUE. Les
+ * quatre fichiers à fond transparent datent du premier commit et sont plus
+ * compressés que ce que produit aujourd'hui l'un ou l'autre encodeur — ils ont
+ * été optimisés après coup. Les régénérer ajouterait 2,7 ko à l'application
+ * sans changer un pixel, alors ils restent tels quels.
  *
  * Exécuter : npm run icons
  */
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PNG } from 'pngjs';
+import sharp from 'sharp';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = join(__dirname, '..', 'public', 'icons');
@@ -21,6 +38,14 @@ await mkdir(outDir, { recursive: true });
 const BG_TOP = [124, 92, 246]; // violet
 const BG_BOTTOM = [59, 130, 246]; // bleu
 const PIP = [255, 255, 255];
+
+/**
+ * Niveau 9 et filtrage adaptatif, et non les défauts de sharp (niveau 6,
+ * filtre fixe) : ceux-là rendaient des fichiers plus lourds que pngjs, qui
+ * compresse au maximum. Sans perte dans les deux cas — une palette, elle,
+ * allégerait encore mais quantifierait le dégradé, qui se mettrait à bander.
+ */
+const PNG_OPTIONS = { compressionLevel: 9, adaptiveFiltering: true };
 
 const mix = (a, b, t) => Math.round(a + (b - a) * t);
 
@@ -48,9 +73,20 @@ function roundedRectMask(px, py, x0, y0, x1, y1, radius) {
   return 0;
 }
 
+/** Les cinq pips de la face 5, sur une grille 3×3 de côté `span`. */
+function facesCinq(gx0, gy0, span) {
+  const step = span / 2;
+  return [
+    [gx0, gy0],
+    [gx0 + 2 * step, gy0],
+    [gx0 + step, gy0 + step],
+    [gx0, gy0 + 2 * step],
+    [gx0 + 2 * step, gy0 + 2 * step],
+  ];
+}
+
 function renderIcon(size) {
-  const png = new PNG({ width: size, height: size });
-  const d = png.data;
+  const d = Buffer.alloc(size * size * 4);
   // Le dé occupe la zone de sécurité maskable (~78 %), centré.
   const pad = size * 0.11;
   const x0 = pad;
@@ -59,19 +95,13 @@ function renderIcon(size) {
   const y1 = size - pad;
   const radius = (x1 - x0) * 0.22;
 
-  // Pips de la face 5 : 4 coins + centre, sur une grille 3×3.
   const span = (x1 - x0) * 0.62;
-  const gx0 = (x0 + x1) / 2 - span / 2;
-  const gy0 = (y0 + y1) / 2 - span / 2;
-  const step = span / 2;
+  const pips = facesCinq(
+    (x0 + x1) / 2 - span / 2,
+    (y0 + y1) / 2 - span / 2,
+    span
+  );
   const pipR = span * 0.16;
-  const pips = [
-    [gx0, gy0],
-    [gx0 + 2 * step, gy0],
-    [gx0 + step, gy0 + step],
-    [gx0, gy0 + 2 * step],
-    [gx0 + 2 * step, gy0 + 2 * step],
-  ];
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
@@ -100,7 +130,7 @@ function renderIcon(size) {
       d[i + 3] = 255;
     }
   }
-  return png;
+  return d;
 }
 
 /**
@@ -122,21 +152,11 @@ function renderIcon(size) {
  *   (span/2)·√2 + rayon = 0,22·1,414 + 0,0792 = 0,390 < 0,4 ✅
  */
 function renderMaskable(size) {
-  const png = new PNG({ width: size, height: size });
-  const d = png.data;
+  const d = Buffer.alloc(size * size * 4);
 
   const span = size * 0.44;
-  const gx0 = size / 2 - span / 2;
-  const gy0 = size / 2 - span / 2;
-  const step = span / 2;
+  const pips = facesCinq(size / 2 - span / 2, size / 2 - span / 2, span);
   const pipR = span * 0.18;
-  const pips = [
-    [gx0, gy0],
-    [gx0 + 2 * step, gy0],
-    [gx0 + step, gy0 + step],
-    [gx0, gy0 + 2 * step],
-    [gx0 + 2 * step, gy0 + 2 * step],
-  ];
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
@@ -160,8 +180,14 @@ function renderMaskable(size) {
       d[i + 3] = 255;
     }
   }
-  return png;
+  return d;
 }
+
+/** Écrit un tampon RVBA brut en PNG : sharp ne devine pas la géométrie. */
+const ecrire = (data, size, name) =>
+  sharp(data, { raw: { width: size, height: size, channels: 4 } })
+    .png(PNG_OPTIONS)
+    .toFile(join(outDir, name));
 
 const sizes = [
   { s: 192, name: 'icon-192.png' },
@@ -171,13 +197,10 @@ const sizes = [
 ];
 
 for (const { s, name } of sizes) {
-  await writeFile(join(outDir, name), PNG.sync.write(renderIcon(s)));
+  await ecrire(renderIcon(s), s, name);
 }
 
-await writeFile(
-  join(outDir, 'icon-maskable.png'),
-  PNG.sync.write(renderMaskable(512))
-);
+await ecrire(renderMaskable(512), 512, 'icon-maskable.png');
 
 console.log(
   'Icônes écrites dans public/icons/ (192, 512, apple-touch 180, favicon 64, maskable 512).'
