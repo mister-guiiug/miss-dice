@@ -194,7 +194,6 @@ const ecrire = (data, size, name) =>
 const sizes = [
   { s: 192, name: 'icon-192.png' },
   { s: 512, name: 'icon-512.png' },
-  { s: 180, name: 'apple-touch-icon.png' },
   { s: 64, name: 'favicon.png' },
 ];
 
@@ -204,6 +203,34 @@ for (const { s, name } of sizes) {
 
 await ecrire(renderMaskable(512), 512, 'icon-maskable.png');
 
+/**
+ * L'ICÔNE APPLE SORT DU MASKABLE, ET C'EST LE SEUL ENDROIT OÙ LES DEUX DESSINS
+ * NE SE VALENT PAS.
+ *
+ * `renderIcon` pose un dé arrondi sur un fond TRANSPARENT. iOS n'accepte pas la
+ * transparence pour l'icône d'accueil : il la comble lui-même, historiquement
+ * par du noir. Ce n'était donc pas un mauvais fond, c'était un TROU — et pas
+ * seulement aux coins, sur tout le pourtour. Mesuré sur le fichier livré
+ * jusqu'au 14/09/2026 :
+ *
+ *   apple-touch-icon.png   coin(0,0) = 0,0,0,0   bord(90,1) = 0,0,0,0
+ *
+ * Alpha ZÉRO. C'est exactement le reproche que l'en-tête de `renderMaskable`
+ * fait déjà à Android — « remplir la transparence d'un aplat de son choix » —
+ * et il vaut pour iOS, à ceci près qu'iOS n'a pas de `purpose` pour qu'on lui
+ * dise quelle image prendre : il ne lit que `<link rel="apple-touch-icon">`.
+ *
+ * `renderMaskable` fait déjà ce qu'il faut : le dégradé occupe toute la toile,
+ * sans un pixel transparent, et les pips tiennent dans le disque de 80 %
+ * (0,390 contre 0,4 — la démonstration est au-dessus). Le masque d'iOS est une
+ * superellipse, qui rogne moins qu'un cercle : ce qui passe l'un passe l'autre.
+ *
+ * L'icône d'accueil change donc d'allure : la toile entière EST la face du dé,
+ * au lieu d'un petit dé flottant. C'est ce qu'iOS montrait déjà, en pire — le
+ * même dé rétréci, sur le fond qu'il choisissait tout seul.
+ */
+await ecrire(renderMaskable(180), 180, 'apple-touch-icon.png');
+
 console.log(
-  'Icônes écrites dans public/icons/ (192, 512, apple-touch 180, favicon 64, maskable 512).'
+  'Icônes écrites dans public/icons/ (192, 512, favicon 64, maskable 512, apple-touch 180 à fond perdu).'
 );
