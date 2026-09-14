@@ -118,9 +118,17 @@ describe('AppUpdatesProvider', () => {
       // es/de/it/pt parlent français sans que personne ne le remarque.
       expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();
       expect(screen.queryByText(socleLabels('en').update.title)).toBeNull();
-      expect(
-        screen.queryByRole('button', { name: socleLabels('fr').update.update })
-      ).toBeNull();
+
+      // LE BOUTON, LUI, NE SE VÉRIFIE QUE SI LES DEUX TEXTES DIFFÈRENT. Le
+      // socle a repris « Mettre à jour » en 4.16.0 — le mot que cette app
+      // employait déjà. Chercher l'absence du libellé du socle revenait alors
+      // à exiger l'absence de celui de l'app : une assertion que rien ne peut
+      // satisfaire, et qui ne prouvait plus la surcharge mais la seule
+      // divergence des dictionnaires. Elle reste utile là où ils divergent.
+      const duSocle = socleLabels('fr').update.update;
+      if (duSocle !== attendus.action) {
+        expect(screen.queryByRole('button', { name: duSocle })).toBeNull();
+      }
     }
   );
 
