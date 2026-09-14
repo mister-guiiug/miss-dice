@@ -15,13 +15,7 @@
  *
  * Les pixels ne bougent pas d'un iota : le dessin est le même, et les deux
  * encodeurs écrivent le même PNG sans perte. Ce sont les octets qui changent,
- * sharp compressant mieux — le 512 tombe de 15,1 à 11,8 ko.
- *
- * CE QUI EXPLIQUE QUE `public/icons/` NE SOIT PAS REDEVENU IDENTIQUE. Les
- * quatre fichiers à fond transparent datent du premier commit et sont plus
- * compressés que ce que produit aujourd'hui l'un ou l'autre encodeur — ils ont
- * été optimisés après coup. Les régénérer ajouterait 2,7 ko à l'application
- * sans changer un pixel, alors ils restent tels quels.
+ * sharp compressant mieux — les cinq icônes tombent de 35,8 à 28,1 ko.
  *
  * Exécuter : npm run icons
  */
@@ -40,12 +34,20 @@ const BG_BOTTOM = [59, 130, 246]; // bleu
 const PIP = [255, 255, 255];
 
 /**
- * Niveau 9 et filtrage adaptatif, et non les défauts de sharp (niveau 6,
- * filtre fixe) : ceux-là rendaient des fichiers plus lourds que pngjs, qui
- * compresse au maximum. Sans perte dans les deux cas — une palette, elle,
- * allégerait encore mais quantifierait le dégradé, qui se mettrait à bander.
+ * Niveau 9, et le filtre fixe de sharp : aux défauts (niveau 6), les cinq
+ * icônes pèsent 35,6 ko ; ainsi réglées, 28,1.
+ *
+ * SANS `adaptiveFiltering`, ET C'EST MESURÉ. Le filtrage adaptatif est le
+ * réflexe, et il se trompe sur ces images-ci : il les remonte à 32,9 ko. Un
+ * dé, c'est de larges aplats et un dégradé vertical — des lignes que le même
+ * filtre décrit toutes aussi bien, là où l'adaptatif paie un octet par ligne
+ * pour choisir. (Sur le logo photographique de mister-molkky, il gagne
+ * franchement : le rapport s'inverse d'une image à l'autre.)
+ *
+ * Sans perte dans tous les cas : une palette allégerait encore, mais
+ * quantifierait le dégradé, qui se mettrait à bander.
  */
-const PNG_OPTIONS = { compressionLevel: 9, adaptiveFiltering: true };
+const PNG_OPTIONS = { compressionLevel: 9 };
 
 const mix = (a, b, t) => Math.round(a + (b - a) * t);
 
