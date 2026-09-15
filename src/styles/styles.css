@@ -1774,3 +1774,79 @@ html[data-theme='light'] .family-apps [data-maturity='alpha'] {
 [data-dwc='pwa-install-prompt'] ~ .family-links {
   display: none;
 }
+
+/* ── Bandeau de consentement (`ConsentBanner` du socle) ───────────────────────
+   Miss Dice n'importe pas `components.css` : le composant arrive NU. Relevé le
+   16/09/2026 sur le site déployé, `[data-dwc='consent-actions']` rendait
+   `display: block` — « Accepter » et « Refuser » se touchaient, sans cible
+   tactile. Les seize apps qui importent la feuille du socle rendaient `flex`.
+
+   EN HAUT, ET PAS EN BAS. Le bas d'écran est déjà disputé par l'invite
+   d'installation et les liens de famille, qui se cachent déjà l'un l'autre. Le
+   haut est libre, et un bandeau posé là ne recouvre pas la surface de lancer —
+   qui est l'interface entière de cette app. */
+[data-dwc='consent-banner'] {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 14px);
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-ui);
+  backdrop-filter: blur(10px);
+  animation: consent-in 260ms var(--ease-out);
+}
+
+[data-dwc='consent-message'] {
+  margin: 0;
+  flex: 1 1 15rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* `flex-wrap` ici AUSSI : sous 360 px le message passe au-dessus et les deux
+   boutons restent côte à côte. Les empiler mettrait « Refuser » plus bas
+   qu'« Accepter », donc plus coûteux — obtenu par la mise en page plutôt que
+   par le nombre de clics, ce qui ne vaut pas mieux. */
+[data-dwc='consent-actions'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* LES DEUX BOUTONS SUR LA MÊME RÈGLE, et c'est tout l'enjeu : même taille,
+   même contraste, même cible tactile. Un bouton de refus plus discret rendrait
+   le consentement irrégulier sans qu'aucun test de comportement ne le voie. */
+[data-dwc='consent-accept'],
+[data-dwc='consent-refuse'] {
+  min-height: 2.75rem;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* `slide-up` ne conviendrait pas : il monte depuis le bas, alors que ce
+   bandeau-ci descend du haut. */
+@keyframes consent-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
