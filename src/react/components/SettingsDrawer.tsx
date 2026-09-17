@@ -19,7 +19,6 @@ import {
 import { appUrl } from '../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { currentIssueReportUrl } from '@mister-guiiug/dev-pwa-config/issue-report';
-import { AppVersion } from '@mister-guiiug/dev-pwa-config/react/app-version';
 import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
@@ -517,20 +516,11 @@ export function SettingsDrawer() {
           <p className="about__feedback" role="status" aria-live="polite">
             {copied ? t('settings.linkCopied') : ''}
           </p>
-          {/* LE NUMÉRO DE BUILD, juste sous « Signaler un problème » — c'est
-              pour lui qu'il existe. `versionPlugin({ manifest: true })` écrit
-              `version.json` au build depuis toujours et rien ne le lisait :
-              l'en-tête d'`issueUrl` ci-dessus dit pourtant que la version et le
-              commit sont « ce que la page sait et que l'utilisateur ne sait
-              jamais dire ». Ils partaient dans le rapport, sans jamais être
-              affichés.
-              `updates` fait sonder ce fichier au montage du tiroir : une PWA
-              installée apprend qu'une version l'attend. */}
-          <AppVersion
-            className="about__version"
-            repoUrl={repoUrl('miss-dice')}
-            updates
-          />
+          {/* PLUS DE NUMÉRO DE BUILD AFFICHÉ. Il portait un lien vers
+              `…/releases/tag/vX.Y.Z` : aucune app du parc ne pose de tag git,
+              le lien répondait donc 404. Le numéro et le commit continuent de
+              partir dans le rapport de bug, préremplis par `issueUrl`
+              ci-dessus — c'est le canal pour lequel ils existent. */}
         </div>
 
         {/* Nos autres applications : cross-promotion de la famille miss/mister.
