@@ -1,26 +1,26 @@
-import { useMemo, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { AppUpdates } from '@mister-guiiug/dev-pwa-config/react/app-updates';
-import {
-  LabelsProvider,
-  type LabelOverrides,
-} from '@mister-guiiug/dev-pwa-config/react/labels';
+import { LabelsProvider } from '@mister-guiiug/dev-pwa-config/react/labels';
 import type { RegisterSW } from '@mister-guiiug/dev-pwa-config/react/use-update-prompt';
 import { useI18n } from '../i18n/useI18n';
 
 /**
  * Pont entre le i18n de l'app et le bandeau de mise à jour du socle.
  *
- * POURQUOI CE FICHIER EXISTE. `react/labels` du socle ne livre que **`fr` et
- * `en`**, et `LabelsProvider` fait retomber toute locale inconnue sur le
- * **français**, en silence : ni erreur, ni avertissement. Miss Dice parle
- * **six** langues — fr, en, es, de, it, pt. Monter `AppUpdates` sans surcharges
- * ferait donc parler français à quatre utilisateurs sur six, et rien ne le
- * signalerait : ni le typage, ni ESLint, ni aucun test.
+ * CE FICHIER SURCHARGEAIT LES LIBELLÉS, ET LA RAISON A DISPARU. Elle était
+ * écrite ici : « `react/labels` du socle ne livre que **`fr` et `en`**, et
+ * `LabelsProvider` fait retomber toute locale inconnue sur le **français**, en
+ * silence. Miss Dice parle **six** langues — fr, en, es, de, it, pt. Monter
+ * `AppUpdates` sans surcharges ferait donc parler français à quatre
+ * utilisateurs sur six. »
  *
- * On ne s'en remet donc jamais au dictionnaire du socle : les libellés du
- * bandeau sont TOUJOURS surchargés depuis `messages.ts`, y compris en français.
- * Le repli du socle devient inatteignable — c'est le but.
- * `AppUpdatesProvider.test.tsx` le prouve pour les six locales.
+ * C'était exact — et ça ne l'est plus : le socle livre SEPT locales, les six
+ * de Miss Dice comprises, groupe `update` complet. La surcharge ne protégeait
+ * donc plus de rien ; elle ajoutait seulement une neuvième façon d'annoncer
+ * une mise à jour dans un parc qui en comptait déjà huit.
+ *
+ * `AppUpdatesProvider.test.tsx` prouve toujours les six locales — sur les
+ * libellés du socle, désormais.
  *
  * `registerSW` est une PROP, pas un import : la décision « on n'enregistre pas
  * de service worker en développement » appartient à `main.tsx`, seul endroit
@@ -39,23 +39,10 @@ export function AppUpdatesProvider({
   registerSW?: RegisterSW;
   children: ReactNode;
 }) {
-  const { locale, t } = useI18n();
-
-  const overrides = useMemo<LabelOverrides>(
-    () => ({
-      update: {
-        title: t('update.available'),
-        update: t('update.action'),
-        updating: t('update.updating'),
-        dismiss: t('update.dismiss'),
-        snooze: t('update.dismiss'),
-      },
-    }),
-    [t]
-  );
+  const { locale } = useI18n();
 
   return (
-    <LabelsProvider locale={locale} overrides={overrides}>
+    <LabelsProvider locale={locale}>
       <AppUpdates
         checkEvery="1h"
         registerSW={registerSW}

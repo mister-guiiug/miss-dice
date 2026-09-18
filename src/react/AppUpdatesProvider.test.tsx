@@ -15,7 +15,7 @@ import {
   swStub,
 } from '@mister-guiiug/dev-pwa-config/testing/pwa-register';
 import { LABELS } from '@mister-guiiug/dev-pwa-config/react/labels';
-import { LOCALES, messages, type Locale } from '../i18n/messages';
+import { LOCALES, type Locale } from '../i18n/messages';
 import { renderWithProviders } from '../test/renderWithProviders';
 import { AppUpdatesProvider } from './AppUpdatesProvider';
 
@@ -28,12 +28,11 @@ import { AppUpdatesProvider } from './AppUpdatesProvider';
  *    donc échouer le test au lieu de passer en silence. L'ancien stub maison,
  *    muet, ne pouvait rien prouver de tel.
  *
- * 2. **Le bandeau parle la BONNE LANGUE, dans les SIX.** `react/labels` du
- *    socle ne livre que `fr` et `en`, et fait retomber toute locale inconnue
- *    sur le français SANS RIEN SIGNALER. Miss Dice parle fr/en/es/de/it/pt :
- *    sans les surcharges d'`AppUpdatesProvider`, quatre utilisateurs sur six
- *    verraient un bandeau français, et ni le typage, ni ESLint, ni aucun test
- *    ne le dirait.
+ * 2. **Le bandeau parle la BONNE LANGUE, dans les SIX.** `LabelsProvider`
+ *    fait retomber toute locale INCONNUE sur le français SANS RIEN SIGNALER.
+ *    Miss Dice parle fr/en/es/de/it/pt : ces six cas prouvent que le socle
+ *    les sert lui-même, depuis qu'il livre sept locales et que l'app a cessé
+ *    de passer ses propres libellés.
  */
 
 /** `LABELS` est un `Record<string, …>` : TS ignore quelles locales existent. */
@@ -46,10 +45,8 @@ function socleLabels(locale: string) {
 /**
  * `I18nProvider` est INDISPENSABLE ici, et pas seulement pour que `useI18n`
  * réponde : c'est lui qui fixe la langue dans laquelle
- * `AppUpdatesProvider` calcule ses surcharges. Il pose aussi son propre
- * `LabelsProvider`, SANS surcharge — celui d'`AppUpdatesProvider`, plus
- * proche du bandeau, doit l'emporter. C'est exactement ce que vérifie le test
- * des six langues ci-dessous.
+ * `AppUpdatesProvider` passe au `LabelsProvider` du socle. C'est exactement ce
+ * que vérifie le test des six langues ci-dessous.
  */
 function mount(registerSW?: typeof pilotableRegisterSW, locale: Locale = 'fr') {
   return renderWithProviders(
@@ -71,8 +68,8 @@ describe('AppUpdatesProvider', () => {
   it('le socle livre les sept langues depuis 3.33.0 — le piège que ces tests fermaient', () => {
     // Jusqu'à 3.32, `react/labels` ne portait que fr et en : les autres
     // langues retombaient en français sans un mot. Ces tests figeaient ce
-    // piège ; ils figent désormais sa disparition — la règle qu'ils ont
-    // inspirée reste bonne, l'app passe ses propres libellés au bandeau.
+    // piège ; ils figent désormais sa disparition : l'app a retiré ses
+    // surcharges, et c'est ce dictionnaire-ci qui répond dans les six langues.
     expect(Object.keys(LABELS).sort()).toEqual([
       'de',
       'en',
@@ -91,43 +88,46 @@ describe('AppUpdatesProvider', () => {
     mount(pilotableRegisterSW);
 
     expect(swStub.registered).toBe(true);
-    expect(screen.queryByText(messages.fr.update.available)).toBeNull();
+    expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();
   });
 
   // LE test du lot. Les six locales, une par une.
+  //
+  // IL A CHANGÉ DE PREUVE, et il est devenu plus fort. Il vérifiait que les
+  // surcharges de l'app couvraient six locales que le socle ignorait ; il
+  // vérifie maintenant que le SOCLE les sert toutes les six lui-même. C'est la
+  // seule chose dont elles dépendent depuis que la surcharge est retirée — et
+  // le jour où le socle en perdrait une, ces six cas le diraient.
   it.each(LOCALES)(
-    'locale « %s » : le bandeau affiche les libellés de l’app',
+    'locale « %s » : le bandeau affiche les libellés du socle',
     locale => {
       mount(pilotableRegisterSW, locale);
       act(() => {
         swStub.needRefresh();
       });
 
-      const attendus = messages[locale].update;
-      expect(screen.getByText(attendus.available)).toBeInTheDocument();
+      const attendus = socleLabels(locale).update;
+      expect(screen.getByText(attendus.title)).toBeInTheDocument();
       expect(
-        screen.getByRole('button', { name: attendus.action })
+        screen.getByRole('button', { name: attendus.update })
       ).toBeInTheDocument();
+      // LE REPORT DIT SA DURÉE, et c'est ce que la surcharge masquait : elle
+      // mappait `snooze` sur « Plus tard » tout court, alors qu'`AppUpdates`
+      // reporte de quatre heures par défaut depuis le socle 4.19.0. Le libellé
+      // du socle est `Plus tard ({hours} h)` et remplit `{hours}` lui-même.
       expect(
-        screen.getByRole('button', { name: attendus.dismiss })
+        screen.getByRole('button', {
+          name: attendus.snooze.replaceAll('{hours}', '4'),
+        })
       ).toBeInTheDocument();
 
-      // ET SURTOUT : le dictionnaire du socle est INATTEIGNABLE. Ses titres
-      // `fr` et `en` diffèrent de ceux de l'app dans les six locales ; en
-      // voir un à l'écran signifierait que la surcharge a sauté — et que
-      // es/de/it/pt parlent français sans que personne ne le remarque.
-      expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();
-      expect(screen.queryByText(socleLabels('en').update.title)).toBeNull();
-
-      // LE BOUTON, LUI, NE SE VÉRIFIE QUE SI LES DEUX TEXTES DIFFÈRENT. Le
-      // socle a repris « Mettre à jour » en 4.16.0 — le mot que cette app
-      // employait déjà. Chercher l'absence du libellé du socle revenait alors
-      // à exiger l'absence de celui de l'app : une assertion que rien ne peut
-      // satisfaire, et qui ne prouvait plus la surcharge mais la seule
-      // divergence des dictionnaires. Elle reste utile là où ils divergent.
-      const duSocle = socleLabels('fr').update.update;
-      if (duSocle !== attendus.action) {
-        expect(screen.queryByRole('button', { name: duSocle })).toBeNull();
+      // ET SURTOUT : PAS DE REPLI SILENCIEUX. `LabelsProvider` retombe sur le
+      // français pour toute locale qu'il ne connaît pas, sans rien signaler.
+      // Hors du français, en voir le titre à l'écran signifierait exactement
+      // ça — et c'est le seul défaut que ce test ne peut pas se permettre de
+      // laisser passer.
+      if (locale !== 'fr') {
+        expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();
       }
     }
   );
@@ -140,6 +140,6 @@ describe('AppUpdatesProvider', () => {
     expect(() => {
       swStub.needRefresh();
     }).toThrow(/registerSW n'a jamais été appelé/);
-    expect(screen.queryByText(messages.fr.update.available)).toBeNull();
+    expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();
   });
 });

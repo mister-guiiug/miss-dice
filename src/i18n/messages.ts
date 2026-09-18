@@ -113,17 +113,6 @@ export interface Messages {
     later: string;
     dismiss: string;
   };
-  /**
-   * Bandeau « nouvelle version ». Ces quatre libellés surchargent le groupe
-   * `update` de `react/labels` du socle, qui ne connaît que `fr` et `en` et
-   * ferait retomber SILENCIEUSEMENT es/de/it/pt sur le français.
-   */
-  update: {
-    available: string;
-    action: string;
-    updating: string;
-    dismiss: string;
-  };
   modes: {
     title: string;
     roll: string;
@@ -317,12 +306,6 @@ const fr: Messages = {
     action: 'Installer',
     later: 'Plus tard',
     dismiss: 'Ne pas installer',
-  },
-  update: {
-    available: 'Nouvelle version disponible.',
-    action: 'Mettre à jour',
-    updating: 'Mise à jour…',
-    dismiss: 'Plus tard',
   },
   modes: {
     title: 'Jeux',
@@ -518,12 +501,6 @@ const en: Messages = {
     later: 'Later',
     dismiss: 'Don’t install',
   },
-  update: {
-    available: 'A new version is available.',
-    action: 'Update',
-    updating: 'Updating…',
-    dismiss: 'Later',
-  },
   modes: {
     title: 'Games',
     roll: 'Free roll',
@@ -717,12 +694,6 @@ const es: Messages = {
     action: 'Instalar',
     later: 'Más tarde',
     dismiss: 'No instalar',
-  },
-  update: {
-    available: 'Hay una nueva versión disponible.',
-    action: 'Actualizar',
-    updating: 'Actualizando…',
-    dismiss: 'Más tarde',
   },
   modes: {
     title: 'Juegos',
@@ -918,12 +889,6 @@ const de: Messages = {
     later: 'Später',
     dismiss: 'Nicht installieren',
   },
-  update: {
-    available: 'Eine neue Version ist verfügbar.',
-    action: 'Aktualisieren',
-    updating: 'Wird aktualisiert…',
-    dismiss: 'Später',
-  },
   modes: {
     title: 'Spiele',
     roll: 'Freier Wurf',
@@ -1118,12 +1083,6 @@ const it: Messages = {
     later: 'Più tardi',
     dismiss: 'Non installare',
   },
-  update: {
-    available: 'È disponibile una nuova versione.',
-    action: 'Aggiorna',
-    updating: 'Aggiornamento…',
-    dismiss: 'Più tardi',
-  },
   modes: {
     title: 'Giochi',
     roll: 'Lancio libero',
@@ -1317,12 +1276,6 @@ const pt: Messages = {
     action: 'Instalar',
     later: 'Mais tarde',
     dismiss: 'Não instalar',
-  },
-  update: {
-    available: 'Está disponível uma nova versão.',
-    action: 'Atualizar',
-    updating: 'A atualizar…',
-    dismiss: 'Mais tarde',
   },
   modes: {
     title: 'Jogos',
