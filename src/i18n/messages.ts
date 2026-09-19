@@ -65,6 +65,9 @@ export interface Messages {
     sourceCode: string;
     buyCoffee: string;
     reportIssue: string;
+    forceUpdate: string;
+    updating: string;
+    forceUpdateHint: string;
     linkCopied: string;
     stats: string;
     statsTotal: string;
@@ -261,6 +264,10 @@ const fr: Messages = {
     sourceCode: 'Code source',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Signaler un problème',
+    forceUpdate: 'Recharger l’application',
+    updating: 'Rechargement…',
+    forceUpdateHint:
+      'Récupère la dernière version publiée, même si cet appareil en garde une plus ancienne en cache. Vos réglages, votre historique et vos parties ne sont pas touchés.',
     linkCopied: 'Lien copié !',
     stats: 'Statistiques',
     statsTotal: '{n} lancers',
@@ -455,6 +462,10 @@ const en: Messages = {
     sourceCode: 'Source code',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Report a problem',
+    forceUpdate: 'Reload the app',
+    updating: 'Reloading…',
+    forceUpdateHint:
+      'Fetches the latest published version, even if this device keeps an older one in cache. Your settings, history and games are untouched.',
     linkCopied: 'Link copied!',
     stats: 'Statistics',
     statsTotal: '{n} rolls',
@@ -649,6 +660,10 @@ const es: Messages = {
     sourceCode: 'Código fuente',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Informar de un problema',
+    forceUpdate: 'Recargar la aplicación',
+    updating: 'Recargando…',
+    forceUpdateHint:
+      'Obtiene la última versión publicada, aunque este dispositivo conserve una anterior en caché. Tus ajustes, tu historial y tus partidas no se tocan.',
     linkCopied: '¡Enlace copiado!',
     stats: 'Estadísticas',
     statsTotal: '{n} lanzamientos',
@@ -843,6 +858,10 @@ const de: Messages = {
     sourceCode: 'Quellcode',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Problem melden',
+    forceUpdate: 'App neu laden',
+    updating: 'Wird neu geladen…',
+    forceUpdateHint:
+      'Holt die neueste veröffentlichte Version, auch wenn dieses Gerät eine ältere im Cache behält. Deine Einstellungen, dein Verlauf und deine Partien bleiben unberührt.',
     linkCopied: 'Link kopiert!',
     stats: 'Statistiken',
     statsTotal: '{n} Würfe',
@@ -1037,6 +1056,10 @@ const it: Messages = {
     sourceCode: 'Codice sorgente',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Segnala un problema',
+    forceUpdate: 'Ricarica l’applicazione',
+    updating: 'Ricaricamento…',
+    forceUpdateHint:
+      'Recupera l’ultima versione pubblicata, anche se questo dispositivo ne conserva una più vecchia in cache. Le tue impostazioni, la cronologia e le partite non vengono toccate.',
     linkCopied: 'Link copiato!',
     stats: 'Statistiche',
     statsTotal: '{n} lanci',
@@ -1231,6 +1254,10 @@ const pt: Messages = {
     sourceCode: 'Código-fonte',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Comunicar um problema',
+    forceUpdate: 'Recarregar a aplicação',
+    updating: 'A recarregar…',
+    forceUpdateHint:
+      'Obtém a última versão publicada, mesmo que este dispositivo guarde uma mais antiga em cache. As suas definições, o histórico e os jogos não são afetados.',
     linkCopied: 'Link copiado!',
     stats: 'Estatísticas',
     statsTotal: '{n} lançamentos',

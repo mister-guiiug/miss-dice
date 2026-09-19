@@ -19,6 +19,7 @@ import {
 import { appUrl } from '../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { currentIssueReportUrl } from '@mister-guiiug/dev-pwa-config/issue-report';
+import { UpdateButton } from '@mister-guiiug/dev-pwa-config/react/update-button';
 import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
@@ -513,6 +514,30 @@ export function SettingsDrawer() {
               {t('settings.reportIssue')}
             </a>
           </div>
+          {/*
+           * RECHARGER L'APPLICATION — le geste qui manquait, et le seul que
+           * l'utilisateur ne peut pas improviser.
+           *
+           * POURQUOI UN BOUTON, ET PAS LE BANDEAU. Le bandeau de mise à jour
+           * ne paraît que quand le navigateur a DÉJÀ vu la nouvelle version ;
+           * ce bouton sert exactement dans le cas inverse — quand on
+           * SOUPÇONNE d'être en retard et que rien ne s'affiche. C'est la
+           * raison d'être du composant du socle, promu en 4.x depuis six apps
+           * qui l'avaient écrit six fois, dont trois de travers.
+           *
+           * LES LIBELLÉS SONT PASSÉS, ET C'EST OBLIGATOIRE ICI. Ceux du socle
+           * ne parlent que `fr` et `en` ; cette application en compte SIX. Les
+           * laisser au paquet ferait retomber l'espagnol, l'allemand,
+           * l'italien et le portugais en anglais, au milieu d'un tiroir
+           * entièrement traduit.
+           */}
+          <UpdateButton
+            className="link-btn"
+            label={t('settings.forceUpdate')}
+            updatingLabel={t('settings.updating')}
+            hint={t('settings.forceUpdateHint')}
+            showHint
+          />
           <p className="about__feedback" role="status" aria-live="polite">
             {copied ? t('settings.linkCopied') : ''}
           </p>
