@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { GESTES, trackEvent } from '@mister-guiiug/dev-pwa-config/analytics';
 import {
   clearGame,
   loadGame,
@@ -42,15 +43,50 @@ export function useUndoableGame<T>(
     return saved ? { present: saved, past: [] } : null;
   });
 
+  /*
+   * LA PARTIE EST MESURÉE ICI, ET NULLE PART AILLEURS.
+   *
+   * Ce hook est le seul endroit qui connaisse À LA FOIS le jeu (`mode`, une
+   * énumération `GameKey`) et le moment où il se termine (`isOver`). Chaque
+   * écran de jeu l'utilise : l'instrumenter ici les couvre tous, du même nom,
+   * là où trois composants auraient donné trois vocabulaires.
+   *
+   * IL N'Y A PAS D'ÉVÉNEMENT PAR LANCER, et c'est une décision. Un tap est le
+   * battement de cœur de cette app : un événement par lancer pèserait plus que
+   * tout le reste du parc réuni, pour un chiffre que la vue de page donne
+   * déjà. Ce qui manque, c'est le RAPPORT — combien de parties commencées vont
+   * au bout.
+   *
+   * NI LES NOMS DES JOUEURS, NI LES SCORES. Les noms sont saisis, et un score
+   * ne dit rien qu'on veuille savoir de quelqu'un.
+   */
+  const finComptee = useRef(false);
+
   useEffect(() => {
     if (!wrap) return;
-    if (isOver(wrap.present)) clearGame(mode);
-    else saveGame(mode, wrap.present);
+    if (isOver(wrap.present)) {
+      clearGame(mode);
+      // UNE SEULE FOIS PAR PARTIE. L'effet rejoue à chaque changement d'état,
+      // et `isOver` reste vrai : sans ce garde, une partie finie se compterait
+      // à chaque rendu suivant.
+      if (!finComptee.current) {
+        finComptee.current = true;
+        trackEvent(GESTES.PARTIE, { etape: 'terminee', jeu: mode });
+      }
+    } else {
+      // Un `undo` ramène la partie en cours : sa fin redeviendra comptable.
+      finComptee.current = false;
+      saveGame(mode, wrap.present);
+    }
   }, [wrap, mode, isOver]);
 
   const start = useCallback(
-    (game: T) => setWrap({ present: game, past: [] }),
-    []
+    (game: T) => {
+      finComptee.current = false;
+      setWrap({ present: game, past: [] });
+      trackEvent(GESTES.PARTIE, { etape: 'demarree', jeu: mode });
+    },
+    [mode]
   );
 
   const apply = useCallback(
