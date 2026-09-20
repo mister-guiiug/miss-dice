@@ -47,6 +47,21 @@ export default defineConfig(({ command }) => {
             // téléchargée chez un visiteur qui refuse. C'est `preloadGzipKb`
             // qui le voit, jamais le total.
             if (norm.includes('/posthog-js/')) return 'posthog';
+            // ET LE CATALOGUE DES PALETTES, TROISIÈME FOIS LE MÊME PIÈGE.
+            // `ThemeProvider` du socle charge `themes.js` — dix-sept palettes
+            // — par un `import()` PARESSEUX, et ne le déclenche que si on lui
+            // passe `appId`. Cette app ne lui en passe aucun : le catalogue
+            // n'est jamais lu à l'exécution. Mais la règle ci-dessous range
+            // tout `node_modules` dans `vendor`, qui est un morceau STATIQUE
+            // et PRÉCHARGÉ : le chargement paresseux du socle est annulé par
+            // le découpage de l'app, et le catalogue voyage dans le chemin
+            // critique de chaque visiteur. Mesuré le 20/09/2026 : `vendor`
+            // 32,0 → 28,4 Kio gzip, PRÉCHARGÉ 123,5 → 119,8 Kio, et un
+            // morceau `themes` de 4,0 Kio que personne ne demande jamais.
+            // La preuve tient à un marqueur PROPRE au catalogue — une couleur
+            // de palette, `#f8fafc` : les noms d'apps ne valent rien, ils
+            // vivent aussi dans `apps-catalog.js`.
+            if (norm.includes('/dev-pwa-config/themes.js')) return 'themes';
             if (
               norm.includes('/vite-plugin-pwa/') ||
               norm.includes('/workbox-')
