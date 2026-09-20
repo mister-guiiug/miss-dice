@@ -1000,33 +1000,46 @@ a[data-dwc='app-version-value']:hover {
   white-space: nowrap;
 }
 
-.family-apps [data-maturity='stable'] {
+/* `[data-dwc='maturity']` N'EST PAS DÉCORATIF DANS CES SÉLECTEURS.
+   `data-maturity` est porté par DEUX éléments : la pastille, et le `<li>` de
+   la carte entière — le socle l'y pose comme prise de filtrage. Sans le
+   qualifier, ces règles peignaient aussi le `<li>` : un rectangle teinté,
+   PLEINE LARGEUR ET À ANGLES DROITS, derrière une carte aux coins arrondis.
+   D'où le double contour visible à l'écran, violet pour une app `alpha`,
+   vert pour une `stable`. */
+.family-apps [data-dwc='maturity'][data-maturity='stable'] {
   background: color-mix(in srgb, #22a05a 15%, transparent);
   border-color: color-mix(in srgb, #22a05a 30%, transparent);
   color: #4ade80;
 }
 
-.family-apps [data-maturity='beta'] {
+.family-apps [data-dwc='maturity'][data-maturity='beta'] {
   background: color-mix(in srgb, #d29614 16%, transparent);
   border-color: color-mix(in srgb, #d29614 32%, transparent);
   color: #fbbf24;
 }
 
-.family-apps [data-maturity='alpha'] {
+.family-apps [data-dwc='maturity'][data-maturity='alpha'] {
   background: color-mix(in srgb, #965ad2 15%, transparent);
   border-color: color-mix(in srgb, #965ad2 30%, transparent);
   color: #c084fc;
 }
 
-html[data-theme='light'] .family-apps [data-maturity='stable'] {
+html[data-theme='light']
+  .family-apps
+  [data-dwc='maturity'][data-maturity='stable'] {
   color: #166534;
 }
 
-html[data-theme='light'] .family-apps [data-maturity='beta'] {
+html[data-theme='light']
+  .family-apps
+  [data-dwc='maturity'][data-maturity='beta'] {
   color: #854d0e;
 }
 
-html[data-theme='light'] .family-apps [data-maturity='alpha'] {
+html[data-theme='light']
+  .family-apps
+  [data-dwc='maturity'][data-maturity='alpha'] {
   color: #6d28d9;
 }
 
