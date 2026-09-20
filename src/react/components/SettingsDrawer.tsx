@@ -514,6 +514,14 @@ export function SettingsDrawer() {
               {t('settings.reportIssue')}
             </a>
           </div>
+          {/* LE STATUT DU PARTAGE, JUSTE SOUS LES LIENS. Il annonçait « Lien
+              copié » depuis l'AUTRE CÔTÉ du bouton de rechargement et de son
+              explication : une région `aria-live` séparée de ce qui la
+              déclenche par deux blocs, donc un lecteur d'écran qui annonce la
+              confirmation loin du geste, et un œil qui ne la voit pas. */}
+          <p className="about__feedback" role="status" aria-live="polite">
+            {copied ? t('settings.linkCopied') : ''}
+          </p>
           {/*
            * RECHARGER L'APPLICATION — le geste qui manquait, et le seul que
            * l'utilisateur ne peut pas improviser.
@@ -531,16 +539,15 @@ export function SettingsDrawer() {
            * l'italien et le portugais en anglais, au milieu d'un tiroir
            * entièrement traduit.
            */}
-          <UpdateButton
-            className="link-btn"
-            label={t('settings.forceUpdate')}
-            updatingLabel={t('settings.updating')}
-            hint={t('settings.forceUpdateHint')}
-            showHint
-          />
-          <p className="about__feedback" role="status" aria-live="polite">
-            {copied ? t('settings.linkCopied') : ''}
-          </p>
+          <div className="about__maintenance">
+            <UpdateButton
+              className="link-btn"
+              label={t('settings.forceUpdate')}
+              updatingLabel={t('settings.updating')}
+              hint={t('settings.forceUpdateHint')}
+              showHint
+            />
+          </div>
           {/* PLUS DE NUMÉRO DE BUILD AFFICHÉ. Il portait un lien vers
               `…/releases/tag/vX.Y.Z` : aucune app du parc ne pose de tag git,
               le lien répondait donc 404. Le numéro et le commit continuent de

@@ -742,17 +742,38 @@ button {
   letter-spacing: 0.05em;
 }
 
+/* UNE GRILLE, PLUS UNE RANGÉE QUI SE REPLIE OÙ ELLE PEUT.
+   En `flex` avec `flex: 1 1 auto`, chaque bouton prenait la largeur de son
+   TEXTE : trois tenaient sur la première ligne, « Signaler un problème »
+   basculait seul sur la deuxième et s'étirait sur toute la largeur. Le
+   découpage ne disait rien — il suivait la longueur des mots, pas
+   l'importance des liens, et il changeait d'une langue à l'autre. Des
+   DEUX colonnes, et pas un `auto-fit` : mesuré, `minmax(140px, 1fr)` en
+   rendait TROIS dans ce tiroir et reconstituait exactement le 3 + 1 qu'on
+   voulait supprimer. Le nombre de liens est connu — quatre — donc la grille
+   se pose, elle ne se devine pas. Ils se rangent alors deux par deux, et les
+   paires ont un sens : le projet d'un côté, la contribution de l'autre.
+   `minmax(0, 1fr)` plutôt que `1fr` : sans lui, un mot long d'une autre
+   langue élargirait sa colonne au lieu de passer à la ligne. */
 .about__links {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
+
+/* DEUX COLONNES AUSSI SUR TÉLÉPHONE, ET C'EST MESURÉ. Une première version
+   retombait à une colonne sous 360 px — la coupure ne servait à rien : sur un
+   écran de 375 px, le tiroir laisse 163 px par colonne et « Signaler un
+   problème » passe à DEUX lignes malgré tout. Vérifié dans le navigateur.
+   Or les deux cellules d'une rangée gardent la même hauteur, le texte reste
+   centré, et le pavé reste compact : empiler quatre boutons pleine largeur
+   aurait repoussé « Nos autres applications » hors de l'écran pour éviter un
+   retour à la ligne qui ne gêne personne. */
 
 .link-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  flex: 1 1 auto;
   justify-content: center;
   padding: 11px 12px;
   border: 1px solid var(--border);
@@ -782,6 +803,42 @@ button {
   font-size: 0.85rem;
   font-weight: 600;
   text-align: center;
+}
+
+/* ─────────── Recharger l'application (UpdateButton du socle) ───────────
+   CETTE APP N'IMPORTE PAS `components.css` — comme pour `AppVersion` plus
+   bas, les composants du socle sortent NUS. Sans les règles ci-dessous, le
+   bouton gardait la largeur de son texte au milieu d'une grille de blocs
+   pleine largeur, et son explication tombait en TEXTE COURANT : c'était le
+   plus gros pavé du tiroir, pour l'action la moins fréquente.
+
+   ET C'EST UNE ACTION D'UNE AUTRE NATURE. Les quatre liens au-dessus mènent
+   AILLEURS ; celui-ci agit sur l'application elle-même, et c'est le seul dont
+   l'effet demande une phrase. D'où le trait de séparation : ce n'est pas un
+   cinquième lien qu'on aurait mal rangé. */
+.about__maintenance {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.about__maintenance [data-dwc='update-button'] {
+  width: 100%;
+}
+
+.about__maintenance [data-dwc='update-button-hint'] {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+/* Pendant le rechargement, le bouton porte `aria-disabled` : le curseur et
+   l'opacité doivent le dire aussi, sinon rien ne distingue « en cours » d'un
+   bouton qui n'a pas réagi au clic. */
+.about__maintenance [data-dwc='update-button'][aria-disabled='true'] {
+  opacity: 0.65;
+  cursor: progress;
 }
 
 /* ───────────── Numéro de version (AppVersion du socle) ─────────────
