@@ -18,27 +18,27 @@ partagées de [`@mister-guiiug/dev-pwa-config`](https://github.com/mister-guiiug
 
 Séparation stricte **métier / animation / rendu / config**, comme demandé :
 
-| Couche               | Fichier(s)                                            | Rôle                                                                 |
-| -------------------- | ----------------------------------------------------- | -------------------------------------------------------------------- |
-| Aléa                 | `src/dice/random.ts`                                  | Tirage uniforme 1..N + multi-dés (rng injectable)                    |
-| Types de dés         | `src/dice/diceTypes.ts`                               | D4/D6/D8/D10/D12/D20 : faces, silhouette, rendu                      |
-| Disposition points   | `src/dice/pips.ts`                                    | Grille 3×3 → points (réservé au D6)                                  |
-| Couleurs             | `src/dice/colors.ts`                                  | Une teinte par face (palette cyclée au-delà du D6)                   |
-| Cadence d'animation  | `src/dice/rollSchedule.ts`                            | Instants de défilement (pur, testé)                                  |
-| Contrôleur de lancer | `src/react/hooks/useDiceRoll.ts`                      | État repos → défilement → résultat multi-dés, anti-double-tap        |
-| Secouer pour lancer  | `src/react/hooks/useShakeToRoll.ts`                   | Détection de secousse (DeviceMotion) + permission iOS                |
-| Clavier (desktop)    | `src/react/hooks/useKeyboardRoll.ts`                  | Espace/Entrée lance, `+`/`−`/flèches changent le nombre de dés       |
-| Annonce vocale       | `src/a11y/speech.ts`                                  | Énoncé du résultat (Web Speech), voix choisie selon la langue        |
-| Rendu d'une face     | `src/react/components/DiceFace.tsx`                   | Points (D6) ou chiffre + silhouette (sans logique métier)            |
-| Plateau de dés       | `src/react/components/DiceTray.tsx`                   | Disposition de N dés, taille adaptative                              |
-| Écran principal      | `src/react/components/DiceScreen.tsx`                 | Zone de tap plein écran, total, teinte immersive, a11y               |
-| Réglages             | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx` | Préfs locales (langue, type, nombre, secousse, vibration, mouvement) |
-| Traductions          | `src/i18n/messages.ts`, `useI18n.ts`                  | FR/EN/ES, clés typées, détection navigateur, `translate` pur         |
-| Jeu Yahtzee          | `src/games/yahtzee/{scoring,engine}.ts`               | Score des 13 cases + machine d'état pure (pass-and-play)             |
-| Jeu 421              | `src/games/dice421/{scoring,engine}.ts`               | Classement des mains + manches à jetons (charge/décharge)            |
-| Jeu Cochon (Pig)     | `src/games/pig/engine.ts`                             | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque       |
-| Aiguillage écrans    | `src/app/appMode.ts`                                  | Lancer libre / Yahtzee / 421 / Cochon / notation / décider           |
-| PWA                  | `vite.config.ts`, `src/main.tsx`                      | Manifest, service worker, base path GH Pages                         |
+| Couche               | Fichier(s)                                            | Rôle                                                                  |
+| -------------------- | ----------------------------------------------------- | --------------------------------------------------------------------- |
+| Aléa                 | `src/dice/random.ts`                                  | Tirage uniforme 1..N + multi-dés (rng injectable)                     |
+| Types de dés         | `src/dice/diceTypes.ts`                               | D4/D6/D8/D10/D12/D20 : faces, silhouette, rendu                       |
+| Disposition points   | `src/dice/pips.ts`                                    | Grille 3×3 → points (réservé au D6)                                   |
+| Couleurs             | `src/dice/colors.ts`                                  | Une teinte par face (palette cyclée au-delà du D6)                    |
+| Cadence d'animation  | `src/dice/rollSchedule.ts`                            | Instants de défilement (pur, testé)                                   |
+| Contrôleur de lancer | `src/react/hooks/useDiceRoll.ts`                      | État repos → défilement → résultat multi-dés, anti-double-tap         |
+| Secouer pour lancer  | `src/react/hooks/useShakeToRoll.ts`                   | Détection de secousse (DeviceMotion) + permission iOS                 |
+| Clavier (desktop)    | `src/react/hooks/useKeyboardRoll.ts`                  | Espace/Entrée lance, `+`/`−`/flèches changent le nombre de dés        |
+| Annonce vocale       | `src/react/hooks/useSpeak.ts`                         | Branche le `speech` du socle (Web Speech) sur le réglage et la locale |
+| Rendu d'une face     | `src/react/components/DiceFace.tsx`                   | Points (D6) ou chiffre + silhouette (sans logique métier)             |
+| Plateau de dés       | `src/react/components/DiceTray.tsx`                   | Disposition de N dés, taille adaptative                               |
+| Écran principal      | `src/react/components/DiceScreen.tsx`                 | Zone de tap plein écran, total, teinte immersive, a11y                |
+| Réglages             | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx` | Préfs locales (langue, type, nombre, secousse, vibration, mouvement)  |
+| Traductions          | `src/i18n/messages.ts`, `useI18n.ts`                  | FR/EN/ES, clés typées, détection navigateur, `translate` pur          |
+| Jeu Yahtzee          | `src/games/yahtzee/{scoring,engine}.ts`               | Score des 13 cases + machine d'état pure (pass-and-play)              |
+| Jeu 421              | `src/games/dice421/{scoring,engine}.ts`               | Classement des mains + manches à jetons (charge/décharge)             |
+| Jeu Cochon (Pig)     | `src/games/pig/engine.ts`                             | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque        |
+| Aiguillage écrans    | `src/app/appMode.ts`                                  | Lancer libre / Yahtzee / 421 / Cochon / notation / décider            |
+| PWA                  | `vite.config.ts`, `src/main.tsx`                      | Manifest, service worker, base path GH Pages                          |
 
 La logique pure (`src/dice/**`) ne connaît ni React ni le DOM : elle est
 testable seule et couverte à ≥ 90 % (seuil CI).
@@ -68,7 +68,6 @@ miss-dice/
     ├── settings/settingsStore.ts
     ├── i18n/{messages,useI18n}.ts   # FR/EN/ES + clés typées + tests
     ├── app/appMode.ts               # écran actif (lancer libre / jeux)
-    ├── a11y/speech.ts               # annonce vocale du résultat (Web Speech)
     ├── games/                       # moteurs purs + tests
     │   ├── yahtzee/{scoring,engine}.ts
     │   ├── dice421/{scoring,engine}.ts
@@ -111,7 +110,7 @@ miss-dice/
 - **Sons** : petit retour audio synthétisé (WebAudio, aucun asset) au
   lancer et au résultat, activable.
 - **Annonce vocale** : le résultat énoncé à voix haute par la synthèse du
-  navigateur, dans la voix de la langue choisie (`src/a11y/speech.ts`).
+  navigateur, dans la voix de la langue choisie (`speech` du socle).
   Silencieuse et sans erreur là où l'API manque.
 - **Statistiques** : distribution des faces du lancer libre + total,
   réinitialisable.
@@ -210,7 +209,7 @@ gère le **bonus Yahtzee** (+100) ; le 421 reconnaît **suites** et
   dès qu'un champ ou une feuille modale a le focus.
 - `:focus-visible` net, contrastes sombres élevés.
 - Région `aria-live` annonçant « Résultat : N », doublée au besoin par
-  l'**annonce vocale** (`src/a11y/speech.ts`, réglage « Annonce vocale »).
+  l'**annonce vocale** (`speech` du socle, réglage « Annonce vocale »).
 - `role="img"` + libellé chiffré sur chaque face.
 - `prefers-reduced-motion` respecté (CSS + logique).
 
@@ -267,7 +266,6 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/games/yahtzee/{scoring,engine}.test.ts` — 13 combinaisons, bonus, tours, fin.
 - `src/games/dice421/{scoring,engine}.test.ts` — classement des mains, charge/décharge, victoire.
 - `src/games/pig/engine.test.ts` — cumul du tour, perte sur le 1, banque, victoire, solo.
-- `src/a11y/speech.test.ts` — voix par locale, énoncé, silence si l'API manque.
 - `src/react/components/SettingsDrawer.test.tsx` — le lien de signalement et son préremplissage.
 - `src/games/persistence.test.ts` — sauvegarde/reprise/effacement de partie.
 - `src/react/hooks/useUndoableGame.test.ts` — annuler, persister, reprendre.
