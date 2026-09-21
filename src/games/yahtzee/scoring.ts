@@ -22,7 +22,7 @@ export const UPPER_CATEGORIES: readonly UpperCategory[] = [
   'fives',
   'sixes',
 ];
-const LOWER_CATEGORIES: readonly LowerCategory[] = [
+export const LOWER_CATEGORIES: readonly LowerCategory[] = [
   'threeKind',
   'fourKind',
   'fullHouse',

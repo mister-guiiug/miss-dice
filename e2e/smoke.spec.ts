@@ -41,3 +41,42 @@ test('@smoke Cochon : démarrer une partie et lancer le dé', async ({
     page.getByText(/cumul du tour|turn total|acumulado del turno/i)
   ).toBeVisible({ timeout: 10000 });
 });
+
+// Régression du 21/09/2026 : le statut du tour portait un `min-height`
+// chiffré, qui remplace le `min-height: auto` — la SEULE protection d'un
+// élément flex contre la compression sous son contenu. Le corps du jeu
+// débordant, flex écrasait ce paragraphe à une ligne et la seconde
+// (« ou inscris une case pour t'arrêter ») se dessinait sous la grille de
+// score. Invisible en jsdom, qui n'a pas de moteur de mise en page : cette
+// garde n'a de sens QUE dans un vrai navigateur.
+test('@smoke Yahtzee : le statut du tour n’est rogné par rien', async ({
+  page,
+}) => {
+  // Le plus petit téléphone courant : c'est le seul endroit où la grille
+  // déborde encore du corps, donc le seul où flex a de quoi comprimer. Sur
+  // un écran confortable cette garde ne prouverait rien.
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto('/?play=yahtzee');
+  await page
+    .getByRole('button', { name: /commencer|^start$|empezar/i })
+    .click();
+  await page
+    .getByRole('button', { name: /^(lancer|roll|lanzar)$/i })
+    .first()
+    .click();
+
+  // Deux lancers restent : le statut porte bien sa seconde ligne. On vise
+  // l'élément, pas son texte — la garde vaut dans les six langues.
+  const statut = page.locator('.game-status');
+  await expect(statut.locator('.game-status__sub')).toBeVisible({
+    timeout: 10000,
+  });
+
+  // `toBeVisible` ne suffirait pas : rogné, ce texte se dessinait quand
+  // même, par-dessous le bloc suivant. Ce qu'on exige, c'est que la BOÎTE
+  // contienne son contenu.
+  const rogne = await statut.evaluate(
+    el => el.scrollHeight > el.clientHeight + 1
+  );
+  expect(rogne).toBe(false);
+});
