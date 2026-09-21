@@ -447,6 +447,85 @@ button {
   border-top: 1px solid var(--border);
 }
 
+/* ───────────── Confirmation (`ConfirmDialog` du socle) ─────────────
+   MÊME SITUATION QUE `Sheet`, et pour la même raison : miss-dice n'importe
+   pas `components.css`, le composant partagé arrive donc entièrement nu —
+   « cibler [data-dwc="confirm"] et descendants », dit son en-tête. Même
+   charpente aussi : le VOILE est un enfant qui recouvre la racine, d'où le
+   `position: relative` du panneau, sans quoi il peindrait dessous. */
+[data-dwc='confirm'] {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--safe-top) + 20px) calc(var(--safe-right) + 20px)
+    calc(var(--safe-bottom) + 20px) calc(var(--safe-left) + 20px);
+}
+
+[data-dwc='confirm-backdrop'] {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  animation: fade-in 160ms ease;
+}
+
+[data-dwc='confirm-panel'] {
+  position: relative;
+  width: min(380px, 100%);
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+[data-dwc='confirm-title'] {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+[data-dwc='confirm-body'] {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+[data-dwc='confirm-actions'] {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+[data-dwc='confirm-actions'] button {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* L'action irréversible porte le rouge dans son TEXTE et son liseré, pas dans
+   un aplat. `--dwc-danger` est une couleur de texte (light-dark : #b91c1c en
+   clair, #f87171 en sombre) : en faire un fond plein donnerait du blanc sur
+   rouge pâle en thème sombre. Et même une teinte légère coûte cher — mesuré
+   ici : un fond `color-mix(--dwc-danger 14%, --surface)` faisait tomber le
+   texte à 4,44:1, SOUS le seuil AA. La surface reste donc neutre. */
+[data-destructive] [data-dwc='confirm-confirm'] {
+  border-color: color-mix(in srgb, var(--dwc-danger) 55%, transparent);
+  color: var(--dwc-danger);
+}
+
+[data-dwc='confirm-actions'] button[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .setting-row {
   display: flex;
   align-items: center;

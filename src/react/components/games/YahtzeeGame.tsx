@@ -95,8 +95,13 @@ export function YahtzeeGame() {
       }
     };
 
+    // Partie terminée : plus rien à perdre, donc pas de confirmation.
     return (
-      <GameShell title={t('modes.yahtzee')} onNewGame={newGame}>
+      <GameShell
+        title={t('modes.yahtzee')}
+        onNewGame={newGame}
+        confirmNewGame={false}
+      >
         <div className="results">
           <h2 className="results__title">{t('game.gameOver')}</h2>
           <p className="results__headline">🏆 {headline}</p>

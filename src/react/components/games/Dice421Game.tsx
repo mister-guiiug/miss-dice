@@ -105,8 +105,13 @@ export function Dice421Game() {
         window.setTimeout(() => setCopied(false), 2200);
       }
     };
+    // Partie terminée : plus rien à perdre, donc pas de confirmation.
     return (
-      <GameShell title={t('modes.d421')} onNewGame={newGame}>
+      <GameShell
+        title={t('modes.d421')}
+        onNewGame={newGame}
+        confirmNewGame={false}
+      >
         <div className="results">
           <h2 className="results__title">{t('game.gameOver')}</h2>
           <p className="results__headline">

@@ -135,6 +135,7 @@ export interface Messages {
   common: {
     back: string;
     quit: string;
+    cancel: string;
     newGame: string;
     start: string;
     players: string;
@@ -161,6 +162,8 @@ export interface Messages {
     tie: string;
     scores: string;
     undo: string;
+    newGameConfirmTitle: string;
+    newGameConfirmBody: string;
     replay: string;
     shareResult: string;
     copied: string;
@@ -333,6 +336,7 @@ const fr: Messages = {
   common: {
     back: 'Retour',
     quit: 'Quitter',
+    cancel: 'Annuler',
     newGame: 'Nouvelle partie',
     start: 'Commencer',
     players: 'Joueurs',
@@ -359,6 +363,8 @@ const fr: Messages = {
     tie: 'Égalité !',
     scores: 'Scores',
     undo: 'Annuler',
+    newGameConfirmTitle: 'Nouvelle partie ?',
+    newGameConfirmBody: 'La partie en cours sera perdue.',
     replay: 'Rejouer (mêmes joueurs)',
     shareResult: 'Partager le résultat',
     copied: 'Copié !',
@@ -531,6 +537,7 @@ const en: Messages = {
   common: {
     back: 'Back',
     quit: 'Quit',
+    cancel: 'Cancel',
     newGame: 'New game',
     start: 'Start',
     players: 'Players',
@@ -557,6 +564,8 @@ const en: Messages = {
     tie: 'It’s a tie!',
     scores: 'Scores',
     undo: 'Undo',
+    newGameConfirmTitle: 'New game?',
+    newGameConfirmBody: 'The game in progress will be lost.',
     replay: 'Play again (same players)',
     shareResult: 'Share the result',
     copied: 'Copied!',
@@ -729,6 +738,7 @@ const es: Messages = {
   common: {
     back: 'Atrás',
     quit: 'Salir',
+    cancel: 'Cancelar',
     newGame: 'Nueva partida',
     start: 'Empezar',
     players: 'Jugadores',
@@ -755,6 +765,8 @@ const es: Messages = {
     tie: '¡Empate!',
     scores: 'Puntuaciones',
     undo: 'Deshacer',
+    newGameConfirmTitle: '¿Nueva partida?',
+    newGameConfirmBody: 'Se perderá la partida en curso.',
     replay: 'Jugar otra vez (mismos jugadores)',
     shareResult: 'Compartir el resultado',
     copied: '¡Copiado!',
@@ -927,6 +939,7 @@ const de: Messages = {
   common: {
     back: 'Zurück',
     quit: 'Beenden',
+    cancel: 'Abbrechen',
     newGame: 'Neues Spiel',
     start: 'Starten',
     players: 'Spieler',
@@ -953,6 +966,8 @@ const de: Messages = {
     tie: 'Unentschieden!',
     scores: 'Punkte',
     undo: 'Rückgängig',
+    newGameConfirmTitle: 'Neues Spiel?',
+    newGameConfirmBody: 'Das laufende Spiel geht verloren.',
     replay: 'Nochmal spielen (gleiche Spieler)',
     shareResult: 'Ergebnis teilen',
     copied: 'Kopiert!',
@@ -1125,6 +1140,7 @@ const it: Messages = {
   common: {
     back: 'Indietro',
     quit: 'Esci',
+    cancel: 'Annulla',
     newGame: 'Nuova partita',
     start: 'Inizia',
     players: 'Giocatori',
@@ -1151,6 +1167,8 @@ const it: Messages = {
     tie: 'Pareggio!',
     scores: 'Punteggi',
     undo: 'Annulla',
+    newGameConfirmTitle: 'Nuova partita?',
+    newGameConfirmBody: 'La partita in corso andrà persa.',
     replay: 'Rigioca (stessi giocatori)',
     shareResult: 'Condividi il risultato',
     copied: 'Copiato!',
@@ -1323,6 +1341,7 @@ const pt: Messages = {
   common: {
     back: 'Voltar',
     quit: 'Sair',
+    cancel: 'Cancelar',
     newGame: 'Novo jogo',
     start: 'Começar',
     players: 'Jogadores',
@@ -1349,6 +1368,8 @@ const pt: Messages = {
     tie: 'Empate!',
     scores: 'Pontuações',
     undo: 'Anular',
+    newGameConfirmTitle: 'Nova partida?',
+    newGameConfirmBody: 'A partida em curso será perdida.',
     replay: 'Jogar de novo (mesmos jogadores)',
     shareResult: 'Partilhar o resultado',
     copied: 'Copiado!',
