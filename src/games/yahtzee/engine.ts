@@ -1,5 +1,5 @@
 /**
- * Yahtzee — machine d'état pure (pass-and-play, 1 à N joueurs).
+ * Yahtzee - machine d'état pure (pass-and-play, 1 à N joueurs).
  *
  * Aucune dépendance React/DOM : chaque action renvoie un nouvel état, ce
  * qui rend tout le déroulé testable. L'aléa est injectable.

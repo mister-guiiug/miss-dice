@@ -5,7 +5,7 @@ import README from '../README.md?raw';
  * LE README NE CITE QUE DES FICHIERS QUI EXISTENT.
  *
  * Ce n'est pas une précaution théorique. Au 06/09/2026, le README renvoyait
- * DEUX fois à `src/share.ts` — au § 3 et dans la liste des tests du § 8 —
+ * DEUX fois à `src/share.ts` - au § 3 et dans la liste des tests du § 8 -
  * alors que le partage vient du module `share` du socle, et que ce fichier
  * n'existe pas. Deux autres renvois pourrissaient dans le même silence :
  * `register-sw.ts` (l'enregistrement vit dans `main.tsx`, via
@@ -14,19 +14,19 @@ import README from '../README.md?raw';
  *
  * Un chemin mort dans un README ne casse aucun build : il ne coûte qu'au
  * lecteur, qui cherche un fichier absent et finit par douter du reste du
- * document. Rien ne le rattrape — d'où ce test.
+ * document. Rien ne le rattrape - d'où ce test.
  *
  * SANS `node:fs`, ET C'EST LA CONTRAINTE QUI COMMANDE LA FORME. `src/` est
  * type-vérifié par `tsconfig.app.json`, dont les `types` se limitent à
  * `vite/client` : un `readFileSync` ici fait rougir `tsc` (« Cannot find name
  * 'node:fs' ») sans rien apprendre à personne. On passe donc par ce que Vite
- * offre nativement — `?raw` pour le document, `import.meta.glob` pour
- * l'inventaire — qui a l'avantage d'être résolu à la COMPILATION : la liste
+ * offre nativement - `?raw` pour le document, `import.meta.glob` pour
+ * l'inventaire - qui a l'avantage d'être résolu à la COMPILATION : la liste
  * des fichiers ne peut pas diverger de l'arbre réel.
  *
  * DEUX RÈGLES, parce que le README cite ses fichiers de deux façons :
  *
- *  1. en absolu (`src/…`), dans les tableaux et la prose — vérifié à
+ *  1. en absolu (`src/…`), dans les tableaux et la prose - vérifié à
  *     l'identique ;
  *  2. en relatif, dans l'arborescence du § 2, où l'indentation seule dit le
  *     parent. Plutôt que de parser des caractères de dessin, on vérifie
@@ -40,7 +40,7 @@ import README from '../README.md?raw';
 /**
  * L'inventaire réel de `src/`, en chemins relatifs à la racine du dépôt.
  *
- * `import.meta.glob` EXCLUT le module qui l'appelle — Vite refuse de se citer
+ * `import.meta.glob` EXCLUT le module qui l'appelle - Vite refuse de se citer
  * lui-même dans la carte qu'il génère, sans quoi le module s'importerait en
  * boucle. Ce fichier serait donc porté manquant par son propre test dès que
  * le § 8 le mentionne. On le rajoute, déduit de `import.meta.url` plutôt
@@ -70,7 +70,7 @@ function estUnFichierCite(chemin: string): boolean {
   return !chemin.includes('*') && /\.[A-Za-z0-9]+$/.test(chemin);
 }
 
-describe('README — les fichiers cités existent', () => {
+describe('README - les fichiers cités existent', () => {
   it('cite des chemins `src/…` réels (tableaux, prose, liste des tests)', () => {
     const cites = [...README.matchAll(/\bsrc\/[\w./{},*-]+/g)]
       .map(occurrence => occurrence[0].replace(/[.,;:]+$/, ''))

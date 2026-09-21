@@ -1,5 +1,5 @@
 /**
- * 421 — machine d'état pure (pass-and-play, 1 à N joueurs), jeu à jetons.
+ * 421 - machine d'état pure (pass-and-play, 1 à N joueurs), jeu à jetons.
  *
  * Déroulé (version classique simplifiée) :
  *  1. « Charge » : un pot de jetons (21 par défaut). Chaque manche, le

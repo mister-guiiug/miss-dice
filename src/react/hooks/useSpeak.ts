@@ -9,7 +9,7 @@ import { useI18n } from '../../i18n/useI18n';
  * lue depuis `I18nProvider` et non depuis `settingsStore`.
  *
  * LE MODULE VIENT DU SOCLE DEPUIS LA 6.6.0. miss-dice en portait une copie
- * (`src/a11y/speech.ts`) — c'est d'ailleurs elle qui avait été promue, avec
+ * (`src/a11y/speech.ts`) - c'est d'ailleurs elle qui avait été promue, avec
  * ses deux défauts. Le socle les corrige tous les deux et ajoute le choix de
  * la voix, que cette copie n'avait pas : garder deux versions du même module
  * revenait à corriger deux fois.
@@ -18,7 +18,7 @@ import { useI18n } from '../../i18n/useI18n';
  * telle quelle.
  *
  * LA VOIX SUIT LE RÉGLAGE (socle 6.7.0). Sans choix explicite, `ttsVoice` est
- * vide et le socle décide — c'est le comportement d'avant. Avec un choix, il
+ * vide et le socle décide - c'est le comportement d'avant. Avec un choix, il
  * prime : c'est la seule échappatoire quand la voix retenue d'office articule
  * mal, ce qui ne se devine d'aucune propriété de l'API. Voir `settingsStore`.
  */

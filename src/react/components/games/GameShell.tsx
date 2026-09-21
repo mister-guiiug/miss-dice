@@ -69,7 +69,7 @@ interface GameShellProps {
   onNewGame?: () => void;
   /**
    * Demander confirmation avant `onNewGame`. **Vrai par défaut**, et c'est
-   * délibéré : ce bouton appelle `quit()`, qui appelle `clearGame()` — il
+   * délibéré : ce bouton appelle `quit()`, qui appelle `clearGame()` - il
    * EFFACE la sauvegarde. Oublier la prop doit donner la confirmation, pas
    * la perte. Les écrans de fin de partie la passent à `false` : là, il n'y
    * a plus rien à perdre, et une boîte de dialogue n'y serait que du bruit.
@@ -143,7 +143,7 @@ export function GameShell({
       </header>
       {/* `tabIndex` SUR UNE ZONE QUI DÉFILE : c'est le remède de la règle axe
           `scrollable-region-focusable`. Sans lui, personne au clavier ne peut
-          faire défiler ce corps avant le premier lancer — toutes les cases de
+          faire défiler ce corps avant le premier lancer - toutes les cases de
           la grille y sont `disabled`, donc hors du parcours, et la zone n'a
           plus un seul enfant focalisable à offrir.
 

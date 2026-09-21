@@ -1,5 +1,5 @@
 /**
- * Calendrier d'animation d'un lancer — logique pure, sans DOM ni React.
+ * Calendrier d'animation d'un lancer - logique pure, sans DOM ni React.
  *
  * Renvoie les instants (ms depuis le début) où la face AFFICHÉE doit
  * changer pendant le défilement. La cadence dessine une courbe en cloche

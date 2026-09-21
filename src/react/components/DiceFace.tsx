@@ -19,7 +19,7 @@ const CELLS = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
 /**
  * Rendu d'une face de dé. Pour un D6 : neuf cellules en grille 3×3 dont
  * seules les bonnes s'allument. Pour les autres dés : le chiffre, dans la
- * silhouette du polyèdre. Aucune logique métier — valeur, type et état
+ * silhouette du polyèdre. Aucune logique métier - valeur, type et état
  * d'animation arrivent en props ; seul le libellé a11y est traduit.
  */
 export function DiceFace({ value, sides = 6, rolling = false }: DiceFaceProps) {

@@ -13,7 +13,7 @@ permissions:
   packages: read
 
 # La concurrence (group: pages, cancel-in-progress) est portée par le reusable
-# pwa-deploy@v4 lui-même — un bloc `concurrency` au niveau de ce workflow (dont
+# pwa-deploy@v4 lui-même - un bloc `concurrency` au niveau de ce workflow (dont
 # l'unique job est un appel reusable) fait échouer la validation.
 
 jobs:

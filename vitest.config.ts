@@ -17,7 +17,7 @@ export default defineConfig({
       // C'était un stub MAISON et MUET (`src/test/stub-pwa-register.ts`, l'un
       // des douze du parc). Le socle en publie un PILOTABLE : `swStub` rejoue
       // ce qu'un vrai worker fait quand une version attend, et LÈVE si
-      // personne n'a injecté `registerSW` — un bandeau incapable de
+      // personne n'a injecté `registerSW` - un bandeau incapable de
       // s'afficher fait donc rougir le test au lieu de passer inaperçu.
       'virtual:pwa-register': fileURLToPath(
         import.meta

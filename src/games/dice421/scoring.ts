@@ -1,5 +1,5 @@
 /**
- * 421 — classement et valeur en jetons d'une main de 3 dés. Logique pure.
+ * 421 - classement et valeur en jetons d'une main de 3 dés. Logique pure.
  *
  * Version classique simplifiée (assumée et documentée) :
  *  - 4-2-1 : la meilleure main, vaut 10 jetons.

@@ -1,5 +1,5 @@
 /**
- * Cochon (« Pig ») — machine d'état pure (pass-and-play, 1 à N joueurs).
+ * Cochon (« Pig ») - machine d'état pure (pass-and-play, 1 à N joueurs).
  *
  * Règle (jeu de stop-ou-encore au dé unique) :
  *  - À son tour, un joueur lance un dé 6 autant de fois qu'il le souhaite.

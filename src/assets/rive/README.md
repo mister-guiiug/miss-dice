@@ -1,4 +1,4 @@
-# Animations — Rive (optionnel)
+# Animations - Rive (optionnel)
 
 miss-dice fonctionne **sans Rive** : l'animation par défaut est en
 CSS/React (défilement des faces piloté par `useDiceRoll`, rendu par
@@ -15,10 +15,10 @@ binaire à maintenir. On garde donc Rive **optionnel**.
 
 La logique métier est déjà isolée de l'animation :
 
-- `src/dice/random.ts` — tirage aléatoire (le « quoi »)
-- `src/dice/rollSchedule.ts` — cadence du défilement (pur, testé)
-- `src/react/hooks/useDiceRoll.ts` — **contrôleur** d'état du lancer
-- `src/react/components/DiceFace.tsx` — **rendu** d'une face
+- `src/dice/random.ts` - tirage aléatoire (le « quoi »)
+- `src/dice/rollSchedule.ts` - cadence du défilement (pur, testé)
+- `src/react/hooks/useDiceRoll.ts` - **contrôleur** d'état du lancer
+- `src/react/components/DiceFace.tsx` - **rendu** d'une face
 
 Pour brancher Rive, on remplace uniquement la couche de _rendu_ : le
 contrôleur `useDiceRoll` reste la seule source de vérité (valeur, statut).

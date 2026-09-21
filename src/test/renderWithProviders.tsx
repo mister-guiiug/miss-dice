@@ -7,13 +7,13 @@ import { LOCALE_STORAGE_KEY } from '../settings/legacyMigration';
 
 /**
  * Monte un composant sous la pile de fournisseurs de l'app, dans la langue
- * demandée — le même empilement que `main.tsx`, dans le même ordre.
+ * demandée - le même empilement que `main.tsx`, dans le même ordre.
  *
  * POURQUOI PASSER PAR `localStorage` POUR LA LANGUE. `createI18n` du socle
  * fixe la sienne à l'INITIALISATION de son état
  * (`useState(detectInitialLocale)`) : il n'existe pas de prop `locale` pour la
  * piloter de l'extérieur. Écrire la clé avant le montage est donc le seul
- * moyen d'ouvrir un arbre dans une langue donnée — et c'est fidèle à ce que
+ * moyen d'ouvrir un arbre dans une langue donnée - et c'est fidèle à ce que
  * vit l'utilisateur, dont la langue est relue au démarrage.
  *
  * La clé est réécrite à chaque appel, donc jamais héritée d'un test précédent.

@@ -13,7 +13,7 @@ export const MAX_DICE = 6;
  * LA LANGUE ET LE THÈME N'Y SONT PLUS. Ils appartiennent désormais aux modules
  * du socle qui les pilotent (`react/i18n` et `react/use-theme`), lesquels
  * possèdent leur propre persistance sous une clé nue. Les garder ici aurait
- * fait deux sources de vérité pour une même valeur — le plus sûr moyen de les
+ * fait deux sources de vérité pour une même valeur - le plus sûr moyen de les
  * voir diverger. `legacyMigration.ts` transporte une fois les valeurs déjà
  * enregistrées dans le blob.
  */
@@ -44,7 +44,7 @@ export interface Settings {
    * certaines articulent franchement mal. Mesuré le 21/09/2026 :
    * `Microsoft Hortense`, première voix française de Windows et donc celle que
    * le socle retient d'office, prononce « cinq » de travers dès qu'une
-   * ponctuation le précède — or l'annonce est « Résultat : 5. ». Sur Firefox,
+   * ponctuation le précède - or l'annonce est « Résultat : 5. ». Sur Firefox,
    * aucune voix n'est marquée par défaut : sans ce réglage, l'utilisateur n'a
    * aucun recours.
    *

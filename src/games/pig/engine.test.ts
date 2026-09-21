@@ -15,7 +15,7 @@ function fixedFace(face: number): Rng {
   return () => (face - 1) / 6 + 0.001;
 }
 
-describe('Pig engine — bases', () => {
+describe('Pig engine - bases', () => {
   it('démarre à 0 pour tous, en phase playing', () => {
     const state = createPig(['A', 'B']);
     expect(state.target).toBe(PIG_TARGET);
@@ -47,7 +47,7 @@ describe('Pig engine — bases', () => {
   });
 });
 
-describe('Pig engine — banque', () => {
+describe('Pig engine - banque', () => {
   it('ne peut banquer qu’après un lancer fructueux', () => {
     const fresh = createPig(['A']);
     expect(canBank(fresh)).toBe(false);
@@ -78,7 +78,7 @@ describe('Pig engine — banque', () => {
   });
 });
 
-describe('Pig engine — garde-fous', () => {
+describe('Pig engine - garde-fous', () => {
   it('ne lance plus une partie terminée', () => {
     let state = createPig(['A'], 5);
     state = rollDiceAction(state, fixedFace(6));

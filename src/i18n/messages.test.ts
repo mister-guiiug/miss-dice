@@ -48,7 +48,7 @@ describe('messages', () => {
 describe('translate', () => {
   it('interpole les paramètres', () => {
     // Le point final est VOULU : `resultOne` est lu par la synthèse vocale,
-    // et une phrase sans ponctuation finale n'a pas de cadence de fin — la
+    // et une phrase sans ponctuation finale n'a pas de cadence de fin - la
     // dernière syllabe, c'est-à-dire le nombre, s'en trouve écourtée.
     // `resultMany` en portait un depuis toujours.
     expect(translate('fr', 'a11y.resultOne', { value: 5 })).toBe(

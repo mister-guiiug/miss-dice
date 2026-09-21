@@ -26,7 +26,7 @@ function fixedFace(face: number): Rng {
   return () => (face - 1) / 6 + 0.001;
 }
 
-describe('yahtzee engine — tour', () => {
+describe('yahtzee engine - tour', () => {
   it('crée une partie jouable même sans nom', () => {
     const state = createYahtzee([]);
     expect(state.players).toHaveLength(1);
@@ -77,7 +77,7 @@ describe('yahtzee engine — tour', () => {
   });
 });
 
-describe('yahtzee engine — score et tours', () => {
+describe('yahtzee engine - score et tours', () => {
   it('inscrit la catégorie et passe au joueur suivant', () => {
     let state = createYahtzee(['A', 'B']);
     state = rollDiceAction(state, fixedFace(5)); // [5,5,5,5,5]

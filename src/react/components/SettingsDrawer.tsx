@@ -114,8 +114,8 @@ const THEME_KEYS = [
  * module décrirait un écran que l'utilisateur a quitté.
  *
  * Ce lien n'est pas décoratif. `AppFooter issues` du socle le pose ailleurs
- * dans la famille, mais cette application n'a pas de pied de page — tout
- * l'écran est une zone de lancer — et ne déclare pas de bibliothèque
+ * dans la famille, mais cette application n'a pas de pied de page - tout
+ * l'écran est une zone de lancer - et ne déclare pas de bibliothèque
  * d'icônes : le tiroir de réglages, sous « À propos », est le seul endroit
  * où il est atteignable sans manger la surface tapable.
  */
@@ -339,13 +339,13 @@ export function SettingsDrawer() {
         </label>
 
         {/*
-          Choix de la voix — affiché seulement quand l'annonce est active ET
+          Choix de la voix - affiché seulement quand l'annonce est active ET
           qu'il y a réellement un choix à faire.
 
           LE BOUTON D'ESSAI FAIT PARTIE DU RÉGLAGE, il n'est pas décoratif :
           aucune propriété de `SpeechSynthesisVoice` n'indique la qualité d'une
           voix, l'oreille est le seul juge. Il énonce donc la phrase RÉELLE de
-          l'annonce, avec la valeur qui avait révélé le défaut — une phrase de
+          l'annonce, avec la valeur qui avait révélé le défaut - une phrase de
           démonstration quelconque ne l'aurait pas fait entendre, puisque ce
           sont précisément les chiffres après une ponctuation qui achoppent.
         */}
@@ -558,8 +558,8 @@ export function SettingsDrawer() {
               <CoffeeIcon />
               {t('settings.buyCoffee')}
             </a>
-            {/* L'URL est posée au rendu pour que le lien soit honnête — il se
-                copie et s'ouvre dans un onglet comme n'importe quel `<a>` —
+            {/* L'URL est posée au rendu pour que le lien soit honnête - il se
+                copie et s'ouvre dans un onglet comme n'importe quel `<a>` -
                 puis RECALCULÉE au clic : le tiroir ne se rend pas à nouveau
                 quand l'écran change sous lui. */}
             <a
@@ -584,12 +584,12 @@ export function SettingsDrawer() {
             {copied ? t('settings.linkCopied') : ''}
           </p>
           {/*
-           * RECHARGER L'APPLICATION — le geste qui manquait, et le seul que
+           * RECHARGER L'APPLICATION - le geste qui manquait, et le seul que
            * l'utilisateur ne peut pas improviser.
            *
            * POURQUOI UN BOUTON, ET PAS LE BANDEAU. Le bandeau de mise à jour
            * ne paraît que quand le navigateur a DÉJÀ vu la nouvelle version ;
-           * ce bouton sert exactement dans le cas inverse — quand on
+           * ce bouton sert exactement dans le cas inverse - quand on
            * SOUPÇONNE d'être en retard et que rien ne s'affiche. C'est la
            * raison d'être du composant du socle, promu en 4.x depuis six apps
            * qui l'avaient écrit six fois, dont trois de travers.
@@ -613,7 +613,7 @@ export function SettingsDrawer() {
               `…/releases/tag/vX.Y.Z` : aucune app du parc ne pose de tag git,
               le lien répondait donc 404. Le numéro et le commit continuent de
               partir dans le rapport de bug, préremplis par `issueUrl`
-              ci-dessus — c'est le canal pour lequel ils existent. */}
+              ci-dessus - c'est le canal pour lequel ils existent. */}
         </div>
 
         {/* Nos autres applications : cross-promotion de la famille miss/mister.

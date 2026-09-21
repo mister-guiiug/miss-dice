@@ -9,7 +9,7 @@ import type { D6Value } from '../types';
  *   6 7 8
  *
  * Le rendu place neuf cellules dans une grille CSS et n'allume que
- * celles listées ici — la disposition reflète un vrai dé. Réservé au D6 ;
+ * celles listées ici - la disposition reflète un vrai dé. Réservé au D6 ;
  * les autres dés affichent un chiffre.
  */
 export const PIP_LAYOUT: Record<D6Value, readonly number[]> = {

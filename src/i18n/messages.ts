@@ -1,5 +1,5 @@
 /**
- * Internationalisation — DONNÉES SEULES : le dictionnaire des six langues et
+ * Internationalisation - DONNÉES SEULES : le dictionnaire des six langues et
  * les types qui en dérivent.
  *
  * La mécanique (résolution de clé, interpolation, détection de la langue
@@ -273,7 +273,7 @@ const fr: Messages = {
     colorblindHint: 'Ajoute la valeur chiffrée sur chaque face',
     about: 'À propos',
     shareApp: 'Partager l’app',
-    shareText: 'Miss Dice — lance un dé, joue au Yahtzee ou au 421.',
+    shareText: 'Miss Dice - lance un dé, joue au Yahtzee ou au 421.',
     sourceCode: 'Code source',
     buyCoffee: 'M’offrir un café',
     reportIssue: 'Signaler un problème',
@@ -479,7 +479,7 @@ const en: Messages = {
     colorblindHint: 'Adds the numeric value on each face',
     about: 'About',
     shareApp: 'Share the app',
-    shareText: 'Miss Dice — roll a die, play Yahtzee or 421.',
+    shareText: 'Miss Dice - roll a die, play Yahtzee or 421.',
     sourceCode: 'Source code',
     buyCoffee: 'Buy me a coffee',
     reportIssue: 'Report a problem',
@@ -685,7 +685,7 @@ const es: Messages = {
     colorblindHint: 'Añade el valor numérico en cada cara',
     about: 'Acerca de',
     shareApp: 'Compartir la app',
-    shareText: 'Miss Dice — lanza un dado, juega al Yahtzee o al 421.',
+    shareText: 'Miss Dice - lanza un dado, juega al Yahtzee o al 421.',
     sourceCode: 'Código fuente',
     buyCoffee: 'Invítame a un café',
     reportIssue: 'Informar de un problema',
@@ -891,7 +891,7 @@ const de: Messages = {
     colorblindHint: 'Zeigt den Zahlenwert auf jeder Seite',
     about: 'Über',
     shareApp: 'App teilen',
-    shareText: 'Miss Dice — wirf einen Würfel, spiele Yahtzee oder 421.',
+    shareText: 'Miss Dice - wirf einen Würfel, spiele Yahtzee oder 421.',
     sourceCode: 'Quellcode',
     buyCoffee: 'Spendier mir einen Kaffee',
     reportIssue: 'Problem melden',
@@ -1097,7 +1097,7 @@ const it: Messages = {
     colorblindHint: 'Aggiunge il valore numerico su ogni faccia',
     about: 'Informazioni',
     shareApp: 'Condividi l’app',
-    shareText: 'Miss Dice — lancia un dado, gioca a Yahtzee o 421.',
+    shareText: 'Miss Dice - lancia un dado, gioca a Yahtzee o 421.',
     sourceCode: 'Codice sorgente',
     buyCoffee: 'Offrimi un caffè',
     reportIssue: 'Segnala un problema',
@@ -1303,7 +1303,7 @@ const pt: Messages = {
     colorblindHint: 'Adiciona o valor numérico em cada face',
     about: 'Acerca de',
     shareApp: 'Partilhar a app',
-    shareText: 'Miss Dice — lança um dado, joga ao Yahtzee ou 421.',
+    shareText: 'Miss Dice - lança um dado, joga ao Yahtzee ou 421.',
     sourceCode: 'Código-fonte',
     buyCoffee: 'Pague-me um café',
     reportIssue: 'Comunicar um problema',
@@ -1489,7 +1489,7 @@ export const messages: Record<Locale, Messages> = {
  * Chemins typés « a.b.c » vers une chaîne de `Messages`.
  *
  * Le `Paths<T>` maison qui vivait ici était le sosie exact d'`I18nPaths<T>` du
- * socle — même récursion, même `[keyof T & string]` final.
+ * socle - même récursion, même `[keyof T & string]` final.
  */
 export type MessageKey = I18nPaths<Messages>;
 
@@ -1533,9 +1533,9 @@ export type ParamsArg<K extends MessageKey> = K extends keyof MessageParams
 
 /*
  * `resolvePath`, `interpolate`, `translate` et `detectLocale` vivaient ici.
- * `createTranslator` du socle fait le même travail — son `interpolate` est à
+ * `createTranslator` du socle fait le même travail - son `interpolate` est à
  * la lettre le même `replace(/\{(\w+)\}/g, …)`, y compris le placeholder
- * laissé en place quand le paramètre manque — et sa détection initiale suit la
+ * laissé en place quand le paramètre manque - et sa détection initiale suit la
  * même règle (valeur stockée valide, sinon `navigator.language`, sinon le
  * repli). Il ajoute ce que `translate` n'avait pas : une clé absente de la
  * langue courante est cherchée dans la langue de repli avant d'être rendue

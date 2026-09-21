@@ -21,7 +21,7 @@ function playTurn(state: Dice421State, face: number): Dice421State {
   return validateTurn(rollDiceAction(state, fixedFace(face)));
 }
 
-describe('421 engine — bases', () => {
+describe('421 engine - bases', () => {
   it('démarre en charge avec le pot plein et des joueurs sans jeton', () => {
     const state = createDice421(['A', 'B']);
     expect(state.pot).toBe(STARTING_POT);
@@ -45,7 +45,7 @@ describe('421 engine — bases', () => {
   });
 });
 
-describe('421 engine — résolution de manche (charge)', () => {
+describe('421 engine - résolution de manche (charge)', () => {
   it('le perdant prend au pot des jetons = valeur de la meilleure main', () => {
     let state = createDice421(['A', 'B']);
     state = playTurn(state, 6); // P0 : 6-6-6 (rang fort, 6 jetons)
@@ -73,7 +73,7 @@ describe('421 engine — résolution de manche (charge)', () => {
   });
 });
 
-describe('421 engine — décharge et victoire', () => {
+describe('421 engine - décharge et victoire', () => {
   it('le gagnant se débarrasse de ses jetons ; à 0 il gagne', () => {
     let state = createDice421(['A', 'B']);
     state.phase = 'decharge';
@@ -88,7 +88,7 @@ describe('421 engine — décharge et victoire', () => {
   });
 });
 
-describe('421 engine — gardes et décharge partielle', () => {
+describe('421 engine - gardes et décharge partielle', () => {
   it('ignore garder un dé avant le lancer ou hors limites', () => {
     const state = createDice421(['A']);
     expect(toggleHold(state, 0)).toBe(state); // pas encore lancé
@@ -116,7 +116,7 @@ describe('421 engine — gardes et décharge partielle', () => {
   });
 });
 
-describe('421 engine — solo (entraînement)', () => {
+describe('421 engine - solo (entraînement)', () => {
   it('enregistre la main sans transfert de jetons et ne se termine pas', () => {
     let state = createDice421(['Moi']);
     state = playTurn(state, 4); // 4-4-4

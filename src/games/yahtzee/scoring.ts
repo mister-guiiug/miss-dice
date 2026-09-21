@@ -1,5 +1,5 @@
 /**
- * Yahtzee — calcul des scores par catégorie. Logique pure, sans React ni
+ * Yahtzee - calcul des scores par catégorie. Logique pure, sans React ni
  * DOM, entièrement testable. Une « main » est un tableau de 5 faces (1..6).
  */
 export type UpperCategory =

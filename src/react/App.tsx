@@ -56,7 +56,7 @@ export function App() {
 
   /*
    * CETTE APP N'A PAS DE ROUTEUR : un seul écran, un seul chemin. Le hook est
-   * donc appelé avec la racine, et il n'envoie QU'UNE vue par chargement — il
+   * donc appelé avec la racine, et il n'envoie QU'UNE vue par chargement - il
    * dédoublonne sur le chemin, donc un re-rendu ne recompte rien.
    *
    * SANS CET APPEL, POSTHOG NE RECEVRAIT RIEN DU TOUT. `initAnalytics` pose
@@ -84,7 +84,7 @@ export function App() {
         <ModeMenu />
         <SettingsDrawer />
         {/* PAS DE `dismissKey` À REPRENDRE : le bandeau maison ne persistait
-            rien — un `useState`, donc un refus oublié au rechargement suivant.
+            rien - un `useState`, donc un refus oublié au rechargement suivant.
             Le socle, lui, reporte d'un mois et s'arrête après trois fois. */}
         <PwaInstallPrompt />
         {/* Les deux liens de la règle famille sur le PREMIER écran : ils
@@ -96,7 +96,7 @@ export function App() {
             est affichée, et il exige cet ordre-là dans le DOM. */}
         <FamilyLinks />
         {/* Une `region`, pas une boîte modale : elle ne recouvre rien et ne
-            piège pas le focus — la surface de lancer reste entière. Ne rend
+            piège pas le focus - la surface de lancer reste entière. Ne rend
             RIEN tant que `VITE_POSTHOG_KEY` n'est pas posée. */}
         <ConsentBanner
           posthogKey={import.meta.env.VITE_POSTHOG_KEY}

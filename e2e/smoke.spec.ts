@@ -43,7 +43,7 @@ test('@smoke Cochon : démarrer une partie et lancer le dé', async ({
 });
 
 // Régression du 21/09/2026 : le statut du tour portait un `min-height`
-// chiffré, qui remplace le `min-height: auto` — la SEULE protection d'un
+// chiffré, qui remplace le `min-height: auto` - la SEULE protection d'un
 // élément flex contre la compression sous son contenu. Le corps du jeu
 // débordant, flex écrasait ce paragraphe à une ligne et la seconde
 // (« ou inscris une case pour t'arrêter ») se dessinait sous la grille de
@@ -66,7 +66,7 @@ test('@smoke Yahtzee : le statut du tour n’est rogné par rien', async ({
     .click();
 
   // Deux lancers restent : le statut porte bien sa seconde ligne. On vise
-  // l'élément, pas son texte — la garde vaut dans les six langues.
+  // l'élément, pas son texte - la garde vaut dans les six langues.
   const statut = page.locator('.game-status');
   await expect(statut.locator('.game-status__sub')).toBeVisible({
     timeout: 10000,

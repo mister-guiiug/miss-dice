@@ -86,7 +86,7 @@ export function YahtzeeGame() {
       const summary = ranked.map(r => `${r.name} ${r.total}`).join(', ');
       const res = await shareOrCopy({
         title: 'Miss Dice',
-        text: `${t('modes.yahtzee')} — ${summary}`,
+        text: `${t('modes.yahtzee')} - ${summary}`,
         url: appUrl(),
       });
       if (res === 'copied') {
@@ -142,7 +142,7 @@ export function YahtzeeGame() {
   const canStopEarly = game.rolledThisTurn && game.rollsLeft > 0;
   const bonusPts = yahtzeeBonusPoints(player);
 
-  // Une case de la grille. Les deux colonnes — section haute et combinaisons —
+  // Une case de la grille. Les deux colonnes - section haute et combinaisons -
   // la rendent à l'identique.
   const scoreRow = (category: Category) => {
     const filled = isCategoryFilled(player, category);
@@ -164,7 +164,7 @@ export function YahtzeeGame() {
           }}
         >
           <span className="scorecard__name">{t(CAT_LABEL[category])}</span>
-          <span className="scorecard__value">{value ?? '—'}</span>
+          <span className="scorecard__value">{value ?? '-'}</span>
         </button>
       </li>
     );

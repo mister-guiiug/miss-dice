@@ -43,7 +43,7 @@ describe('rollLogStore.record', () => {
   });
 });
 
-describe('readLog — robustesse', () => {
+describe('readLog - robustesse', () => {
   it('renvoie un journal vide sans données', () => {
     expect(readLog()).toEqual([]);
   });

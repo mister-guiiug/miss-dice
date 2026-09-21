@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <span className="crash__emoji" aria-hidden="true">
             🎲
           </span>
-          <p className="crash__text">Oups — une erreur est survenue.</p>
+          <p className="crash__text">Oups - une erreur est survenue.</p>
           <button
             type="button"
             className="primary-btn crash__btn"

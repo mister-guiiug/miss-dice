@@ -9,13 +9,13 @@
  * SHARP PLUTÔT QUE PNGJS. Le dépôt portait DEUX bibliothèques d'images pour un
  * seul travail : `sharp`, exigé par `pwa-icons` du socle, et `pngjs`, que ce
  * script était seul à employer. L'en-tête d'alors s'en justifiait par « aucune
- * dépendance native » — ce qui a cessé d'être vrai le jour où le socle est
+ * dépendance native » - ce qui a cessé d'être vrai le jour où le socle est
  * entré. Restait le coût : `pngjs` n'a plus rien publié depuis février 2023 et
  * figurait, à ce titre, parmi les librairies dormantes du parc.
  *
  * Les pixels ne bougent pas d'un iota : le dessin est le même, et les deux
  * encodeurs écrivent le même PNG sans perte. Ce sont les octets qui changent,
- * sharp compressant mieux — les cinq icônes tombent de 35,8 à 28,1 ko.
+ * sharp compressant mieux - les cinq icônes tombent de 35,8 à 28,1 ko.
  *
  * Exécuter : npm run icons
  */
@@ -39,7 +39,7 @@ const PIP = [255, 255, 255];
  *
  * SANS `adaptiveFiltering`, ET C'EST MESURÉ. Le filtrage adaptatif est le
  * réflexe, et il se trompe sur ces images-ci : il les remonte à 32,9 ko. Un
- * dé, c'est de larges aplats et un dégradé vertical — des lignes que le même
+ * dé, c'est de larges aplats et un dégradé vertical - des lignes que le même
  * filtre décrit toutes aussi bien, là où l'adaptatif paie un octet par ligne
  * pour choisir. (Sur le logo photographique de mister-molkky, il gagne
  * franchement : le rapport s'inverse d'une image à l'autre.)
@@ -141,12 +141,12 @@ function renderIcon(size) {
  * L'icône ci-dessus dessine un dé arrondi sur un fond TRANSPARENT, inséré à
  * 11 % du bord. Déclarée `maskable`, elle laissait Android faire deux choses
  * qu'on ne veut pas : remplir la transparence d'un aplat de son choix, puis
- * rogner au masque de l'appareil — et les coins arrondis du dé, eux, se
+ * rogner au masque de l'appareil - et les coins arrondis du dé, eux, se
  * voyaient à l'intérieur du masque. Le résultat est un dé rétréci posé sur du
  * blanc, avec un liseré.
  *
- * Ici le dégradé occupe TOUTE la toile : quel que soit le masque — cercle,
- * squircle, goutte — il n'y a pas de raccord à voir, puisqu'il n'y a pas de
+ * Ici le dégradé occupe TOUTE la toile : quel que soit le masque - cercle,
+ * squircle, goutte - il n'y a pas de raccord à voir, puisqu'il n'y a pas de
  * bord. C'est la toile entière qui EST la face du dé.
  *
  * LES PIPS TIENNENT DANS LA ZONE DE SÉCURITÉ, le disque de 80 % de la toile.
@@ -209,24 +209,24 @@ await ecrire(renderMaskable(512), 512, 'icon-maskable.png');
  *
  * `renderIcon` pose un dé arrondi sur un fond TRANSPARENT. iOS n'accepte pas la
  * transparence pour l'icône d'accueil : il la comble lui-même, historiquement
- * par du noir. Ce n'était donc pas un mauvais fond, c'était un TROU — et pas
+ * par du noir. Ce n'était donc pas un mauvais fond, c'était un TROU - et pas
  * seulement aux coins, sur tout le pourtour. Mesuré sur le fichier livré
  * jusqu'au 14/09/2026 :
  *
  *   apple-touch-icon.png   coin(0,0) = 0,0,0,0   bord(90,1) = 0,0,0,0
  *
  * Alpha ZÉRO. C'est exactement le reproche que l'en-tête de `renderMaskable`
- * fait déjà à Android — « remplir la transparence d'un aplat de son choix » —
+ * fait déjà à Android - « remplir la transparence d'un aplat de son choix » -
  * et il vaut pour iOS, à ceci près qu'iOS n'a pas de `purpose` pour qu'on lui
  * dise quelle image prendre : il ne lit que `<link rel="apple-touch-icon">`.
  *
  * `renderMaskable` fait déjà ce qu'il faut : le dégradé occupe toute la toile,
  * sans un pixel transparent, et les pips tiennent dans le disque de 80 %
- * (0,390 contre 0,4 — la démonstration est au-dessus). Le masque d'iOS est une
+ * (0,390 contre 0,4 - la démonstration est au-dessus). Le masque d'iOS est une
  * superellipse, qui rogne moins qu'un cercle : ce qui passe l'un passe l'autre.
  *
  * L'icône d'accueil change donc d'allure : la toile entière EST la face du dé,
- * au lieu d'un petit dé flottant. C'est ce qu'iOS montrait déjà, en pire — le
+ * au lieu d'un petit dé flottant. C'est ce qu'iOS montrait déjà, en pire - le
  * même dé rétréci, sur le fond qu'il choisissait tout seul.
  */
 await ecrire(renderMaskable(180), 180, 'apple-touch-icon.png');

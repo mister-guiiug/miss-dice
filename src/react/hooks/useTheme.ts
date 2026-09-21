@@ -15,12 +15,12 @@ export interface AppTheme {
  * Ce fichier tenait la mécanique complète : abonnement à `matchMedia` via
  * `useSyncExternalStore`, résolution `auto → dark|light`, pose de `data-theme`
  * et de `<meta name="theme-color">`. Tout est passé au socle. Il ne reste que
- * la lecture du contexte — et la garde ci-dessous.
+ * la lecture du contexte - et la garde ci-dessous.
  *
  * ON N'APPELLE PAS `useTheme()` DIRECTEMENT, et c'est le point. Le hook du
  * socle porte son état dans un `useState` local : deux appels, c'est deux
  * états indépendants qui écrivent tous deux `data-theme` sur `<html>`. Or il
- * faut ici deux points d'accès — l'un pour afficher, l'autre pour changer.
+ * faut ici deux points d'accès - l'un pour afficher, l'autre pour changer.
  * Passer par le contexte garantit un seul écrivain.
  */
 export function useAppTheme(): AppTheme {
