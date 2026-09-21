@@ -36,6 +36,23 @@ export interface Settings {
   sounds: boolean;
   /** Annonce vocale du résultat (synthèse vocale du navigateur). */
   tts: boolean;
+  /**
+   * Voix de l'annonce : le `name` de la voix choisie, vide = choix automatique
+   * du socle.
+   *
+   * POURQUOI CE RÉGLAGE EXISTE. Aucune API n'expose la qualité d'une voix, et
+   * certaines articulent franchement mal. Mesuré le 21/09/2026 :
+   * `Microsoft Hortense`, première voix française de Windows et donc celle que
+   * le socle retient d'office, prononce « cinq » de travers dès qu'une
+   * ponctuation le précède — or l'annonce est « Résultat : 5. ». Sur Firefox,
+   * aucune voix n'est marquée par défaut : sans ce réglage, l'utilisateur n'a
+   * aucun recours.
+   *
+   * ON RETIENT LE NOM, PAS LE `voiceURI` : sur une même machine, Chrome rend
+   * « Microsoft Hortense - French (France) » là où Firefox rend
+   * « urn:moz-tts:sapi:… ». Le nom, lui, survit au changement de navigateur.
+   */
+  ttsVoice: string;
   /** Mode daltonien : ajoute la valeur chiffrée sur chaque face. */
   colorblind: boolean;
 }
@@ -50,6 +67,7 @@ const DEFAULTS: Settings = {
   shake: false,
   sounds: false,
   tts: false,
+  ttsVoice: '',
   colorblind: false,
 };
 
@@ -80,6 +98,10 @@ function safeRead(): Settings {
       sounds:
         typeof parsed.sounds === 'boolean' ? parsed.sounds : DEFAULTS.sounds,
       tts: typeof parsed.tts === 'boolean' ? parsed.tts : DEFAULTS.tts,
+      ttsVoice:
+        typeof parsed.ttsVoice === 'string'
+          ? parsed.ttsVoice
+          : DEFAULTS.ttsVoice,
       colorblind:
         typeof parsed.colorblind === 'boolean'
           ? parsed.colorblind
@@ -115,6 +137,7 @@ export const settingsStore = {
   setShake: (shake: boolean) => setState({ shake }),
   setSounds: (sounds: boolean) => setState({ sounds }),
   setTts: (tts: boolean) => setState({ tts }),
+  setTtsVoice: (ttsVoice: string) => setState({ ttsVoice }),
   setColorblind: (colorblind: boolean) => setState({ colorblind }),
   toggleHaptics: () => setState({ haptics: !store.get().haptics }),
 };

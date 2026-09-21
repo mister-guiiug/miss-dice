@@ -613,6 +613,46 @@ button {
   cursor: not-allowed;
 }
 
+/*
+  Choix de la voix d'annonce. Un vrai <select>, et non un segmented comme le
+  reste du tiroir : les noms de voix sont longs (« Microsoft Hortense - French
+  (France) »), leur NOMBRE varie d'un appareil à l'autre, et le contrôle natif
+  apporte gratuitement le défilement, la recherche au clavier et la liste
+  déroulante du système, qu'une grille de boutons ne donnerait pas.
+*/
+.voice-picker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.voice-picker__select {
+  flex: 1 1 auto;
+  /* `min-width: auto` est le défaut d'un enfant flex : sans cette remise à
+     zéro, un nom de voix long impose sa largeur et fait déborder le tiroir au
+     lieu d'être tronqué par le <select>. */
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.voice-picker__try {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
 .stepper__value {
   min-width: 1.6em;
   text-align: center;
