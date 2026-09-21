@@ -1282,6 +1282,17 @@ a[data-dwc='app-version-value']:hover {
   gap: 14px;
 }
 
+/* Ce corps est focalisable (`tabIndex` dans GameShell : sans lui, personne au
+   clavier ne peut le faire défiler). Il occupe TOUTE la largeur de l'écran,
+   or le `:focus-visible` global pose son contour À L'EXTÉRIEUR
+   (`outline-offset: 3px`) : sur un écran de 393 px, une boîte de 0 à 393
+   donnerait un contour de −3 à 396, c'est-à-dire hors champ à gauche ET à
+   droite — il ne resterait visibles que ses bords haut et bas. Il se dessine
+   donc à l'intérieur. */
+.game-shell__body:focus-visible {
+  outline-offset: -3px;
+}
+
 /* Le corps défile : ses enfants gardent leur hauteur naturelle. Sans ceci,
    flex comprime tout enfant qui s'est donné un `min-height` chiffré — celui-ci
    remplace le `min-height: auto` qui est la SEULE protection d'un élément flex

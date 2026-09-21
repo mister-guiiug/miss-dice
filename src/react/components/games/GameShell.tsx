@@ -141,7 +141,30 @@ export function GameShell({
           <span className="game-shell__spacer" aria-hidden="true" />
         )}
       </header>
-      <div className="game-shell__body">{children}</div>
+      {/* `tabIndex` SUR UNE ZONE QUI DÉFILE : c'est le remède de la règle axe
+          `scrollable-region-focusable`. Sans lui, personne au clavier ne peut
+          faire défiler ce corps avant le premier lancer — toutes les cases de
+          la grille y sont `disabled`, donc hors du parcours, et la zone n'a
+          plus un seul enfant focalisable à offrir.
+
+          INCONDITIONNEL, ET C'EST UN CHOIX. Ne le poser que quand la zone
+          déborde vraiment supposerait de mesurer en continu : le contenu
+          change à chaque lancer, et le débordement dépend aussi du zoom, de la
+          taille de police et de l'orientation. Une mesure en retard d'une
+          image, et l'arrêt de tabulation manque à l'instant où l'on tabule.
+          Le prix payé est un arrêt de tabulation en trop quand tout tient à
+          l'écran ; le prix évité est une zone dont on ne peut pas sortir.
+
+          DEUX RÈGLES D'ACCESSIBILITÉ S'OPPOSENT ICI, et celle d'axe gagne.
+          `jsx-a11y/no-noninteractive-tabindex` existe pour empêcher de rendre
+          focalisable un `div` quelconque ; une zone qui DÉFILE n'en est pas
+          un, et c'est l'exception que la règle d'axe décrit. Le silence est
+          donc posé à la ligne, avec sa raison, plutôt que laissé à traîner
+          dans le flot des avertissements. */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- remède de la règle axe scrollable-region-focusable */}
+      <div className="game-shell__body" tabIndex={0}>
+        {children}
+      </div>
       {footer && <div className="game-shell__footer">{footer}</div>}
 
       {/* Les libellés viennent de l'i18n de l'app, pas de ceux du socle :
