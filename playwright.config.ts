@@ -5,8 +5,9 @@ import { definePwaPlaywrightConfig } from '@mister-guiiug/dev-pwa-config/playwri
 // `preview: true` (dev-pwa-config 3.x) : les e2e testent un BUILD de prod
 // (service worker, minification, cache réels). VITE_BASE_PATH=/ neutralise le
 // base path GitHub Pages ; port 4173 pour ne pas collisionner avec un dev
-// server (5173). Non exécuté en CI (run-e2e: false) — local :
-// `npx playwright install` puis `npm run test:e2e`.
+// server (5173). La CI joue TOUTE la suite (`run-e2e: true`, `e2e-grep: '.*'`
+// dans .github/workflows/ci.yml) ; en local, `npx playwright install` puis
+// `npm run test:e2e`.
 // Identifiant de mesure FACTICE pour le serveur e2e : sans lui,
 // `ConsentBanner` ne rend rien et la garde de `entree.spec.ts` n’a rien à
 // vérifier. Le trafic vers Google est intercepté par la garde elle-même —

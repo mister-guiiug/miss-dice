@@ -9,7 +9,11 @@ import { appUrl } from '../../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { useSound } from '../../hooks/useSound';
 import { useUndoableGame } from '../../hooks/useUndoableGame';
-import { CATEGORIES, type Category } from '../../../games/yahtzee/scoring';
+import {
+  LOWER_CATEGORIES,
+  UPPER_CATEGORIES,
+  type Category,
+} from '../../../games/yahtzee/scoring';
 import {
   canRoll,
   canScore,
@@ -133,6 +137,34 @@ export function YahtzeeGame() {
   const canStopEarly = game.rolledThisTurn && game.rollsLeft > 0;
   const bonusPts = yahtzeeBonusPoints(player);
 
+  // Une case de la grille. Les deux colonnes — section haute et combinaisons —
+  // la rendent à l'identique.
+  const scoreRow = (category: Category) => {
+    const filled = isCategoryFilled(player, category);
+    const selectable = !filled && canScore(game);
+    const value = filled
+      ? player.scores[category]
+      : canScore(game)
+        ? previewScore(game, category)
+        : null;
+    return (
+      <li key={category}>
+        <button
+          type="button"
+          className={`scorecard__row${filled ? ' scorecard__row--filled' : ''}${selectable ? ' scorecard__row--pick' : ''}`}
+          disabled={!selectable}
+          onClick={() => {
+            sound('result');
+            apply(scoreCategoryAction(game, category));
+          }}
+        >
+          <span className="scorecard__name">{t(CAT_LABEL[category])}</span>
+          <span className="scorecard__value">{value ?? '—'}</span>
+        </button>
+      </li>
+    );
+  };
+
   const footer = (
     <button
       type="button"
@@ -182,50 +214,30 @@ export function YahtzeeGame() {
         )}
       </p>
 
-      <ul className="scorecard">
-        {CATEGORIES.map(category => {
-          const filled = isCategoryFilled(player, category);
-          const selectable = !filled && canScore(game);
-          const value = filled
-            ? player.scores[category]
-            : canScore(game)
-              ? previewScore(game, category)
-              : null;
-          return (
-            <li key={category}>
-              <button
-                type="button"
-                className={`scorecard__row${filled ? ' scorecard__row--filled' : ''}${selectable ? ' scorecard__row--pick' : ''}`}
-                disabled={!selectable}
-                onClick={() => {
-                  sound('result');
-                  apply(scoreCategoryAction(game, category));
-                }}
-              >
-                <span className="scorecard__name">
-                  {t(CAT_LABEL[category])}
-                </span>
-                <span className="scorecard__value">{value ?? '—'}</span>
-              </button>
-              {category === 'sixes' && (
-                <div className="scorecard__subtotal">
-                  <span>{t('yahtzee.upperTotal')}</span>
-                  <span>
-                    {upperSum(player)}{' '}
-                    {upperBonus(player) > 0 ? `+${upperBonus(player)}` : ''}
-                  </span>
-                </div>
-              )}
-            </li>
-          );
-        })}
-        {bonusPts > 0 && (
+      {/* Deux colonnes comme sur une feuille de Yahtzee : la section haute et
+          son sous-total à gauche, les combinaisons à droite. Elles se replient
+          l'une sous l'autre quand l'écran est trop étroit. */}
+      <div className="scorecard">
+        <ul className="scorecard__col">
+          {UPPER_CATEGORIES.map(scoreRow)}
           <li className="scorecard__subtotal">
-            <span>{t('yahtzee.yahtzeeBonus')}</span>
-            <span>+{bonusPts}</span>
+            <span>{t('yahtzee.upperTotal')}</span>
+            <span>
+              {upperSum(player)}{' '}
+              {upperBonus(player) > 0 ? `+${upperBonus(player)}` : ''}
+            </span>
           </li>
-        )}
-      </ul>
+        </ul>
+        <ul className="scorecard__col">
+          {LOWER_CATEGORIES.map(scoreRow)}
+          {bonusPts > 0 && (
+            <li className="scorecard__subtotal">
+              <span>{t('yahtzee.yahtzeeBonus')}</span>
+              <span>+{bonusPts}</span>
+            </li>
+          )}
+        </ul>
+      </div>
 
       <div className="scoreboard">
         {game.players.map((p, i) => (

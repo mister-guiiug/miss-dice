@@ -1200,6 +1200,15 @@ a[data-dwc='app-version-value']:hover {
   gap: 14px;
 }
 
+/* Le corps défile : ses enfants gardent leur hauteur naturelle. Sans ceci,
+   flex comprime tout enfant qui s'est donné un `min-height` chiffré — celui-ci
+   remplace le `min-height: auto` qui est la SEULE protection d'un élément flex
+   contre la compression sous son contenu. Le texte débordait alors sous le
+   bloc suivant (statut de tour du Yahtzee, masqué par la grille de score). */
+.game-shell__body > * {
+  flex-shrink: 0;
+}
+
 .game-shell__footer {
   padding: 12px calc(var(--safe-right) + 16px) calc(var(--safe-bottom) + 14px)
     calc(var(--safe-left) + 16px);
@@ -1330,6 +1339,14 @@ a[data-dwc='app-version-value']:hover {
   --tile: clamp(74px, 22vw, 120px);
 }
 
+/* Yahtzee. Les cinq dés doivent tenir sur UNE ligne : la rangée repliée en
+   4 + 1 volait une hauteur de tuile à la grille de score. Largeur utile =
+   100vw moins les 2 × 16 px du corps ; il reste (100vw - 32px - 4 × 10px) / 5
+   par dé, soit 15vw dès 320 px de large. `flex-wrap` reste le filet. */
+.game-dice[data-count='5'] {
+  --tile: clamp(48px, 15vw, 92px);
+}
+
 .game-die {
   position: relative;
   padding: 0;
@@ -1414,13 +1431,27 @@ a[data-dwc='app-version-value']:hover {
   font-size: 0.9em;
 }
 
-/* Grille de score Yahtzee */
+/* Grille de score Yahtzee : deux colonnes dès qu'il y a la place — la section
+   haute et son sous-total à gauche, les combinaisons à droite —, une seule
+   en dessous. En deux colonnes la grille perd la moitié de sa hauteur et tient
+   sans défilement sur un téléphone courant.
+   132 px est le seuil : il fait passer à deux colonnes dès 272 px utiles,
+   c'est-à-dire dès le plus étroit des téléphones (320 px moins le corps).
+   Au-delà de deux, `auto-fit` replie les pistes vides — il n'y a que deux
+   listes, jamais une troisième colonne. */
 .scorecard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  align-items: start;
+  gap: 8px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.scorecard__col {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 100%;
-  max-width: 460px;
   display: flex;
   flex-direction: column;
   gap: 4px;
