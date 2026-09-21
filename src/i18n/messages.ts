@@ -57,6 +57,11 @@ export interface Messages {
     soundsHint: string;
     tts: string;
     ttsHint: string;
+    /** Voix de l’annonce : `name` de la voix, vide = choix automatique. */
+    ttsVoice: string;
+    ttsVoiceHint: string;
+    ttsVoiceAuto: string;
+    ttsVoiceTry: string;
     colorblind: string;
     colorblindHint: string;
     about: string;
@@ -259,6 +264,11 @@ const fr: Messages = {
     soundsHint: 'Petit retour audio au lancer',
     tts: 'Annonce vocale',
     ttsHint: 'Énonce le résultat à voix haute',
+    ttsVoice: 'Voix de l’annonce',
+    ttsVoiceHint:
+      'Certaines voix prononcent mal les chiffres. Écoutez, et changez-en si besoin.',
+    ttsVoiceAuto: 'Automatique',
+    ttsVoiceTry: 'Écouter',
     colorblind: 'Mode daltonien',
     colorblindHint: 'Ajoute la valeur chiffrée sur chaque face',
     about: 'À propos',
@@ -460,6 +470,11 @@ const en: Messages = {
     soundsHint: 'Small audio feedback on roll',
     tts: 'Spoken result',
     ttsHint: 'Reads the result out loud',
+    ttsVoice: 'Announcement voice',
+    ttsVoiceHint:
+      'Some voices mispronounce numbers. Have a listen, and switch if needed.',
+    ttsVoiceAuto: 'Automatic',
+    ttsVoiceTry: 'Listen',
     colorblind: 'Colorblind mode',
     colorblindHint: 'Adds the numeric value on each face',
     about: 'About',
@@ -661,6 +676,11 @@ const es: Messages = {
     soundsHint: 'Pequeño sonido al lanzar',
     tts: 'Resultado hablado',
     ttsHint: 'Lee el resultado en voz alta',
+    ttsVoice: 'Voz del anuncio',
+    ttsVoiceHint:
+      'Algunas voces pronuncian mal los números. Escucha y cámbiala si hace falta.',
+    ttsVoiceAuto: 'Automática',
+    ttsVoiceTry: 'Escuchar',
     colorblind: 'Modo daltónico',
     colorblindHint: 'Añade el valor numérico en cada cara',
     about: 'Acerca de',
@@ -862,6 +882,11 @@ const de: Messages = {
     soundsHint: 'Kleines Audio-Feedback beim Wurf',
     tts: 'Ergebnis vorlesen',
     ttsHint: 'Liest das Ergebnis laut vor',
+    ttsVoice: 'Stimme der Ansage',
+    ttsVoiceHint:
+      'Manche Stimmen sprechen Zahlen falsch aus. Hören Sie hinein und wechseln Sie bei Bedarf.',
+    ttsVoiceAuto: 'Automatisch',
+    ttsVoiceTry: 'Anhören',
     colorblind: 'Farbenblind-Modus',
     colorblindHint: 'Zeigt den Zahlenwert auf jeder Seite',
     about: 'Über',
@@ -1063,6 +1088,11 @@ const it: Messages = {
     soundsHint: 'Piccolo feedback audio al lancio',
     tts: 'Risultato vocale',
     ttsHint: 'Legge il risultato ad alta voce',
+    ttsVoice: 'Voce dell’annuncio',
+    ttsVoiceHint:
+      'Alcune voci pronunciano male i numeri. Ascolta e cambiala se serve.',
+    ttsVoiceAuto: 'Automatica',
+    ttsVoiceTry: 'Ascolta',
     colorblind: 'Modalità daltonici',
     colorblindHint: 'Aggiunge il valore numerico su ogni faccia',
     about: 'Informazioni',
@@ -1264,6 +1294,11 @@ const pt: Messages = {
     soundsHint: 'Pequeno som ao lançar',
     tts: 'Resultado falado',
     ttsHint: 'Lê o resultado em voz alta',
+    ttsVoice: 'Voz do anúncio',
+    ttsVoiceHint:
+      'Algumas vozes pronunciam mal os números. Ouça e mude se for preciso.',
+    ttsVoiceAuto: 'Automática',
+    ttsVoiceTry: 'Ouvir',
     colorblind: 'Modo daltónico',
     colorblindHint: 'Adiciona o valor numérico em cada face',
     about: 'Acerca de',

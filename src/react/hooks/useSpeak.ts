@@ -16,14 +16,19 @@ import { useI18n } from '../../i18n/useI18n';
  *
  * La conversion `fr` → `fr-FR` se fait dans le socle : on lui passe la locale
  * telle quelle.
+ *
+ * LA VOIX SUIT LE RÉGLAGE (socle 6.7.0). Sans choix explicite, `ttsVoice` est
+ * vide et le socle décide — c'est le comportement d'avant. Avec un choix, il
+ * prime : c'est la seule échappatoire quand la voix retenue d'office articule
+ * mal, ce qui ne se devine d'aucune propriété de l'API. Voir `settingsStore`.
  */
 export function useSpeak(): (text: string) => void {
-  const { tts } = useSettings();
+  const { tts, ttsVoice } = useSettings();
   const { locale } = useI18n();
   return useCallback(
     (text: string) => {
-      if (tts) speak(text, locale);
+      if (tts) speak(text, locale, { voiceName: ttsVoice });
     },
-    [tts, locale]
+    [tts, ttsVoice, locale]
   );
 }

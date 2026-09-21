@@ -7,6 +7,8 @@ import {
   useSettings,
 } from '../../settings/settingsStore';
 import { useSystemReducedMotion } from '../hooks/useReducedMotion';
+import { useVoices } from '../hooks/useVoices';
+import { useSpeak } from '../hooks/useSpeak';
 import { requestMotionPermission } from '../hooks/useShakeToRoll';
 import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
@@ -125,8 +127,19 @@ export function SettingsDrawer() {
   const { theme, setTheme } = useAppTheme();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { haptics, motion, sides, diceCount, shake, sounds, tts, colorblind } =
-    useSettings();
+  const {
+    haptics,
+    motion,
+    sides,
+    diceCount,
+    shake,
+    sounds,
+    tts,
+    ttsVoice,
+    colorblind,
+  } = useSettings();
+  const voices = useVoices(locale);
+  const speak = useSpeak();
   const systemReduced = useSystemReducedMotion();
   const stats = useRollStats();
   const log = useRollLog();
@@ -324,6 +337,54 @@ export function SettingsDrawer() {
             onChange={event => settingsStore.setTts(event.target.checked)}
           />
         </label>
+
+        {/*
+          Choix de la voix — affiché seulement quand l'annonce est active ET
+          qu'il y a réellement un choix à faire.
+
+          LE BOUTON D'ESSAI FAIT PARTIE DU RÉGLAGE, il n'est pas décoratif :
+          aucune propriété de `SpeechSynthesisVoice` n'indique la qualité d'une
+          voix, l'oreille est le seul juge. Il énonce donc la phrase RÉELLE de
+          l'annonce, avec la valeur qui avait révélé le défaut — une phrase de
+          démonstration quelconque ne l'aurait pas fait entendre, puisque ce
+          sont précisément les chiffres après une ponctuation qui achoppent.
+        */}
+        {tts && voices.length > 1 && (
+          <div className="setting-row setting-row--stack">
+            <label className="setting-row__label" htmlFor="tts-voice">
+              {t('settings.ttsVoice')}
+            </label>
+            <span className="setting-row__hint">
+              {t('settings.ttsVoiceHint')}
+            </span>
+            <div className="voice-picker">
+              <select
+                id="tts-voice"
+                className="voice-picker__select"
+                value={ttsVoice}
+                onChange={event =>
+                  settingsStore.setTtsVoice(event.target.value)
+                }
+              >
+                <option value="">{t('settings.ttsVoiceAuto')}</option>
+                {voices.map(voice => (
+                  <option key={voice.name} value={voice.name}>
+                    {voice.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="voice-picker__try"
+                onClick={() =>
+                  speak(t('a11y.resultOne', { value: Math.min(5, sides) }))
+                }
+              >
+                {t('settings.ttsVoiceTry')}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Mode daltonien */}
         <label className="setting-row">
