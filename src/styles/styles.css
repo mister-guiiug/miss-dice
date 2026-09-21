@@ -6,7 +6,7 @@
  * dix-neuf règles pour la seule grille famille.
  *
  * Deux sections seulement, pas la feuille entière. `base.css` porte ce que
- * toute section suppose — replis, focus, cibles tactiles, contraste forcé,
+ * toute section suppose - replis, focus, cibles tactiles, contraste forcé,
  * impression. `app-footer.css` porte `AppFooter` et `FamilyApps`, et rien
  * d'autre. Tout est en `@layer components` : chaque règle de ce fichier
  * continue donc de gagner, quelle que soit sa spécificité.
@@ -345,7 +345,7 @@ button {
    HABILLAGE DU `Sheet` DU SOCLE. miss-dice n'importe pas `components.css`
    (design maison assumé) : le composant partagé arriverait donc entièrement
    nu. Ces règles reprennent, à l'identique, ce que `.sheet-backdrop` et
-   `.sheet` habillaient — mais visent les `[data-dwc="sheet-*"]` du paquet.
+   `.sheet` habillaient - mais visent les `[data-dwc="sheet-*"]` du paquet.
 
    La charpente a une pièce de plus : le VOILE est un enfant qui recouvre la
    racine, là où l'ancienne `.sheet-backdrop` était à la fois le voile et le
@@ -378,7 +378,7 @@ button {
   max-height: 92vh;
   max-height: 92dvh;
   /* Colonne : c'est le CORPS qui défile, pas le panneau. L'en-tête (titre +
-     fermeture) et le pied restent donc visibles pendant le défilement — le
+     fermeture) et le pied restent donc visibles pendant le défilement - le
      panneau entier défilait auparavant, emportant le titre hors de l'écran. */
   display: flex;
   flex-direction: column;
@@ -416,7 +416,7 @@ button {
   font-size: 1.1rem;
 }
 
-/* Bouton de fermeture de l'en-tête — 44 px, la cible tactile minimale. */
+/* Bouton de fermeture de l'en-tête - 44 px, la cible tactile minimale. */
 .sheet-root [data-dwc='sheet-close'] {
   flex: none;
   display: inline-flex;
@@ -440,7 +440,7 @@ button {
 }
 
 /* Pied ÉPINGLÉ : il reste visible pendant que le corps défile. Le bouton
-   « Fermer » des réglages y vit désormais — il était auparavant en fin de
+   « Fermer » des réglages y vit désormais - il était auparavant en fin de
    contenu, donc atteignable seulement après avoir tout fait défiler. Le filet
    marque la séparation d'avec le corps qui glisse dessous. */
 .sheet-root [data-dwc='sheet-footer'] {
@@ -452,7 +452,7 @@ button {
 
 /* ───────────── Confirmation (`ConfirmDialog` du socle) ─────────────
    MÊME SITUATION QUE `Sheet`, et pour la même raison : miss-dice n'importe
-   pas `components.css`, le composant partagé arrive donc entièrement nu —
+   pas `components.css`, le composant partagé arrive donc entièrement nu -
    « cibler [data-dwc="confirm"] et descendants », dit son en-tête. Même
    charpente aussi : le VOILE est un enfant qui recouvre la racine, d'où le
    `position: relative` du panneau, sans quoi il peindrait dessous. */
@@ -516,7 +516,7 @@ button {
 /* L'action irréversible porte le rouge dans son TEXTE et son liseré, pas dans
    un aplat. `--dwc-danger` est une couleur de texte (light-dark : #b91c1c en
    clair, #f87171 en sombre) : en faire un fond plein donnerait du blanc sur
-   rouge pâle en thème sombre. Et même une teinte légère coûte cher — mesuré
+   rouge pâle en thème sombre. Et même une teinte légère coûte cher - mesuré
    ici : un fond `color-mix(--dwc-danger 14%, --surface)` faisait tomber le
    texte à 4,44:1, SOUS le seuil AA. La surface reste donc neutre. */
 [data-destructive] [data-dwc='confirm-confirm'] {
@@ -720,7 +720,7 @@ button {
    habillé, et la pastille garde exactement l'allure qu'elle avait.
 
    CE N'EST PAS UN SIMPLE RENOMMAGE DE SÉLECTEUR. La pastille maison était une
-   rangée à plat — texte, bouton, bouton. Le socle empile un titre, une
+   rangée à plat - texte, bouton, bouton. Le socle empile un titre, une
    description et une barre d'actions, parce que sur iOS la description PORTE
    la marche à suivre : il n'y a pas de bouton « Installer » à proposer là-bas,
    seulement des mots. D'où un bloc, et non plus une rangée. */
@@ -776,7 +776,7 @@ button {
 /* L'aplat ne va qu'au bouton d'installation, et SEULEMENT quand il existe :
    en mode instructions la seule sortie est « Plus tard », qui ne doit pas
    hériter du poids visuel de l'action principale. C'est ce que `data-method`
-   permet de dire — un `:first-child` seul l'aurait peint à tort. */
+   permet de dire - un `:first-child` seul l'aurait peint à tort. */
 [data-dwc='pwa-install-prompt'][data-method='prompt']
   [data-dwc='pwa-install-actions']
   button:first-child {
@@ -886,11 +886,11 @@ button {
    En `flex` avec `flex: 1 1 auto`, chaque bouton prenait la largeur de son
    TEXTE : trois tenaient sur la première ligne, « Signaler un problème »
    basculait seul sur la deuxième et s'étirait sur toute la largeur. Le
-   découpage ne disait rien — il suivait la longueur des mots, pas
+   découpage ne disait rien - il suivait la longueur des mots, pas
    l'importance des liens, et il changeait d'une langue à l'autre. Des
    DEUX colonnes, et pas un `auto-fit` : mesuré, `minmax(140px, 1fr)` en
    rendait TROIS dans ce tiroir et reconstituait exactement le 3 + 1 qu'on
-   voulait supprimer. Le nombre de liens est connu — quatre — donc la grille
+   voulait supprimer. Le nombre de liens est connu - quatre - donc la grille
    se pose, elle ne se devine pas. Ils se rangent alors deux par deux, et les
    paires ont un sens : le projet d'un côté, la contribution de l'autre.
    `minmax(0, 1fr)` plutôt que `1fr` : sans lui, un mot long d'une autre
@@ -902,7 +902,7 @@ button {
 }
 
 /* DEUX COLONNES AUSSI SUR TÉLÉPHONE, ET C'EST MESURÉ. Une première version
-   retombait à une colonne sous 360 px — la coupure ne servait à rien : sur un
+   retombait à une colonne sous 360 px - la coupure ne servait à rien : sur un
    écran de 375 px, le tiroir laisse 163 px par colonne et « Signaler un
    problème » passe à DEUX lignes malgré tout. Vérifié dans le navigateur.
    Or les deux cellules d'une rangée gardent la même hauteur, le texte reste
@@ -946,7 +946,7 @@ button {
 }
 
 /* ─────────── Recharger l'application (UpdateButton du socle) ───────────
-   CETTE APP N'IMPORTE PAS `components.css` — comme pour `AppVersion` plus
+   CETTE APP N'IMPORTE PAS `components.css` - comme pour `AppVersion` plus
    bas, les composants du socle sortent NUS. Sans les règles ci-dessous, le
    bouton gardait la largeur de son texte au milieu d'une grille de blocs
    pleine largeur, et son explication tombait en TEXTE COURANT : c'était le
@@ -983,7 +983,7 @@ button {
 
 /* ───────────── Numéro de version (AppVersion du socle) ─────────────
    CETTE APP N'IMPORTE PAS `components.css`. Les composants du socle sortent
-   NUS — ils n'exposent que des attributs `data-dwc` — donc sans les règles
+   NUS - ils n'exposent que des attributs `data-dwc` - donc sans les règles
    ci-dessous, le numéro tomberait en texte brut, et le badge « une version
    vous attend » ne se distinguerait pas d'une phrase.
    Elles reprennent la composition du socle avec les jetons d'ici : gris
@@ -1045,7 +1045,7 @@ a[data-dwc='app-version-value']:hover {
    trente-six palettes.
 
    Ne restent que deux écarts voulus : l'aplatissement de la <section>, qui la
-   fait participer à la carte hôte, et le fond teinté de l'icône — le paquet
+   fait participer à la carte hôte, et le fond teinté de l'icône - le paquet
    ne remplit que l'initiale de repli, et en aplat de primaire. */
 .family-apps [data-dwc='family-apps'] {
   display: contents;
@@ -1327,14 +1327,14 @@ a[data-dwc='app-version-value']:hover {
    or le `:focus-visible` global pose son contour À L'EXTÉRIEUR
    (`outline-offset: 3px`) : sur un écran de 393 px, une boîte de 0 à 393
    donnerait un contour de −3 à 396, c'est-à-dire hors champ à gauche ET à
-   droite — il ne resterait visibles que ses bords haut et bas. Il se dessine
+   droite - il ne resterait visibles que ses bords haut et bas. Il se dessine
    donc à l'intérieur. */
 .game-shell__body:focus-visible {
   outline-offset: -3px;
 }
 
 /* Le corps défile : ses enfants gardent leur hauteur naturelle. Sans ceci,
-   flex comprime tout enfant qui s'est donné un `min-height` chiffré — celui-ci
+   flex comprime tout enfant qui s'est donné un `min-height` chiffré - celui-ci
    remplace le `min-height: auto` qui est la SEULE protection d'un élément flex
    contre la compression sous son contenu. Le texte débordait alors sous le
    bloc suivant (statut de tour du Yahtzee, masqué par la grille de score). */
@@ -1569,13 +1569,13 @@ a[data-dwc='app-version-value']:hover {
   font-size: 0.9em;
 }
 
-/* Grille de score Yahtzee : deux colonnes dès qu'il y a la place — la section
-   haute et son sous-total à gauche, les combinaisons à droite —, une seule
+/* Grille de score Yahtzee : deux colonnes dès qu'il y a la place - la section
+   haute et son sous-total à gauche, les combinaisons à droite -, une seule
    en dessous. En deux colonnes la grille perd la moitié de sa hauteur et tient
    sans défilement sur un téléphone courant.
    132 px est le seuil : il fait passer à deux colonnes dès 272 px utiles,
    c'est-à-dire dès le plus étroit des téléphones (320 px moins le corps).
-   Au-delà de deux, `auto-fit` replie les pistes vides — il n'y a que deux
+   Au-delà de deux, `auto-fit` replie les pistes vides - il n'y a que deux
    listes, jamais une troisième colonne. */
 .scorecard {
   display: grid;
@@ -1972,12 +1972,12 @@ a[data-dwc='app-version-value']:hover {
 /* ── Bandeau de consentement (`ConsentBanner` du socle) ───────────────────────
    Miss Dice n'importe pas `components.css` : le composant arrive NU. Relevé le
    16/09/2026 sur le site déployé, `[data-dwc='consent-actions']` rendait
-   `display: block` — « Accepter » et « Refuser » se touchaient, sans cible
+   `display: block` - « Accepter » et « Refuser » se touchaient, sans cible
    tactile. Les seize apps qui importent la feuille du socle rendaient `flex`.
 
    EN HAUT, ET PAS EN BAS. Le bas d'écran est déjà disputé par l'invite
    d'installation et les liens de famille, qui se cachent déjà l'un l'autre. Le
-   haut est libre, et un bandeau posé là ne recouvre pas la surface de lancer —
+   haut est libre, et un bandeau posé là ne recouvre pas la surface de lancer -
    qui est l'interface entière de cette app. */
 [data-dwc='consent-banner'] {
   position: absolute;
@@ -2008,7 +2008,7 @@ a[data-dwc='app-version-value']:hover {
 
 /* `flex-wrap` ici AUSSI : sous 360 px le message passe au-dessus et les deux
    boutons restent côte à côte. Les empiler mettrait « Refuser » plus bas
-   qu'« Accepter », donc plus coûteux — obtenu par la mise en page plutôt que
+   qu'« Accepter », donc plus coûteux - obtenu par la mise en page plutôt que
    par le nombre de clics, ce qui ne vaut pas mieux. */
 [data-dwc='consent-actions'] {
   display: flex;

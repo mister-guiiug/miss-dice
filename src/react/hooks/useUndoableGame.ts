@@ -54,7 +54,7 @@ export function useUndoableGame<T>(
    * IL N'Y A PAS D'ÉVÉNEMENT PAR LANCER, et c'est une décision. Un tap est le
    * battement de cœur de cette app : un événement par lancer pèserait plus que
    * tout le reste du parc réuni, pour un chiffre que la vue de page donne
-   * déjà. Ce qui manque, c'est le RAPPORT — combien de parties commencées vont
+   * déjà. Ce qui manque, c'est le RAPPORT - combien de parties commencées vont
    * au bout.
    *
    * NI LES NOMS DES JOUEURS, NI LES SCORES. Les noms sont saisis, et un score

@@ -1,7 +1,7 @@
 import { rollDie, type Rng } from './random';
 
 /**
- * Évaluation de notation de dés (JDR) — logique pure, sans React.
+ * Évaluation de notation de dés (JDR) - logique pure, sans React.
  * Exemples : `2d6+3`, `d20`, `4d6kh3` (garder les 3 meilleurs),
  * `2d20kh1` (avantage), `3d6dl1` (retirer le plus bas), `1d100`, `2dF`
  * (dés Fudge : -1/0/+1), `1d%` (= d100), `2d6+1d4+1`.

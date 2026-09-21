@@ -5,9 +5,9 @@ import { expectEcranEntreeCable } from '@mister-guiiug/dev-pwa-config/playwright
  * L'ÉCRAN D'ENTRÉE, VÉRIFIÉ LÀ OÙ IL CASSE.
  *
  * Trois fois en un mois, une pièce à effet de bord s'est retrouvée montée
- * DERRIÈRE la porte d'une app du parc : `registerSW` d'abord — donc aucun
- * service worker et rien en cache —, le bandeau de consentement ensuite — donc
- * la question jamais posée —, la vue de page enfin — donc aucune remontée.
+ * DERRIÈRE la porte d'une app du parc : `registerSW` d'abord - donc aucun
+ * service worker et rien en cache -, le bandeau de consentement ensuite - donc
+ * la question jamais posée -, la vue de page enfin - donc aucune remontée.
  *
  * À chaque fois le composant était bien écrit, les tests unitaires verts, la CI
  * verte, et le défaut trouvé EN PRODUCTION. Cette spec ne teste pas un

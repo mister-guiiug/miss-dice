@@ -1,6 +1,6 @@
 import type { Rng } from '../dice/random';
 
-/** Outils de décision aléatoires — logique pure, sans React. */
+/** Outils de décision aléatoires - logique pure, sans React. */
 
 export type Coin = 'heads' | 'tails';
 

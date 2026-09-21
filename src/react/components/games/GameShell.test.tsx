@@ -12,7 +12,7 @@ import { renderWithProviders } from '../../../test/renderWithProviders';
  * (`@mister-guiiug/dev-pwa-config/react/use-wake-lock`). Ce qui est propre à
  * miss-dice, c'est *où* le verrou est demandé : dans le cadre de jeu
  * (pass-and-play, l'écran doit rester allumé entre deux tours) et nulle part
- * ailleurs — surtout pas sur le lancer libre.
+ * ailleurs - surtout pas sur le lancer libre.
  */
 
 const release = vi.fn(() => Promise.resolve());
@@ -61,7 +61,7 @@ describe('<GameShell /> et le verrou d’écran', () => {
 
 /**
  * `onNewGame` appelle `quit()`, donc `clearGame()` : ce bouton EFFACE la
- * sauvegarde. Il était déclenché au premier tap, sans rien demander — et
+ * sauvegarde. Il était déclenché au premier tap, sans rien demander - et
  * son glyphe (`↺`) était le plus anodin des trois. Ce qui est vérifié ici,
  * c'est la GARDE : qu'aucun chemin ne mène à `onNewGame` sans un second
  * geste, et qu'elle disparaisse là où il n'y a plus rien à perdre.

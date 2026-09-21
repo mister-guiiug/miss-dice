@@ -6,7 +6,7 @@ import { renderWithProviders } from '../../test/renderWithProviders';
 
 /**
  * Ce qui est testé ici, c'est le BRANCHEMENT de miss-dice sur le `Sheet` du
- * socle — pas le comportement du socle, qui a ses propres tests dans un vrai
+ * socle - pas le comportement du socle, qui a ses propres tests dans un vrai
  * DOM. Trois choses lui appartiennent en propre : le titre visible qui
  * étiquette le dialogue, l'habillage local (miss-dice n'importe pas
  * `components.css`), et le libellé de fermeture dans les six langues.
@@ -54,7 +54,7 @@ describe('<Sheet />', () => {
    * Le voile est un ENFANT qui recouvre toute la racine (`inset: 0` dans
    * `styles.css`) : en navigateur, c'est LUI que le hit-testing désigne comme
    * cible d'un clic dans le fond, jamais la racine. jsdom, lui, ne fait aucun
-   * hit-testing — il laisse dispatcher où l'on veut. Un test qui viserait
+   * hit-testing - il laisse dispatcher où l'on veut. Un test qui viserait
    * seulement la racine passerait donc au vert tout en laissant la feuille
    * infermable en vrai (mesuré par deux apps du parc pendant la campagne
    * `components.css`). On vise donc la topologie RÉELLE : le voile.
@@ -124,7 +124,7 @@ describe('<Sheet />', () => {
    * PORTÉE EXACTE DE CE TEST, vérifiée par mutation : en retirant
    * `closeLabel`, **quatre** cas tombent (es, de, it, pt) et deux passent
    * encore. `fr` et `en` survivent parce que l'app et le socle emploient par
-   * coïncidence le même mot (« Fermer », « Close ») — ce ne sont pas eux que
+   * coïncidence le même mot (« Fermer », « Close ») - ce ne sont pas eux que
    * ce test protège, et il ne faut pas croire qu'il les couvre. Ce sont bien
    * les quatre langues absentes du dictionnaire du paquet qui sont en jeu.
    */

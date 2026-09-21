@@ -1,4 +1,4 @@
-// Suite a11y (axe-core + Playwright) — helper partagé dev-pwa-config.
+// Suite a11y (axe-core + Playwright) - helper partagé dev-pwa-config.
 // Le tag @a11y permet de filtrer : `playwright test --grep @a11y`.
 // Contrairement au test jsdom, le navigateur réel dispose de la mise en
 // page, donc le contraste des couleurs est réellement évalué. Les tags par
@@ -26,7 +26,7 @@ test.describe('@a11y accessibilité', () => {
   // Le `ConfirmDialog` du socle arrive NON STYLÉ : tout son habillage est
   // local (miss-dice n'importe pas `components.css`). Le contraste du bouton
   // destructeur est donc un choix de cette app, et c'est ici qu'il se
-  // vérifie — dans un vrai navigateur, seul endroit où axe voit des couleurs.
+  // vérifie - dans un vrai navigateur, seul endroit où axe voit des couleurs.
   //
   // La portée était restreinte à la boîte tant que `.game-shell__body` portait
   // une violation `scrollable-region-focusable` : avant le premier lancer,

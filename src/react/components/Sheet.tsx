@@ -27,18 +27,18 @@ interface SheetProps {
  *    en-tête qui ne défile plus avec le contenu ;
  *  - la fermeture au clic sur le fond qui accepte DEUX cibles, la racine et le
  *    voile. La copie locale n'en gérait qu'une (`onClick` sur la racine avec
- *    `stopPropagation` sur le panneau) et fermait donc, elle, correctement —
+ *    `stopPropagation` sur le panneau) et fermait donc, elle, correctement -
  *    mais sur `click` et non `mousedown` : un glisser-déposer né dans le
  *    panneau et relâché sur le fond fermait la feuille. Plus maintenant.
  *
- * Le socle apporte aussi un VERROU DE DÉFILEMENT du fond — sans effet ici, et
+ * Le socle apporte aussi un VERROU DE DÉFILEMENT du fond - sans effet ici, et
  * il faut le dire : `styles.css` pose déjà `body { overflow: hidden }` (l'écran
  * entier est une surface de jeu). Vérifié en navigateur : le verrou repose
  * `hidden` puis restaure la valeur d'origine, qui est la même.
  *
  * CE QUI RESTE LOCAL, ET POURQUOI. **L'HABILLAGE.** miss-dice n'importe PAS
  * `components.css` (design maison assumé) : le `Sheet` du socle y serait
- * entièrement nu — ni fond, ni voile, ni position, ni arrondi. Comme pour le
+ * entièrement nu - ni fond, ni voile, ni position, ni arrondi. Comme pour le
  * bandeau de mise à jour avant lui, on garde le CSS de `styles.css` et on le
  * branche par `className` sur la racine ; les règles visent ensuite les
  * `[data-dwc="sheet-*"]` du socle. La poignée de glissement
@@ -49,7 +49,7 @@ interface SheetProps {
  * socle ne livre que `fr` et `en`, et fait retomber toute locale inconnue sur
  * le FRANÇAIS, en silence. miss-dice parle six langues : sans `closeLabel`,
  * quatre utilisateurs sur six liraient « Fermer ». Même parti pris que
- * `AppUpdatesProvider` — on ne s'en remet jamais au dictionnaire du paquet.
+ * `AppUpdatesProvider` - on ne s'en remet jamais au dictionnaire du paquet.
  */
 export function Sheet({ open, onClose, title, children, footer }: SheetProps) {
   const { t } = useI18n();

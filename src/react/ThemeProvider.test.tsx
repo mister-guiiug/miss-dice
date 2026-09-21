@@ -12,7 +12,7 @@ import { LOCALES } from '../i18n/messages';
 /**
  * Deux consommateurs, comme dans l'app : `App` applique le thème,
  * `SettingsDrawer` en change. Le piège que ce montage referme est que
- * `useTheme` du socle porte son état dans un `useState` LOCAL — deux appels
+ * `useTheme` du socle porte son état dans un `useState` LOCAL - deux appels
  * directs donneraient deux états indépendants écrivant tous deux `data-theme`.
  */
 function Lecteur({ nom }: { nom: string }) {

@@ -54,7 +54,7 @@ export function PigGame() {
       const summary = ranked.map(r => `${r.name} ${r.score}`).join(', ');
       const res = await shareOrCopy({
         title: 'Miss Dice',
-        text: `${t('modes.pig')} — ${summary}`,
+        text: `${t('modes.pig')} - ${summary}`,
         url: appUrl(),
       });
       if (res === 'copied') {

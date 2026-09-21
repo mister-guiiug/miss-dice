@@ -12,5 +12,5 @@ export type D6Value = 1 | 2 | 3 | 4 | 5 | 6;
  */
 export type RollStatus = 'idle' | 'rolling' | 'result';
 
-/** Les six faces d'un D6, dans l'ordre — pratique pour itérer/tester. */
+/** Les six faces d'un D6, dans l'ordre - pratique pour itérer/tester. */
 export const DIE_VALUES: readonly D6Value[] = [1, 2, 3, 4, 5, 6];

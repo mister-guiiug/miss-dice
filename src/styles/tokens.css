@@ -1,5 +1,5 @@
 /**
- * Tokens visuels de miss-dice — source unique du langage graphique.
+ * Tokens visuels de miss-dice - source unique du langage graphique.
  * Les tokens dépendant du thème (surfaces, texte, accent, ombres) vivent
  * dans les blocs `html[data-theme=...]` ; les tokens neutres (tailles de
  * dé, courbes d'animation, safe-areas) restent dans :root.
@@ -12,7 +12,7 @@
      absolue : la même face doit se reconnaître à 250 px sur le lancer libre
      comme à 59 px dans le Yahtzee. Ce token valait `clamp(20px, 7vw, 38px)`,
      tiré du VIEWPORT : 27,5 px à 393 px de large, soit 0,109 du côté de la
-     grande face (juste) mais 0,467 de celui des dés de jeu — où 0,5 est un
+     grande face (juste) mais 0,467 de celui des dés de jeu - où 0,5 est un
      cercle. 0,11 est donc la proportion que la grande face avait déjà. */
   --die-radius-ratio: 0.11;
   --die-size: clamp(180px, min(64vw, 60vh), 420px);
@@ -76,7 +76,7 @@ html[data-theme='light'] {
  * Les feuilles du socle lisent quinze variables et n'en définissent aucune :
  * chaque `var()` porte un repli NEUTRE (`CanvasText`, `GrayText`). Une app qui
  * importe une section sans poser ce pont obtient donc des composants corrects
- * mais GRIS — c'est ce qui faisait sortir l'indice du bouton de rechargement
+ * mais GRIS - c'est ce qui faisait sortir l'indice du bouton de rechargement
  * en texte de page nue.
  *
  * UN PONT, PAS UNE SECONDE PALETTE. Rien ici n'est une couleur : tout pointe

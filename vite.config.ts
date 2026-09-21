@@ -35,7 +35,7 @@ export default defineConfig(({ command }) => {
             // Sentry est chargé par un `import()` que `loader` rend
             // analysable. Sans cette ligne il tomberait dans `vendor`,
             // qui est PRÉCHARGÉ : mesuré sur miss-uwh, 381,9 kB
-            // préchargés au lieu de 227,2 — pour un total gzip identique
+            // préchargés au lieu de 227,2 - pour un total gzip identique
             // à 0,1 kB près. Le total ne voit pas la différence,
             // `bundleBudget.preloadGzipKb` si.
             if (norm.includes('/@sentry/')) return 'sentry';
@@ -43,13 +43,13 @@ export default defineConfig(({ command }) => {
             // coûtait du poids ; PostHog préchargé casse une PROMESSE : l'ADR
             // 0012 dit que rien n'est chargé avant l'accord, et le socle ne
             // l'appelle qu'après. Sans cette ligne, la bibliothèque tombe
-            // dans `vendor`, qui est PRÉCHARGÉ — elle serait donc
+            // dans `vendor`, qui est PRÉCHARGÉ - elle serait donc
             // téléchargée chez un visiteur qui refuse. C'est `preloadGzipKb`
             // qui le voit, jamais le total.
             if (norm.includes('/posthog-js/')) return 'posthog';
             // ET LE CATALOGUE DES PALETTES, TROISIÈME FOIS LE MÊME PIÈGE.
-            // `ThemeProvider` du socle charge `themes.js` — dix-sept palettes
-            // — par un `import()` PARESSEUX, et ne le déclenche que si on lui
+            // `ThemeProvider` du socle charge `themes.js` - dix-sept palettes
+            // - par un `import()` PARESSEUX, et ne le déclenche que si on lui
             // passe `appId`. Cette app ne lui en passe aucun : le catalogue
             // n'est jamais lu à l'exécution. Mais la règle ci-dessous range
             // tout `node_modules` dans `vendor`, qui est un morceau STATIQUE
@@ -58,7 +58,7 @@ export default defineConfig(({ command }) => {
             // critique de chaque visiteur. Mesuré le 20/09/2026 : `vendor`
             // 32,0 → 28,4 Kio gzip, PRÉCHARGÉ 123,5 → 119,8 Kio, et un
             // morceau `themes` de 4,0 Kio que personne ne demande jamais.
-            // La preuve tient à un marqueur PROPRE au catalogue — une couleur
+            // La preuve tient à un marqueur PROPRE au catalogue - une couleur
             // de palette, `#f8fafc` : les noms d'apps ne valent rien, ils
             // vivent aussi dans `apps-catalog.js`.
             if (norm.includes('/dev-pwa-config/themes.js')) return 'themes';
@@ -101,9 +101,9 @@ export default defineConfig(({ command }) => {
       // l'identique depuis l'ancienne meta statique de index.html.
       cspPlugin({
         dev: command === 'serve',
-        // Ouvre les hôtes de PostHog — le nuage EUROPÉEN (ADR 0012). Sans
+        // Ouvre les hôtes de PostHog - le nuage EUROPÉEN (ADR 0012). Sans
         // cette option, l'ingestion que `ConsentBanner` déclenche APRÈS
-        // l'accord serait refusée par la politique — et l'échec ne se verrait
+        // l'accord serait refusée par la politique - et l'échec ne se verrait
         // qu'en console, sur le site déployé, une fois le consentement donné.
         analytics: true,
         imgSrc: ["'self'", 'data:'],
@@ -147,7 +147,7 @@ export default defineConfig(({ command }) => {
            * ci-dessus ne servirait à rien : `globPatterns` ramasse TOUT le
            * JS émis, `import()` ou pas. Mesuré le 16/09/2026 sur la
            * production de deux apps du parc, 345 et 463 KiB bruts de SDK
-           * téléchargés par chaque visiteur — sans qu’aucun DSN soit posé.
+           * téléchargés par chaque visiteur - sans qu’aucun DSN soit posé.
            *
            * Hors précache, il est cherché sur le réseau à la première
            * erreur, et jamais si l’observabilité reste éteinte. Ne pas
@@ -171,7 +171,7 @@ export default defineConfig(({ command }) => {
           lang: 'fr',
           categories: ['games', 'utilities'],
           launch_handler: { client_mode: 'navigate-existing' },
-          // Raccourcis (longue-pression sur l'icône) — lus via ?play= au boot.
+          // Raccourcis (longue-pression sur l'icône) - lus via ?play= au boot.
           shortcuts: [
             {
               name: 'Yahtzee',
@@ -193,7 +193,7 @@ export default defineConfig(({ command }) => {
           // UNE IMAGE PAR USAGE. Les deux PNG étaient déclarés
           // `any maskable` : la MÊME image servait au navigateur, qui la
           // montre telle quelle, et à Android, qui la rogne à son masque. Un
-          // dessin ne peut pas être bon pour les deux — celui-ci a un fond
+          // dessin ne peut pas être bon pour les deux - celui-ci a un fond
           // transparent et des coins arrondis, que le masque révélait.
           icons: [
             {

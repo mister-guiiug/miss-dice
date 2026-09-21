@@ -24,7 +24,7 @@ import { AppUpdatesProvider } from './AppUpdatesProvider';
  *
  * 1. **Le bandeau peut S'AFFICHER.** Le double du socle LÈVE si personne n'a
  *    injecté `registerSW` : un bandeau monté mais structurellement incapable
- *    d'apparaître — le défaut vécu des mois par une app de la famille — fait
+ *    d'apparaître - le défaut vécu des mois par une app de la famille - fait
  *    donc échouer le test au lieu de passer en silence. L'ancien stub maison,
  *    muet, ne pouvait rien prouver de tel.
  *
@@ -65,7 +65,7 @@ describe('AppUpdatesProvider', () => {
     swStub.reset();
   });
 
-  it('le socle livre les sept langues depuis 3.33.0 — le piège que ces tests fermaient', () => {
+  it('le socle livre les sept langues depuis 3.33.0 - le piège que ces tests fermaient', () => {
     // Jusqu'à 3.32, `react/labels` ne portait que fr et en : les autres
     // langues retombaient en français sans un mot. Ces tests figeaient ce
     // piège ; ils figent désormais sa disparition : l'app a retiré ses
@@ -96,7 +96,7 @@ describe('AppUpdatesProvider', () => {
   // IL A CHANGÉ DE PREUVE, et il est devenu plus fort. Il vérifiait que les
   // surcharges de l'app couvraient six locales que le socle ignorait ; il
   // vérifie maintenant que le SOCLE les sert toutes les six lui-même. C'est la
-  // seule chose dont elles dépendent depuis que la surcharge est retirée — et
+  // seule chose dont elles dépendent depuis que la surcharge est retirée - et
   // le jour où le socle en perdrait une, ces six cas le diraient.
   it.each(LOCALES)(
     'locale « %s » : le bandeau affiche les libellés du socle',
@@ -124,7 +124,7 @@ describe('AppUpdatesProvider', () => {
       // ET SURTOUT : PAS DE REPLI SILENCIEUX. `LabelsProvider` retombe sur le
       // français pour toute locale qu'il ne connaît pas, sans rien signaler.
       // Hors du français, en voir le titre à l'écran signifierait exactement
-      // ça — et c'est le seul défaut que ce test ne peut pas se permettre de
+      // ça - et c'est le seul défaut que ce test ne peut pas se permettre de
       // laisser passer.
       if (locale !== 'fr') {
         expect(screen.queryByText(socleLabels('fr').update.title)).toBeNull();

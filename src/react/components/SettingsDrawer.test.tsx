@@ -22,7 +22,7 @@ function openSettings() {
   fireEvent.click(screen.getByRole('button', { name: /réglages/i }));
 }
 
-describe('SettingsDrawer — signaler un problème', () => {
+describe('SettingsDrawer - signaler un problème', () => {
   it('ouvre le gabarit d’anomalie du dépôt miss-dice', async () => {
     openSettings();
     const link = await screen.findByRole('link', {
@@ -53,7 +53,7 @@ describe('SettingsDrawer — signaler un problème', () => {
  * Ces deux défauts sont invisibles à la relecture du JSX et ne cassent aucun
  * rendu : ils se voient à l'écran, ou s'entendent au lecteur d'écran.
  */
-describe('SettingsDrawer — le bloc « À propos »', () => {
+describe('SettingsDrawer - le bloc « À propos »', () => {
   it('annonce « lien copié » entre les liens et le rechargement', async () => {
     openSettings();
     const propos = (await screen.findByText(/^à propos$/i)).parentElement;
@@ -63,7 +63,7 @@ describe('SettingsDrawer — le bloc « À propos »', () => {
 
     // La région `aria-live` vivait APRÈS le bouton de rechargement et son
     // explication : deux blocs séparaient la confirmation du geste qui la
-    // déclenche — « Partager l'app ». Un lecteur d'écran l'annonçait donc
+    // déclenche - « Partager l'app ». Un lecteur d'écran l'annonçait donc
     // loin de son bouton, et l'œil ne la voyait pas.
     expect(rang('about__links')).toBeLessThan(rang('about__feedback'));
     expect(rang('about__feedback')).toBeLessThan(rang('about__maintenance'));
@@ -109,8 +109,8 @@ describe('SettingsDrawer — le bloc « À propos »', () => {
 /**
  * LE CHOIX DE LA VOIX. Aucune propriété de `SpeechSynthesisVoice` n'indique la
  * qualité d'une voix, et certaines articulent franchement mal : mesuré le
- * 21/09/2026, `Microsoft Hortense` — PREMIÈRE voix française de Windows, donc
- * celle que le socle retient d'office — écorche « cinq » dès qu'une ponctuation
+ * 21/09/2026, `Microsoft Hortense` - PREMIÈRE voix française de Windows, donc
+ * celle que le socle retient d'office - écorche « cinq » dès qu'une ponctuation
  * le précède, alors que `Julie` et `Paul` sont justes sur la même machine.
  *
  * Sur Firefox, aucune voix n'est marquée `default` : sans ce réglage,
@@ -173,7 +173,7 @@ function poseVoix(voix: SpeechSynthesisVoice[]) {
   synth.dispatchEvent(new Event('voiceschanged'));
 }
 
-describe('SettingsDrawer — choix de la voix d’annonce', () => {
+describe('SettingsDrawer - choix de la voix d’annonce', () => {
   beforeAll(() => {
     Object.defineProperty(globalThis, 'speechSynthesis', {
       value: synth,
@@ -235,8 +235,8 @@ describe('SettingsDrawer — choix de la voix d’annonce', () => {
   });
 
   /**
-   * LE TEST QUI COMPTE. Il tient toute la chaîne — liste déroulante, store,
-   * `useSpeak`, socle — et vérifie que la phrase essayée est bien CELLE DE
+   * LE TEST QUI COMPTE. Il tient toute la chaîne - liste déroulante, store,
+   * `useSpeak`, socle - et vérifie que la phrase essayée est bien CELLE DE
    * L'ANNONCE : une phrase de démonstration quelconque ne ferait pas entendre
    * le défaut, puisque ce sont les chiffres après une ponctuation qui
    * achoppent.

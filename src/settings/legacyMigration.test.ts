@@ -13,7 +13,7 @@ import { LOCALES } from '../i18n/messages';
  * Adopter `react/i18n` et `react/use-theme` déplace la langue et le thème hors
  * du blob `miss-dice:settings` vers deux clés nues. Sans pont, l'utilisateur
  * qui avait choisi l'espagnol et le thème clair rouvre l'app en français
- * système — UNE SEULE FOIS, donc sans que personne ne remonte le bug. C'est
+ * système - UNE SEULE FOIS, donc sans que personne ne remonte le bug. C'est
  * exactement le défaut que `legacyKeys` prétend fermer côté socle, et qu'il ne
  * peut PAS fermer ici : voir le dernier test.
  */
@@ -55,7 +55,7 @@ describe('migrateLegacySettings', () => {
   });
 
   /**
-   * LA GARDE QUI COMPTE. Sans elle, le blob — qui survit à la migration —
+   * LA GARDE QUI COMPTE. Sans elle, le blob - qui survit à la migration -
    * réimposerait l'ancien choix à CHAQUE rechargement : l'utilisateur passe en
    * clair, ferme l'app, la rouvre en sombre, indéfiniment.
    */

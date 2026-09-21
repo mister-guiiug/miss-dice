@@ -1,7 +1,7 @@
 /**
  * Extraction PONCTUELLE de `locale` et `theme` hors du blob de réglages.
  *
- * POURQUOI CE FICHIER EXISTE — et pourquoi `legacyKeys` ne suffisait pas.
+ * POURQUOI CE FICHIER EXISTE - et pourquoi `legacyKeys` ne suffisait pas.
  *
  * Les deux modules du socle qu'on adopte ici possèdent leur propre
  * persistance, et tous deux lisent une **chaîne nue** sous leur clé :
@@ -18,7 +18,7 @@
  * `legacyKeys: ['miss-dice:settings']` lirait donc `'{"haptics":true,…}'`,
  * ne le reconnaîtrait pas comme un thème valide, et retomberait en silence
  * sur le défaut : exactement la perte de préférence que l'option prétend
- * empêcher. Pire, `createI18n` n'a même pas d'équivalent — et s'il pointait
+ * empêcher. Pire, `createI18n` n'a même pas d'équivalent - et s'il pointait
  * sur cette clé, son `setLocale` **écraserait le blob entier** par `"es"`,
  * emportant les neuf autres réglages.
  *
@@ -38,7 +38,7 @@
  * prochaine écriture du store.
  */
 
-/** Le blob historique — dix réglages sous une seule clé. */
+/** Le blob historique - dix réglages sous une seule clé. */
 export const LEGACY_SETTINGS_KEY = 'miss-dice:settings';
 
 /**
@@ -46,7 +46,7 @@ export const LEGACY_SETTINGS_KEY = 'miss-dice:settings';
  * les défauts `dwc_locale` / `dwc_theme` : les PWA de la famille partagent une
  * origine GitHub Pages, donc un même `localStorage`. Sous la clé par défaut,
  * miss-dice hériterait de la langue et du thème d'une app voisine au lieu des
- * siens — et les lui imposerait en retour.
+ * siens - et les lui imposerait en retour.
  */
 export const LOCALE_STORAGE_KEY = 'miss-dice_locale';
 export const THEME_STORAGE_KEY = 'miss-dice_theme';
@@ -70,7 +70,7 @@ function readLegacyBlob(): Record<string, unknown> | null {
 /**
  * Repose `locale` et `theme` sous leurs clés nues si elles n'y sont pas déjà.
  *
- * @param locales Les langues réellement servies — une valeur hors liste est
+ * @param locales Les langues réellement servies - une valeur hors liste est
  *   ignorée plutôt que propagée jusqu'à `document.documentElement.lang`.
  */
 export function migrateLegacySettings(locales: readonly string[]): void {

@@ -5,7 +5,7 @@ import {
 import { useI18n } from '../../i18n/useI18n';
 
 /**
- * Les deux liens de la règle famille — code source et soutien — sur le PREMIER
+ * Les deux liens de la règle famille - code source et soutien - sur le PREMIER
  * écran.
  *
  * Ils n'existaient que dans le tiroir de réglages, derrière un bouton : qui
@@ -16,7 +16,7 @@ import { useI18n } from '../../i18n/useI18n';
  * IL VIT DANS `.app__overlay`, ET C'EST LA SEULE PLACE POSSIBLE. Tout l'écran
  * de dé est une zone de lancer : y poser un pied de page dans le flux
  * mangerait la surface tapable. L'overlay est `pointer-events: none` et ne
- * réactive que ses enfants — deux liens de seize pixels n'y prennent rien.
+ * réactive que ses enfants - deux liens de seize pixels n'y prennent rien.
  *
  * Les icônes sont dessinées en ligne, comme celles du tiroir : cette
  * application ne déclare pas de bibliothèque d'icônes.

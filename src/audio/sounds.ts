@@ -1,5 +1,5 @@
 /**
- * Petits sons synthétisés en WebAudio — aucun fichier asset, tout est
+ * Petits sons synthétisés en WebAudio - aucun fichier asset, tout est
  * généré. Entièrement gardé : silencieux si l'API est absente (jamais
  * d'erreur). L'AudioContext n'est créé qu'au premier son (geste utilisateur).
  */

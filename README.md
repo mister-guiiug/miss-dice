@@ -7,7 +7,7 @@ Lanceur de dés **D4 à D20**, _mobile-first_, 100 % offline, installable.
 Toute la surface de l'écran est une zone de tap : on touche, le dé roule,
 une face se pose. Autour du lancer libre : trois jeux en _pass-and-play_
 (Yahtzee, 421, Cochon), un lanceur en **notation JDR** (`4d6kh3`) et un
-écran **Décider**. Sans pub, sans tracking, sans backend — seules les
+écran **Décider**. Sans pub, sans tracking, sans backend - seules les
 préférences locales sont stockées dans le navigateur.
 
 Membre de la famille PWA `miss-*` / `mister-*`, bâti sur les conventions
@@ -107,7 +107,7 @@ miss-dice/
 
 - Tap n'importe où → lancer.
 - Au clavier (desktop) : **Espace** ou **Entrée** lance, `+`/`=`/`↑` ajoute un
-  dé, `-`/`↓` en retire — neutralisé pendant la saisie et tant qu'une feuille
+  dé, `-`/`↓` en retire - neutralisé pendant la saisie et tant qu'une feuille
   modale est ouverte (`src/react/hooks/useKeyboardRoll.ts`).
 - Pendant le lancer : défilement rapide des faces, cadence en cloche
   inversée (accélère puis décélère, « le dé se pose »).
@@ -134,12 +134,12 @@ miss-dice/
   navigateur, dans la voix de la langue choisie (`speech` du socle).
   Silencieuse et sans erreur là où l'API manque.
 - **Voix de l'annonce** : n'apparaît que s'il y a un choix à faire. La voix
-  retenue d'office n'est pas toujours la bonne — mesuré le 21/09/2026,
+  retenue d'office n'est pas toujours la bonne - mesuré le 21/09/2026,
   `Microsoft Hortense` écorche « cinq » dès qu'une ponctuation le précède,
   alors que `Julie` et `Paul` sont justes sur la même machine. Aucune
   propriété de `SpeechSynthesisVoice` n'annonce la qualité d'une voix : le
   bouton d'essai énonce donc la phrase RÉELLE de l'annonce, l'oreille étant
-  le seul juge. Le choix est retenu par `name`, pas par `voiceURI` — Chrome
+  le seul juge. Le choix est retenu par `name`, pas par `voiceURI` - Chrome
   et Firefox ne nomment pas la même voix pareil.
 - **Mode daltonien** : une pastille chiffrée redondante dans un coin de
   chaque face. La valeur ne dépend jamais de la couleur seule.
@@ -155,11 +155,11 @@ miss-dice/
 - **Vibration** et **réduire les animations** (déjà présents).
 - **Nos autres applications** : la grille `FamilyApps` du socle, alimentée par
   son catalogue. Elle est rendue **en une colonne** (`layout="list"`, le
-  tiroir est étroit) et **groupée par catégorie** (`groupBy="category"`) —
+  tiroir est étroit) et **groupée par catégorie** (`groupBy="category"`) -
   dix-neuf cartes d'affilée faisaient un mur, il en reste sept lignes.
 - **À propos** : partager le lien de l'app (Web Share API, repli
   presse-papiers), lien vers le **code source** (GitHub), **Buy me a coffee**
-  (sponsor) et **Signaler un problème** — cf. `src/links.ts` ; le partage et
+  (sponsor) et **Signaler un problème** - cf. `src/links.ts` ; le partage et
   le signalement viennent des modules `share` et `issue-report` du socle.
 - **Signaler un problème** ouvre le gabarit d'anomalie du compte
   (`issues/new?template=bug.yml`) **prérempli** avec la version, le commit,
@@ -177,21 +177,21 @@ libre par la flèche **ou le bouton retour du navigateur/Android** (intégré
 (`shortcuts` du manifest → `?play=`).
 
 - **Notation de dés** (JDR) : `2d6+3`, `1d20`, `4d6kh3`, avantage
-  `2d20kh1`, `1d100`, dés Fudge `4dF`… — parseur pur testé, total + détail
+  `2d20kh1`, `1d100`, dés Fudge `4dF`… - parseur pur testé, total + détail
   des dés gardés/retirés (logique `src/dice/notation.ts`).
 - **Décider** : pile ou face, oui/non, tirer un nom au sort, mélanger une
   liste (`src/decide/decisions.ts`).
 
 Pass-and-play **1 à 8 joueurs** (1 joueur = solo) pour les jeux suivants.
 
-**Yahtzee** — 5 dés, **jusqu'à 3 lancers** par tour (on garde les dés au
+**Yahtzee** - 5 dés, **jusqu'à 3 lancers** par tour (on garde les dés au
 tap entre les lancers) : on peut s'arrêter et inscrire une case **dès le
 1er ou le 2e lancer** (le statut le rappelle). Grille de 13 combinaisons,
 bonus supérieur (+35 si la somme des « 1…6 » atteint 63). Chaque joueur
 remplit sa propre grille ; le plus haut total l'emporte. Logique :
 `src/games/yahtzee/`.
 
-**421** — 3 dés, jeu à jetons (version classique simplifiée, assumée et
+**421** - 3 dés, jeu à jetons (version classique simplifiée, assumée et
 documentée dans `src/games/dice421/scoring.ts`) :
 
 - Valeur des mains : `4-2-1` = 10 jetons (la meilleure), `1-1-1` = 7,
@@ -203,7 +203,7 @@ documentée dans `src/games/dice421/scoring.ts`) :
   jetons au gagnant de la manche. Le premier à n'avoir **plus aucun
   jeton** gagne la partie.
 
-**Cochon** (« Pig ») — 1 dé, jeu de _stop-ou-encore_ : à son tour, on relance
+**Cochon** (« Pig ») - 1 dé, jeu de _stop-ou-encore_ : à son tour, on relance
 autant qu'on veut, chaque face 2–6 s'ajoute au **cumul du tour** ; un **1**
 efface ce cumul et passe la main ; **banquer** verse le cumul au score. Le
 premier à **100** gagne (à un joueur : atteindre la cible en un minimum de
@@ -241,7 +241,7 @@ choisir la **taille du pot**.
   plomberie (`src/store/createStore.ts`) : un store concret ne décrit plus
   que sa logique métier.
 - **Le CSS du socle, par SECTION.** L'app n'importait aucune feuille du
-  paquet, donc ses composants partagés sortaient en couleurs système — c'est
+  paquet, donc ses composants partagés sortaient en couleurs système - c'est
   ce qui faisait rendre l'indice du bouton de rechargement en texte de page
   nue. Elle importe maintenant `components/base.css` et
   `components/app-footer.css`, **pas** la feuille entière : rien d'autre que
@@ -250,16 +250,16 @@ choisir la **taille du pot**.
   Le contrat `--dwc-*` qu'elles lisent est un **pont** posé dans
   `src/styles/tokens.css` : il pointe les jetons déjà déclarés au-dessus, et
   la bascule clair/sombre suit sans être redite. Seuls les quatre tons d'état
-  y portent une valeur, faute d'équivalent dans l'app — en `light-dark()`,
+  y portent une valeur, faute d'équivalent dans l'app - en `light-dark()`,
   `color-scheme` étant déclaré dans les deux blocs de thème.
 - **TypeScript 7 en SECOND AVIS, pas en remplacement.** `typescript-eslint`
-  refuse la 7 par une assertion à l'import — ESLint meurt alors pour tous les
+  refuse la 7 par une assertion à l'import - ESLint meurt alors pour tous les
   fichiers. La cohabitation est la voie documentée : `npm run type-check:7`
   fait tourner le portage natif Go à côté de la 6, en `continue-on-error` en
   CI. Il sert à voir venir, pas à bloquer.
 - **Lisibilité des points.** Points blancs avec ombre + anneau sombre :
   lisibles sur toutes les faces (jaune compris). La valeur se lit au
-  nombre de points et via `aria-label` — jamais uniquement à la couleur.
+  nombre de points et via `aria-label` - jamais uniquement à la couleur.
 - **PWA.** `vite-plugin-pwa` (`registerType: 'prompt'`), précache de
   l'app shell (offline), bandeau de mise à jour non intrusif.
 
@@ -271,10 +271,10 @@ choisir la **taille du pot**.
   dès qu'un champ ou une feuille modale a le focus.
 - **La zone de jeu qui défile est atteignable au clavier.** `.game-shell__body`
   déborde mais ne contenait, avant le premier lancer, aucun élément focalisable
-  — les cases de la grille sont toutes `disabled` tant qu'on n'a pas lancé, et
-  un bouton désactivé sort du parcours. Elle porte donc un `tabIndex`
-  inconditionnel : mesurer le débordement en continu laisserait manquer
-  l'arrêt de tabulation à l'instant précis où l'on tabule.
+  - les cases de la grille sont toutes `disabled` tant qu'on n'a pas lancé, et
+    un bouton désactivé sort du parcours. Elle porte donc un `tabIndex`
+    inconditionnel : mesurer le débordement en continu laisserait manquer
+    l'arrêt de tabulation à l'instant précis où l'on tabule.
 - `:focus-visible` net, contrastes sombres élevés. Sur la zone de jeu, le
   contour se dessine à l'INTÉRIEUR (`outline-offset: -3px`) : posé dehors sur
   un bloc pleine largeur, il sortirait de l'écran à gauche et à droite.
@@ -326,44 +326,44 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 
 ## 8. Tests
 
-- `src/dice/random.test.ts` — mapping des tranches, bornes, multi-dés, uniformité.
-- `src/dice/diceTypes.test.ts` — set de dés, rendu pips/chiffre, repli D6.
-- `src/dice/pips.test.ts` — N points pour la face N, symétrie 180°.
-- `src/dice/colors.test.ts` — teintes valides, distinctes, palette cyclée.
-- `src/dice/rollSchedule.test.ts` — courbe accélère/décélère, robustesse.
-- `src/react/components/DiceFace.test.tsx` — points (D6) et chiffre (autres) + a11y.
-- `src/react/hooks/useDiceRoll.test.ts` — états, multi-dés, callbacks, anti-double-tap.
-- `src/react/hooks/useShakeToRoll.test.ts` — seuil de secousse + temporisation.
-- `src/dice/notation.test.ts` — parseur de notation (avantage, drop, Fudge).
-- `src/i18n/messages.test.ts` — parité des clés des six langues, interpolation, détection.
-- `src/i18n/useI18n.test.tsx` — bascule de langue, `<html lang>`, persistance.
-- `src/games/yahtzee/{scoring,engine}.test.ts` — 13 combinaisons, bonus, tours, fin.
-- `src/games/dice421/{scoring,engine}.test.ts` — classement des mains, charge/décharge, victoire.
-- `src/games/pig/engine.test.ts` — cumul du tour, perte sur le 1, banque, victoire, solo.
-- `src/react/components/SettingsDrawer.test.tsx` — le lien de signalement et son préremplissage.
-- `src/games/persistence.test.ts` — sauvegarde/reprise/effacement de partie.
-- `src/react/hooks/useUndoableGame.test.ts` — annuler, persister, reprendre.
-- `src/react/components/Sheet.test.tsx` — dialogue modal, focus, Échap.
-- `src/react/components/games/GameShell.test.tsx` — coquille de jeu, retour, confirmation.
-- `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` — préfs et stats.
-- `src/settings/legacyMigration.test.ts` — reprise des anciennes clés de réglages.
-- `src/store/createStore.test.ts` — abonnement, émission, isolation entre stores.
-- `src/log/rollLog.test.ts` — journal borné, export CSV.
-- `src/audio/sounds.test.ts` — silence garanti quand l'API WebAudio manque.
-- `src/decide/decisions.test.ts` — pièce, oui/non, tirage, mélange.
-- `src/react/ThemeProvider.test.tsx` — thème auto/clair/sombre, pas de flash.
-- `src/react/AppUpdatesProvider.test.tsx` — bandeau de mise à jour, dans la bonne langue.
-- `src/react/a11y.test.tsx` — axe-core sur les écrans clés (hors contraste : jsdom ne
+- `src/dice/random.test.ts` - mapping des tranches, bornes, multi-dés, uniformité.
+- `src/dice/diceTypes.test.ts` - set de dés, rendu pips/chiffre, repli D6.
+- `src/dice/pips.test.ts` - N points pour la face N, symétrie 180°.
+- `src/dice/colors.test.ts` - teintes valides, distinctes, palette cyclée.
+- `src/dice/rollSchedule.test.ts` - courbe accélère/décélère, robustesse.
+- `src/react/components/DiceFace.test.tsx` - points (D6) et chiffre (autres) + a11y.
+- `src/react/hooks/useDiceRoll.test.ts` - états, multi-dés, callbacks, anti-double-tap.
+- `src/react/hooks/useShakeToRoll.test.ts` - seuil de secousse + temporisation.
+- `src/dice/notation.test.ts` - parseur de notation (avantage, drop, Fudge).
+- `src/i18n/messages.test.ts` - parité des clés des six langues, interpolation, détection.
+- `src/i18n/useI18n.test.tsx` - bascule de langue, `<html lang>`, persistance.
+- `src/games/yahtzee/{scoring,engine}.test.ts` - 13 combinaisons, bonus, tours, fin.
+- `src/games/dice421/{scoring,engine}.test.ts` - classement des mains, charge/décharge, victoire.
+- `src/games/pig/engine.test.ts` - cumul du tour, perte sur le 1, banque, victoire, solo.
+- `src/react/components/SettingsDrawer.test.tsx` - le lien de signalement et son préremplissage.
+- `src/games/persistence.test.ts` - sauvegarde/reprise/effacement de partie.
+- `src/react/hooks/useUndoableGame.test.ts` - annuler, persister, reprendre.
+- `src/react/components/Sheet.test.tsx` - dialogue modal, focus, Échap.
+- `src/react/components/games/GameShell.test.tsx` - coquille de jeu, retour, confirmation.
+- `src/settings/settingsStore.test.ts` + `src/stats/rollStats.test.ts` - préfs et stats.
+- `src/settings/legacyMigration.test.ts` - reprise des anciennes clés de réglages.
+- `src/store/createStore.test.ts` - abonnement, émission, isolation entre stores.
+- `src/log/rollLog.test.ts` - journal borné, export CSV.
+- `src/audio/sounds.test.ts` - silence garanti quand l'API WebAudio manque.
+- `src/decide/decisions.test.ts` - pièce, oui/non, tirage, mélange.
+- `src/react/ThemeProvider.test.tsx` - thème auto/clair/sombre, pas de flash.
+- `src/react/AppUpdatesProvider.test.tsx` - bandeau de mise à jour, dans la bonne langue.
+- `src/react/a11y.test.tsx` - axe-core sur les écrans clés (hors contraste : jsdom ne
   calcule pas la mise en page).
-- `src/readme.test.ts` — ce document ne cite aucun fichier de `src/` disparu.
-- `e2e/smoke.spec.ts` — fumée Playwright (lancer, menu des jeux).
-- `e2e/a11y.spec.ts` — axe-core dans un VRAI navigateur : là, le contraste est
+- `src/readme.test.ts` - ce document ne cite aucun fichier de `src/` disparu.
+- `e2e/smoke.spec.ts` - fumée Playwright (lancer, menu des jeux).
+- `e2e/a11y.spec.ts` - axe-core dans un VRAI navigateur : là, le contraste est
   réellement évalué (WCAG 2.0/2.1 A + AA).
-- `e2e/entree.spec.ts` — l'écran d'entrée, vérifié là où il casse : rien à effet de
+- `e2e/entree.spec.ts` - l'écran d'entrée, vérifié là où il casse : rien à effet de
   bord ne doit se monter derrière la porte.
 
 **Couverture : 98,5 % d'instructions**, seuil CI ≥ 90 %. La porte ne mesure
-que les domaines PURS — `src/dice/**`, `src/games/**`, `src/decide/**`,
+que les domaines PURS - `src/dice/**`, `src/games/**`, `src/decide/**`,
 `src/log/**` et `src/store/createStore.ts` (cf. `vitest.config.ts`). La
 surface d'interface en est volontairement exclue : l'y verser diluerait le
 seuil au lieu de le renforcer.
@@ -385,4 +385,4 @@ complet, synchronisation multi-appareils.
 
 ## Licence
 
-MIT — voir [LICENSE](LICENSE).
+MIT - voir [LICENSE](LICENSE).

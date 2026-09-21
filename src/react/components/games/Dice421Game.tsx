@@ -97,7 +97,7 @@ export function Dice421Game() {
       const summary = game.players.map(p => `${p.name} ${p.tokens}`).join(', ');
       const res = await shareOrCopy({
         title: 'Miss Dice',
-        text: `${t('modes.d421')} — ${t('game.winner', { name: winner.name })} (${summary})`,
+        text: `${t('modes.d421')} - ${t('game.winner', { name: winner.name })} (${summary})`,
         url: appUrl(),
       });
       if (res === 'copied') {

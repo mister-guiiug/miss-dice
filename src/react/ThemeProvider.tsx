@@ -26,7 +26,7 @@ migrateLegacySettings(LOCALES);
  * POURQUOI LE FOURNISSEUR, ET PAS `useTheme` SEUL. `useTheme` porte son état
  * dans un `useState` LOCAL : deux appels, c'est deux états indépendants qui
  * écrivent tous deux `data-theme` sur `<html>`. Or il faut ici deux points
- * d'accès — `App` pour l'appliquer, `SettingsDrawer` pour en changer — et
+ * d'accès - `App` pour l'appliquer, `SettingsDrawer` pour en changer - et
  * l'ancien code s'en tirait parce que `settingsStore` était global. Monté ici,
  * le fournisseur rend cet état partagé : **un seul écrivain de `data-theme`
  * côté React**, l'IIFE anti-FOUC d'`index.html` étant l'autre, avant tout
@@ -35,16 +35,16 @@ migrateLegacySettings(LOCALES);
  * NI `appId` NI `palette` : miss-dice a son propre jeu de tokens
  * (`styles/tokens.css`) et n'importe pas `components.css`. Sans palette, le
  * fournisseur ne peint aucune variable `--dwc-*` et ne charge pas le catalogue
- * des dix-sept thèmes — il ne sert qu'à unifier l'état et la barre système.
+ * des dix-sept thèmes - il ne sert qu'à unifier l'état et la barre système.
  *
- * ON RESTE SUR `defaultTheme: 'system'` (le défaut, donc non passé) — mais
+ * ON RESTE SUR `defaultTheme: 'system'` (le défaut, donc non passé) - mais
  * pas pour la raison qui était écrite ici.
  *
  * Ce commentaire affirmait que `theme-boot` du socle ignore `defaultTheme`
  * quand rien n'est stocké, et que le correctif « n'est PAS dans la 3.26.0 ».
  * **C'est faux** : il y est depuis cette version (`resolveEmpty`, PR #98 du
  * socle), et il a été recopié ici depuis un brief erroné. Vérifiable en une
- * ligne — `themeBootSource({ defaultTheme: 'light' })` n'émet aucun
+ * ligne - `themeBootSource({ defaultTheme: 'light' })` n'émet aucun
  * `prefers-color-scheme` dans le tarball 3.26.0.
  *
  * La vraie raison de rester sur `'system'` est plus simple : c'est ce que

@@ -1,7 +1,7 @@
 /**
  * Retour haptique. L'API Vibration n'existe que sur certains mobiles
  * (Android Chrome notamment ; iOS l'ignore). Tous les appels sont gardés
- * et silencieux en cas d'absence — jamais d'erreur, simple no-op.
+ * et silencieux en cas d'absence - jamais d'erreur, simple no-op.
  */
 
 /** Légère pichenette au lancer (accusé de réception du tap). */

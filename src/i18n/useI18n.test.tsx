@@ -51,7 +51,7 @@ describe('useI18n', () => {
 
   /**
    * LA CLÉ REPRISE. Sans `storageKey`, `createI18n` écrirait sous `dwc_locale`
-   * — partagée par toutes les PWA de la famille sur l'origine GitHub Pages :
+   * - partagée par toutes les PWA de la famille sur l'origine GitHub Pages :
    * miss-dice hériterait de la langue d'une app voisine, et lui imposerait la
    * sienne en retour.
    */

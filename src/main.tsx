@@ -20,7 +20,7 @@ void initSentry({
   environment: import.meta.env.MODE,
   // `loader` REND L’IMPORT ANALYSABLE PAR VITE, et c’est ce qui permet au
   // `manualChunks` de le ranger dans son propre morceau. Sans lui, le socle
-  // retombe sur un spécificateur volontairement non analysable — nécessaire
+  // retombe sur un spécificateur volontairement non analysable - nécessaire
   // tant que la peer n’est pas installée, inutile maintenant qu’elle l’est.
   //
   // Rien ne part tant qu’aucun DSN n’est posé : `initSentry` rend `null`
@@ -45,7 +45,7 @@ if (rootElement) {
         {/* ORDRE IMPOSÉ. `AppUpdatesProvider` appelle `useI18n` pour surcharger
             les libellés du bandeau : il doit être SOUS `I18nProvider`. Ce
             dernier pose son propre `LabelsProvider` (sans surcharge) ; celui
-            d'`AppUpdatesProvider`, plus proche, l'emporte pour son sous-arbre —
+            d'`AppUpdatesProvider`, plus proche, l'emporte pour son sous-arbre -
             c'est ce qui fait tenir les six langues du bandeau. */}
         <ThemeProvider>
           <I18nProvider>

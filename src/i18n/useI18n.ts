@@ -23,7 +23,7 @@ import {
  * (celle-ci vivait dans un `useEffect` d'`App.tsx`). Le type `Paths<T>` de
  * `messages.ts` était même le SOSIE EXACT d'`I18nPaths<T>` du paquet.
  *
- * CE QU'ON GAGNE. `fmt.*` — nombres, dates, monnaie, pluriel — déjà lié à la
+ * CE QU'ON GAGNE. `fmt.*` - nombres, dates, monnaie, pluriel - déjà lié à la
  * langue choisie, là où l'app n'avait aucun pont entre « la langue » et
  * « comment on écrit les nombres ». `dir` calculé par `Intl.Locale#textInfo`
  * plutôt que par la table `LOCALE_DIR` tenue à la main. Et le repli sur la
@@ -33,7 +33,7 @@ import {
  * CE QU'ON GARDE, ET POURQUOI CE FICHIER SUBSISTE. Le `t` du socle est typé
  * `(path, params?) => string` : les paramètres y sont TOUJOURS facultatifs.
  * Celui de l'app exige à la compilation les paramètres des vingt et une clés
- * interpolées (voir `MessageParams`) — oublier le `{n}` de
+ * interpolées (voir `MessageParams`) - oublier le `{n}` de
  * `settings.statsTotal` est une erreur de build, pas un `{n}` affiché tel quel
  * à l'utilisateur. C'est une garantie que le socle n'offre pas ; on ne la rend
  * pas. Le ré-typage ci-dessous est purement statique : à l'exécution, les deux
@@ -41,7 +41,7 @@ import {
  *
  * LA LANGUE QUITTE `settingsStore`. Elle vivait dans le blob JSON des dix
  * réglages ; `I18nProvider` la persiste désormais sous sa propre clé nue.
- * `migrateLegacySettings` fait le pont une fois — voir ce fichier, l'option
+ * `migrateLegacySettings` fait le pont une fois - voir ce fichier, l'option
  * `legacyKeys` du socle étant inopérante sur un blob.
  */
 

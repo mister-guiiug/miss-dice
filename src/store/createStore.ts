@@ -3,8 +3,8 @@ import { useSyncExternalStore } from 'react';
 /**
  * Micro-store réactif partagé par toutes les sources d'état globales de
  * l'app (réglages, statistiques, mode courant, journal…). Mutualise la
- * plomberie répétitive — ensemble d'abonnés, émission, `subscribe`,
- * branchement `useSyncExternalStore` — pour qu'un store concret ne décrive
+ * plomberie répétitive - ensemble d'abonnés, émission, `subscribe`,
+ * branchement `useSyncExternalStore` - pour qu'un store concret ne décrive
  * plus que SA logique métier (validateurs, setters, persistance).
  *
  * Volontairement minimal : `get` / `set` / `subscribe`. Les stores objet
