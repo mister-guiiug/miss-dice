@@ -557,14 +557,21 @@ export function SettingsDrawer() {
 
         {/* Nos autres applications : cross-promotion de la famille miss/mister.
             La carte code source + sponsor existe déjà ci-dessus, on n'affiche
-            donc que la grille. Le titre interne du composant est masqué en CSS
-            au profit du .about__label, cohérent avec les autres sections. */}
+            donc que la grille. */}
         <div className="about family-apps">
           <span className="about__label">{t('settings.otherApps')}</span>
           <FamilyApps
             currentAppId="miss-dice"
             showSource={false}
             showSponsor={false}
+            // Les deux réglages que `styles.css` posait en CSS : le
+            // `.about__label` ci-dessus fournit déjà le titre, et l'app
+            // refaisait la grille en une colonne.
+            showTitle={false}
+            layout="list"
+            // Dix-neuf cartes d'affilée dans un tiroir : repliées par
+            // catégorie, il en reste sept lignes.
+            groupBy="category"
             labels={{
               otherApps: t('settings.otherApps'),
               maturity: {

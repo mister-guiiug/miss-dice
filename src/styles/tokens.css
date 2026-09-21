@@ -62,3 +62,45 @@ html[data-theme='light'] {
     0 16px 34px rgba(20, 23, 40, 0.16), 0 3px 8px rgba(20, 23, 40, 0.1);
   --shadow-ui: 0 10px 28px rgba(20, 23, 40, 0.14);
 }
+
+/*
+ * LE CONTRAT `--dwc-*`, BRANCHÉ SUR LES JETONS CI-DESSUS.
+ *
+ * Les feuilles du socle lisent quinze variables et n'en définissent aucune :
+ * chaque `var()` porte un repli NEUTRE (`CanvasText`, `GrayText`). Une app qui
+ * importe une section sans poser ce pont obtient donc des composants corrects
+ * mais GRIS — c'est ce qui faisait sortir l'indice du bouton de rechargement
+ * en texte de page nue.
+ *
+ * UN PONT, PAS UNE SECONDE PALETTE. Rien ici n'est une couleur : tout pointe
+ * un jeton déclaré plus haut, dans les deux blocs de thème. Le contrat suit
+ * donc la bascule clair/sombre sans qu'aucune de ces lignes ne la connaisse.
+ *
+ * Les quatre tons d'état font exception, faute d'équivalent dans l'app : ils
+ * reprennent, par `light-dark()`, les teintes que `styles.css` posait déjà sur
+ * les pastilles de maturité. `color-scheme` étant déclaré dans les deux blocs
+ * ci-dessus, la fonction choisit la bonne d'elle-même.
+ */
+:root {
+  --dwc-surface: var(--bg-elevated);
+  /* Le fond que la grille famille se donnait déjà pour ses cartes. */
+  --dwc-surface-2: var(--surface);
+  --dwc-text: var(--text);
+  --dwc-text-soft: var(--muted);
+  --dwc-border: var(--border);
+  /* Le pourtour d'un CONTRÔLE, pas un filet de séparation : WCAG 1.4.11 lui
+     demande 3:1, que `--border` (12 à 14 % d'opacité) ne tient nulle part.
+     `--muted` donne 5,9:1 en sombre et 6,0:1 en clair. */
+  --dwc-border-strong: var(--muted);
+  --dwc-primary: var(--accent);
+  --dwc-primary-contrast: var(--accent-contrast);
+  --dwc-primary-soft: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  --dwc-success: light-dark(#166534, #4ade80);
+  --dwc-warning: light-dark(#854d0e, #fbbf24);
+  --dwc-danger: light-dark(#b91c1c, #f87171);
+  --dwc-info: light-dark(#6d28d9, #c084fc);
+  /* 15 px : le socle arrondit ses cartes à 0,8 × ce rayon, soit les 12 px que
+     la grille famille se donnait. */
+  --dwc-radius: 0.9375rem;
+  --dwc-shadow: var(--shadow-ui);
+}
