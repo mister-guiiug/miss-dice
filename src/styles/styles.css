@@ -1,3 +1,21 @@
+/*
+ * L'HABILLAGE DES COMPOSANTS DU SOCLE, PAR SECTION.
+ *
+ * Cette app n'importait aucune feuille du paquet : ses composants partagés
+ * sortaient en couleurs système, et c'est ce qui l'a obligée à réécrire
+ * dix-neuf règles pour la seule grille famille.
+ *
+ * Deux sections seulement, pas la feuille entière. `base.css` porte ce que
+ * toute section suppose — replis, focus, cibles tactiles, contraste forcé,
+ * impression. `app-footer.css` porte `AppFooter` et `FamilyApps`, et rien
+ * d'autre. Tout est en `@layer components` : chaque règle de ce fichier
+ * continue donc de gagner, quelle que soit sa spécificité.
+ *
+ * Le contrat `--dwc-*` qu'elles lisent est posé dans `tokens.css`.
+ */
+@import '@mister-guiiug/dev-pwa-config/components/base.css';
+@import '@mister-guiiug/dev-pwa-config/components/app-footer.css';
+
 /* ───────────────────────────── Base ───────────────────────────── */
 *,
 *::before,
@@ -890,52 +908,25 @@ a[data-dwc='app-version-value']:hover {
 }
 
 /* ───────────── Nos autres applications (famille, cross-promotion) ───────────── */
-/* Grille rendue par <FamilyApps> (non stylée, pose des attributs [data-dwc]).
-   On masque son titre interne — un .about__label le fournit déjà — puis on
-   habille la grille et les badges de maturité au langage visuel de miss-dice.
-   Thème sombre = base (tokens :root) ; le thème clair surcharge les libellés. */
+/* Grille rendue par <FamilyApps>. CE COMMENTAIRE DISAIT « non stylée », et
+   c'était vrai tant qu'aucune feuille du socle n'était importée : elle l'est
+   désormais, par section, en tête de ce fichier.
+
+   Les dix-neuf règles qui vivaient ici ne faisaient que compenser cette
+   absence. Les deux réglages sans équivalent sont devenus des props :
+   `showTitle={false}`, un `.about__label` fournissant déjà le titre, et
+   `layout="list"`, l'app refaisant la grille en une colonne.
+
+   Les badges de maturité partent aussi. Ils tenaient sur trois teintes en dur
+   doublées de trois surcharges de thème clair ; le paquet mélange la couleur
+   de signal vers la couleur de texte de l'app, à une valeur mesurée sur
+   trente-six palettes.
+
+   Ne restent que deux écarts voulus : l'aplatissement de la <section>, qui la
+   fait participer à la carte hôte, et le fond teinté de l'icône — le paquet
+   ne remplit que l'initiale de repli, et en aplat de primaire. */
 .family-apps [data-dwc='family-apps'] {
   display: contents;
-}
-
-.family-apps [data-dwc='family-apps-title'] {
-  display: none;
-}
-
-.family-apps [data-dwc='family-app-list'] {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.family-apps [data-dwc='family-app'] {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  color: var(--text);
-  text-decoration: none;
-  transition:
-    background 140ms ease,
-    border-color 140ms ease,
-    transform 140ms var(--ease-out);
-}
-
-.family-apps [data-dwc='family-app']:active {
-  transform: scale(0.98);
-}
-
-@media (hover: hover) {
-  .family-apps [data-dwc='family-app']:hover {
-    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
-    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
-  }
 }
 
 .family-apps [data-dwc='family-app-icon'] {
@@ -953,81 +944,10 @@ a[data-dwc='app-version-value']:hover {
   object-fit: cover;
 }
 
-.family-apps [data-dwc='family-app-body'] {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
-}
-
-.family-apps [data-dwc='family-app-head'] {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.family-apps [data-dwc='family-app-name'] {
-  font-weight: 700;
-  font-size: 0.92rem;
-}
-
 .family-apps [data-dwc='family-app-desc'] {
   color: var(--muted);
   font-size: 0.8rem;
   line-height: 1.4;
-}
-
-.family-apps [data-dwc='family-app-arrow'] {
-  flex-shrink: 0;
-  display: flex;
-  color: var(--muted);
-}
-
-/* Badge de maturité : 3 couleurs (alpha / bêta / stable). Fonds/bordures
-   translucides (valables sur les deux thèmes) ; texte clair par défaut
-   (thème sombre), assombri en thème clair pour garder un contraste AA. */
-.family-apps [data-dwc='maturity'] {
-  flex-shrink: 0;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.family-apps [data-maturity='stable'] {
-  background: color-mix(in srgb, #22a05a 15%, transparent);
-  border-color: color-mix(in srgb, #22a05a 30%, transparent);
-  color: #4ade80;
-}
-
-.family-apps [data-maturity='beta'] {
-  background: color-mix(in srgb, #d29614 16%, transparent);
-  border-color: color-mix(in srgb, #d29614 32%, transparent);
-  color: #fbbf24;
-}
-
-.family-apps [data-maturity='alpha'] {
-  background: color-mix(in srgb, #965ad2 15%, transparent);
-  border-color: color-mix(in srgb, #965ad2 30%, transparent);
-  color: #c084fc;
-}
-
-html[data-theme='light'] .family-apps [data-maturity='stable'] {
-  color: #166534;
-}
-
-html[data-theme='light'] .family-apps [data-maturity='beta'] {
-  color: #854d0e;
-}
-
-html[data-theme='light'] .family-apps [data-maturity='alpha'] {
-  color: #6d28d9;
 }
 
 /* Statistiques (distribution des faces) */
