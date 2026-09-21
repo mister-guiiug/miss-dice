@@ -8,8 +8,15 @@
  */
 :root {
   /* Dé (indépendant du thème) */
-  --die-radius: clamp(20px, 7vw, 38px);
+  /* Le rayon d'un dé est une FRACTION de son côté, jamais une longueur
+     absolue : la même face doit se reconnaître à 250 px sur le lancer libre
+     comme à 59 px dans le Yahtzee. Ce token valait `clamp(20px, 7vw, 38px)`,
+     tiré du VIEWPORT : 27,5 px à 393 px de large, soit 0,109 du côté de la
+     grande face (juste) mais 0,467 de celui des dés de jeu — où 0,5 est un
+     cercle. 0,11 est donc la proportion que la grande face avait déjà. */
+  --die-radius-ratio: 0.11;
   --die-size: clamp(180px, min(64vw, 60vh), 420px);
+  --die-radius: calc(var(--die-size) * var(--die-radius-ratio));
   --pip: #ffffff;
 
   /* Animation */

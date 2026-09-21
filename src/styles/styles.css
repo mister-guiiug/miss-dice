@@ -173,6 +173,9 @@ button {
   gap: clamp(10px, 3vw, 22px);
   max-width: 92vw;
   --tile: clamp(180px, min(64vw, 52vh), 380px);
+  /* Le rayon suit la tuile, y compris quand un `[data-count]` la redéfinit
+     plus bas : `var()` lit la valeur calculée de `--tile` sur l'élément. */
+  --die-radius: calc(var(--tile) * var(--die-radius-ratio));
 }
 
 .dice-tray[data-count='2'],
@@ -1333,6 +1336,9 @@ a[data-dwc='app-version-value']:hover {
   justify-content: center;
   gap: 10px;
   --tile: clamp(58px, 17vw, 92px);
+  /* Idem : ces dés-ci sont les plus petits du jeu, et ce sont eux que le
+     rayon absolu arrondissait en palets. */
+  --die-radius: calc(var(--tile) * var(--die-radius-ratio));
 }
 
 .game-dice[data-count='3'] {
@@ -1353,7 +1359,9 @@ a[data-dwc='app-version-value']:hover {
   border: 0;
   background: transparent;
   cursor: pointer;
-  border-radius: 16px;
+  /* Le bouton a exactement la taille de la face (padding 0) : son contour de
+     focus doit épouser le même arrondi, pas un 16 px fixe. */
+  border-radius: var(--die-radius);
   transition:
     transform 140ms var(--ease-out),
     opacity 140ms ease;
