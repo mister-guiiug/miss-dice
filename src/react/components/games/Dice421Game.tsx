@@ -218,6 +218,7 @@ export function Dice421Game() {
       onNewGame={newGame}
       onUndo={undo}
       canUndo={canUndo}
+      reprise={{ mode: 'dice421', state: game }}
       footer={footer}
     >
       <div className="game421-status">

@@ -1,5 +1,7 @@
 /** Sauvegarde/restauration d'une partie en cours (reprise après refresh). */
-export type GameKey = 'yahtzee' | 'dice421' | 'pig';
+export const GAME_KEYS = ['yahtzee', 'dice421', 'pig'] as const;
+
+export type GameKey = (typeof GAME_KEYS)[number];
 
 /**
  * Version du schéma des parties sauvegardées. À incrémenter dès que la
@@ -11,7 +13,7 @@ export type GameKey = 'yahtzee' | 'dice421' | 'pig';
  * `undefined` au tour suivant et le bouton « Relancer » resterait actif sans
  * fin. Mieux vaut perdre une partie en cours que la rendre injouable.
  */
-const GAME_SCHEMA_VERSION = 3;
+export const GAME_SCHEMA_VERSION = 3;
 
 const keyFor = (mode: GameKey): string => `miss-dice:game:${mode}`;
 

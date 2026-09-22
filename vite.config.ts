@@ -62,6 +62,16 @@ export default defineConfig(({ command }) => {
             // de palette, `#f8fafc` : les noms d'apps ne valent rien, ils
             // vivent aussi dans `apps-catalog.js`.
             if (norm.includes('/dev-pwa-config/themes.js')) return 'themes';
+            // ET `uqr`, QUATRIÈME FOIS LE MÊME PIÈGE. Le module `qr` du socle
+            // charge la bibliothèque par un `import()` paresseux, pour que son
+            // poids ne soit payé que si un QR s'affiche vraiment - la feuille
+            // « Continuer ailleurs », que la plupart des parties n'ouvrent
+            // jamais. La règle ci-dessous annulait ce soin en la rangeant dans
+            // `vendor`, qui est STATIQUE et PRÉCHARGÉ. Mesuré le 22/09/2026 :
+            // `vendor` 36,0 → 31,9 kB gzip, PRÉCHARGÉ 134,2 → 130,1, pour un
+            // total inchangé. Le total ne voit jamais ce genre d'erreur ;
+            // `preloadGzipKb`, si.
+            if (norm.includes('/uqr/')) return 'qr';
             if (
               norm.includes('/vite-plugin-pwa/') ||
               norm.includes('/workbox-')
@@ -153,6 +163,13 @@ export default defineConfig(({ command }) => {
            * erreur, et jamais si l’observabilité reste éteinte. Ne pas
            * l’avoir hors ligne est sans conséquence : rapporter une erreur
            * demande le réseau.
+           *
+           * LE MORCEAU `qr` RESTE, LUI, ET C'EST LE MÊME RAISONNEMENT MENÉ
+           * JUSQU'AU BOUT. Ce qui dispense Sentry du précache, c'est qu'il ne
+           * sert à rien hors ligne. Un QR, si : deux appareils posés sur la
+           * même table, sans réseau, c'est précisément le cas où « Continuer
+           * ailleurs » n'a pas d'autre transport. 4,3 kB gzip, une fois, à
+           * l'installation.
            */
           globIgnores: ['**/sentry-*.js'],
         },

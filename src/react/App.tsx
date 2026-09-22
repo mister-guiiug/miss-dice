@@ -7,6 +7,7 @@ import { usePageViews } from '@mister-guiiug/dev-pwa-config/react/use-page-views
 import { ModeMenu } from './components/ModeMenu';
 import { FamilyLinks } from './components/FamilyLinks';
 import { useAppMode } from '../app/appMode';
+import { colisRecu } from '../games/transfer';
 
 // Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
 // garde un bundle initial minimal et un accès au dé immédiat.
@@ -33,6 +34,31 @@ const NotationRoller = lazy(() =>
 const DecideScreen = lazy(() =>
   import('./components/DecideScreen').then(m => ({ default: m.DecideScreen }))
 );
+
+/*
+ * L'ACCUEIL D'UNE PARTIE REÇUE EST CHARGÉ À LA DEMANDE, et la demande est
+ * rare : sur cent ouvertures de l'app, quatre-vingt-dix-neuf n'ont aucun lien
+ * de reprise dans l'URL. Le monter d'office coûtait 7,7 ko gzip au démarrage -
+ * il tire la boîte de dialogue du socle - pour un écran que presque personne
+ * ne verra. `colisRecu()` est, lui, une simple lecture de `location.search`
+ * faite à l'import : elle nettoie l'URL tôt, sans rien peser.
+ */
+const RepriseRecue = lazy(() =>
+  import('./components/RepriseRecue').then(m => ({ default: m.RepriseRecue }))
+);
+
+/** Un lien de reprise était-il présent au chargement ? Figé pour la session. */
+const REPRISE_ATTENDUE = colisRecu() !== null;
+
+/** Rend l'accueil de la partie reçue, et seulement s'il y en a une. */
+function AccueilReprise() {
+  if (!REPRISE_ATTENDUE) return null;
+  return (
+    <Suspense fallback={null}>
+      <RepriseRecue />
+    </Suspense>
+  );
+}
 
 const LAZY = {
   yahtzee: YahtzeeGame,
@@ -71,14 +97,22 @@ export function App() {
   if (mode !== 'roll') {
     const Screen = LAZY[mode];
     return (
-      <Suspense fallback={<div className="game-shell" aria-busy="true" />}>
-        <Screen />
-      </Suspense>
+      <>
+        {/* MONTÉ DANS LES DEUX BRANCHES. Un lien de reprise peut porter
+            `?play=` : l'app s'ouvre alors directement sur le jeu, et
+            l'accueil de la partie reçue ne doit pas dépendre de l'écran
+            sur lequel on atterrit. */}
+        <AccueilReprise />
+        <Suspense fallback={<div className="game-shell" aria-busy="true" />}>
+          <Screen />
+        </Suspense>
+      </>
     );
   }
 
   return (
     <div className="app">
+      <AccueilReprise />
       <DiceScreen />
       <div className="app__overlay">
         <ModeMenu />

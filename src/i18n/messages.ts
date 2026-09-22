@@ -224,6 +224,19 @@ export interface Messages {
     decideurCap: string;
     decideurCapOne: string;
   };
+  reprise: {
+    title: string;
+    lead: string;
+    share: string;
+    shareText: string;
+    qrAlt: string;
+    qrUnavailable: string;
+    snapshot: string;
+    receivedTitle: string;
+    receivedBody: string;
+    receivedConfirm: string;
+    rejected: string;
+  };
   pig: {
     turnTotal: string;
     bank: string;
@@ -447,6 +460,22 @@ const fr: Messages = {
     decideurCap: '{n} lancers au plus dans cette manche',
     decideurCapOne: '1 seul lancer dans cette manche',
   },
+  reprise: {
+    title: 'Continuer ailleurs',
+    lead: 'Scanne ce code avec l’autre appareil, ou envoie-lui le lien : il reprendra la partie où elle en est.',
+    share: 'Partager le lien',
+    shareText: 'Reprends la partie ici :',
+    qrAlt: 'QR code de reprise de la partie',
+    qrUnavailable: 'Le QR n’a pas pu être dessiné. Le lien, lui, fonctionne.',
+    snapshot:
+      'C’est un instantané : si tu rejoues un tour avant l’ouverture du lien, l’autre appareil reprendra la position d’avant.',
+    receivedTitle: 'Reprendre cette partie ?',
+    receivedBody:
+      'Une partie est déjà en cours pour ce jeu sur cet appareil. La reprise va la remplacer.',
+    receivedConfirm: 'Reprendre',
+    rejected:
+      'Ce lien ne correspond à aucune partie que cette version sait reprendre.',
+  },
   pig: {
     turnTotal: 'Cumul du tour : {n}',
     bank: 'Banquer',
@@ -668,6 +697,21 @@ const en: Messages = {
     decideurOpens: 'You open the round: your rolls cap the others.',
     decideurCap: '{n} rolls at most this round',
     decideurCapOne: 'Only one roll this round',
+  },
+  reprise: {
+    title: 'Continue elsewhere',
+    lead: 'Scan this code with the other device, or send it the link: it will pick the game up where it stands.',
+    share: 'Share the link',
+    shareText: 'Pick the game up here:',
+    qrAlt: 'QR code to resume the game',
+    qrUnavailable: 'The QR code could not be drawn. The link still works.',
+    snapshot:
+      'This is a snapshot: if you play another turn before the link is opened, the other device will resume the earlier position.',
+    receivedTitle: 'Resume this game?',
+    receivedBody:
+      'A game is already under way for this game on this device. Resuming will replace it.',
+    receivedConfirm: 'Resume',
+    rejected: 'This link matches no game that this version can resume.',
   },
   pig: {
     turnTotal: 'Turn total: {n}',
@@ -892,6 +936,23 @@ const es: Messages = {
     decideurCap: '{n} tiradas como máximo en esta ronda',
     decideurCapOne: 'Solo una tirada en esta ronda',
   },
+  reprise: {
+    title: 'Continuar en otro dispositivo',
+    lead: 'Escanea este código con el otro dispositivo, o envíale el enlace: retomará la partida donde está.',
+    share: 'Compartir el enlace',
+    shareText: 'Retoma la partida aquí:',
+    qrAlt: 'Código QR para retomar la partida',
+    qrUnavailable:
+      'No se ha podido dibujar el código QR. El enlace sí funciona.',
+    snapshot:
+      'Es una instantánea: si juegas otro turno antes de que se abra el enlace, el otro dispositivo retomará la posición anterior.',
+    receivedTitle: '¿Retomar esta partida?',
+    receivedBody:
+      'Ya hay una partida en curso para este juego en este dispositivo. Retomarla la reemplazará.',
+    receivedConfirm: 'Retomar',
+    rejected:
+      'Este enlace no corresponde a ninguna partida que esta versión sepa retomar.',
+  },
   pig: {
     turnTotal: 'Acumulado del turno: {n}',
     bank: 'Plantarse',
@@ -1114,6 +1175,23 @@ const de: Messages = {
     decideurOpens: 'Du eröffnest die Runde: deine Würfe begrenzen die anderen.',
     decideurCap: 'Höchstens {n} Würfe in dieser Runde',
     decideurCapOne: 'Nur ein Wurf in dieser Runde',
+  },
+  reprise: {
+    title: 'Woanders weiterspielen',
+    lead: 'Scanne diesen Code mit dem anderen Gerät oder schicke ihm den Link: Es setzt die Partie dort fort, wo sie steht.',
+    share: 'Link teilen',
+    shareText: 'Spiel hier weiter:',
+    qrAlt: 'QR-Code zum Fortsetzen der Partie',
+    qrUnavailable:
+      'Der QR-Code konnte nicht gezeichnet werden. Der Link funktioniert weiterhin.',
+    snapshot:
+      'Das ist eine Momentaufnahme: Spielst du noch eine Runde, bevor der Link geöffnet wird, setzt das andere Gerät bei der vorherigen Stellung fort.',
+    receivedTitle: 'Diese Partie fortsetzen?',
+    receivedBody:
+      'Für dieses Spiel läuft auf diesem Gerät bereits eine Partie. Das Fortsetzen ersetzt sie.',
+    receivedConfirm: 'Fortsetzen',
+    rejected:
+      'Dieser Link passt zu keiner Partie, die diese Version fortsetzen kann.',
   },
   pig: {
     turnTotal: 'Zug-Summe: {n}',
@@ -1338,6 +1416,23 @@ const it: Messages = {
     decideurCap: 'Al massimo {n} lanci in questo turno',
     decideurCapOne: 'Un solo lancio in questo turno',
   },
+  reprise: {
+    title: 'Continuare altrove',
+    lead: 'Scansiona questo codice con l’altro dispositivo, o inviagli il link: riprenderà la partita dov’è.',
+    share: 'Condividi il link',
+    shareText: 'Riprendi la partita qui:',
+    qrAlt: 'Codice QR per riprendere la partita',
+    qrUnavailable:
+      'Non è stato possibile disegnare il codice QR. Il link, invece, funziona.',
+    snapshot:
+      'È un’istantanea: se giochi un altro turno prima che il link venga aperto, l’altro dispositivo riprenderà dalla posizione precedente.',
+    receivedTitle: 'Riprendere questa partita?',
+    receivedBody:
+      'Su questo dispositivo c’è già una partita in corso per questo gioco. Riprendere la sostituirà.',
+    receivedConfirm: 'Riprendi',
+    rejected:
+      'Questo link non corrisponde a nessuna partita che questa versione sappia riprendere.',
+  },
   pig: {
     turnTotal: 'Totale del turno: {n}',
     bank: 'Fermati',
@@ -1559,6 +1654,23 @@ const pt: Messages = {
     decideurOpens: 'Abres a ronda: os teus lançamentos limitam os outros.',
     decideurCap: 'No máximo {n} lançamentos nesta ronda',
     decideurCapOne: 'Apenas um lançamento nesta ronda',
+  },
+  reprise: {
+    title: 'Continuar noutro aparelho',
+    lead: 'Digitaliza este código com o outro aparelho, ou envia-lhe a ligação: retoma o jogo onde está.',
+    share: 'Partilhar a ligação',
+    shareText: 'Retoma o jogo aqui:',
+    qrAlt: 'Código QR para retomar o jogo',
+    qrUnavailable:
+      'Não foi possível desenhar o código QR. A ligação continua a funcionar.',
+    snapshot:
+      'É um instantâneo: se jogares mais uma ronda antes de a ligação ser aberta, o outro aparelho retoma a posição anterior.',
+    receivedTitle: 'Retomar este jogo?',
+    receivedBody:
+      'Já há um jogo em curso para este jogo neste aparelho. Retomar vai substituí-lo.',
+    receivedConfirm: 'Retomar',
+    rejected:
+      'Esta ligação não corresponde a nenhum jogo que esta versão saiba retomar.',
   },
   pig: {
     turnTotal: 'Total do turno: {n}',
