@@ -45,6 +45,15 @@ html[data-theme='dark'] {
 
   --accent: #7c5cf6;
   --accent-contrast: #ffffff;
+  /*
+     L'ACCENT QUI PORTE DU TEXTE BLANC, mesuré. `--accent` en sombre (#7c5cf6)
+     ne donne que 4,45:1 sous du blanc : sous le 4,5:1 que WCAG AA demande à un
+     libellé de 16 px. #7352ee le monte à 5,04 tout en gardant 3,24:1 contre la
+     surface du bandeau - le 3:1 de WCAG 1.4.11, sans quoi le bouton cesserait
+     de se distinguer de son fond. Les teintes plus sombres passent le texte
+     mais tombent sous ce seuil-là (#6a44e8 : 5,83 et 2,80).
+  */
+  --accent-strong: #7352ee;
 
   --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
   --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -64,6 +73,8 @@ html[data-theme='light'] {
 
   --accent: #6a44e8;
   --accent-contrast: #ffffff;
+  /* En clair, l'accent porte déjà le blanc à 5,83:1 : rien à corriger. */
+  --accent-strong: var(--accent);
 
   --shadow-die:
     0 16px 34px rgba(20, 23, 40, 0.16), 0 3px 8px rgba(20, 23, 40, 0.1);
