@@ -5,8 +5,13 @@ export type GameKey = 'yahtzee' | 'dice421' | 'pig';
  * Version du schéma des parties sauvegardées. À incrémenter dès que la
  * forme de l'état d'un moteur change : une sauvegarde d'une version
  * antérieure est alors ignorée (plutôt que reprise corrompue).
+ *
+ * 2 → 3 (22/09/2026) : le 421 gagne `decideur` et `rollsAllowed`. Une partie
+ * d'avant ne les porte pas - reprise telle quelle, `rollsLeft` vaudrait
+ * `undefined` au tour suivant et le bouton « Relancer » resterait actif sans
+ * fin. Mieux vaut perdre une partie en cours que la rendre injouable.
  */
-const GAME_SCHEMA_VERSION = 2;
+const GAME_SCHEMA_VERSION = 3;
 
 const keyFor = (mode: GameKey): string => `miss-dice:game:${mode}`;
 
