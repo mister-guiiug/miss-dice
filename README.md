@@ -39,7 +39,8 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Plateau de dés             | `src/react/components/DiceTray.tsx`                    | Disposition de N dés, taille adaptative                                |
 | Écran principal            | `src/react/components/DiceScreen.tsx`                  | Zone de tap plein écran, total, teinte immersive, a11y                 |
 | Micro-store réactif        | `src/store/createStore.ts`                             | Plomberie commune à tous les états globaux (`useSyncExternalStore`)    |
-| Réglages                   | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx`  | Préfs locales (langue, type, nombre, secousse, voix, daltonien…)       |
+| Réglages                   | `src/settings/settingsStore.ts`, `SettingsDrawer.tsx`  | Préfs locales, groupées : affichage, lancer, accessibilité, données    |
+| Choix des dés              | `src/react/components/{DicePicker,DiceControls}.tsx`   | Pastille « 2 × D20 » de l'écran principal : type et nombre de dés      |
 | Reprise des anciennes clés | `src/settings/legacyMigration.ts`                      | Extrait `locale` et `theme` du blob historique vers les clés du socle  |
 | Statistiques               | `src/stats/rollStats.ts`                               | Distribution des faces du lancer libre, réinitialisable                |
 | Journal des lancers        | `src/log/rollLog.ts`                                   | Historique local borné, exportable en CSV ; rien ne sort de l'appareil |
@@ -68,6 +69,7 @@ miss-dice/
 ├── eslint.config.js          # @mister-guiiug/dev-pwa-config/eslint-react
 ├── prettier.config.js
 ├── scripts/generate-pwa-icons.mjs
+├── scripts/captures-prepare.mjs   # met l'écran en scène avant chaque capture
 ├── public/
 │   ├── favicon.svg
 │   ├── robots.txt
@@ -99,6 +101,7 @@ miss-dice/
     │   ├── App.tsx
     │   ├── components/{DiceScreen,DiceTray,DiceFace,SettingsDrawer,ModeMenu}.tsx
     │   ├── components/{NotationRoller,DecideScreen,FamilyLinks,Sheet}.tsx
+    │   ├── components/{DicePicker,DiceControls}.tsx
     │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game,PigGame}.tsx
     │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion}.ts
     │   ├── hooks/{useSpeak,useVoices,useSound,useTheme,useUndoableGame}.ts
@@ -110,6 +113,11 @@ miss-dice/
 ## 3. Concept fonctionnel
 
 - Tap n'importe où → lancer.
+- **Changer de dés** : la pastille en haut, au centre (« 1 × D6 »), ouvre
+  une feuille avec le **type** (D4, D6, D8, D10, D12, D20 - le D6 garde les
+  points, les autres affichent le chiffre dans la silhouette du polyèdre) et
+  le **nombre** (1 à 6, lancés ensemble, **total** affiché). Deux gestes ;
+  il en fallait six quand ces réglages vivaient au fond du tiroir.
 - Au clavier (desktop) : **Espace** ou **Entrée** lance, `+`/`=`/`↑` ajoute un
   dé, `-`/`↓` en retire - neutralisé pendant la saisie et tant qu'une feuille
   modale est ouverte (`src/react/hooks/useKeyboardRoll.ts`).
@@ -124,6 +132,9 @@ miss-dice/
   défilement.
 
 ### Réglages (engrenage, en haut à droite)
+
+Regroupés sous quatre intertitres - **Affichage**, **Lancer**,
+**Accessibilité**, puis les données et « À propos » :
 
 - **Langue** : Français, English, Español, Deutsch, Italiano, Português.
   Détectée depuis le navigateur au premier lancement, puis mémorisée ; tout
@@ -157,9 +168,6 @@ miss-dice/
   réinitialisable.
 - **Historique** : les derniers lancers libres, conservés localement et
   **exportables en CSV**. Le journal est borné, et rien n'est transmis.
-- **Type de dé** : D4, D6, D8, D10, D12, D20. Le D6 garde les points ; les
-  autres affichent le chiffre dans la silhouette du polyèdre.
-- **Nombre de dés** : de 1 à 6, lancés ensemble, avec le **total** affiché.
 - **Secouer pour lancer** : un coup de poignet lance les dés
   (API DeviceMotion ; demande l'autorisation sur iOS, sinon sans effet).
 - **Vibration** et **réduire les animations** (déjà présents).
@@ -345,6 +353,7 @@ npm run format          # Prettier --write
 npm run type-check      # tsc -b (TypeScript 6)
 npm run type-check:7    # second avis TypeScript 7 (portage natif Go)
 npm run icons           # régénère public/icons/ (dé procédural)
+npm run captures        # reconstruit, puis refait les captures du manifeste
 npm run test:e2e        # e2e Playwright (après `npx playwright install`)
 npm run build:analyze   # build + visualisation du poids des chunks
 ```

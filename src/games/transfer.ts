@@ -24,7 +24,12 @@
  *     tout ce qui ne ressemble pas à une partie avant de le rendre - la
  *     sauvegarde locale, elle, vient de nous ; un lien vient de n'importe où.
  */
-import { GAME_KEYS, GAME_SCHEMA_VERSION, type GameKey } from './persistence';
+import {
+  GAME_KEYS,
+  GAME_SCHEMA_VERSION,
+  migrerPartie,
+  type GameKey,
+} from './persistence';
 import { appUrl } from '../links';
 
 /** Paramètre d'URL qui porte la partie. */
@@ -164,10 +169,15 @@ export async function decoderPartie(
 
   if (typeof lu !== 'object' || lu === null) return null;
   const { v, m, s } = lu as Partial<Colis>;
-  if (v !== GAME_SCHEMA_VERSION) return null;
   if (!GAME_KEYS.includes(m as GameKey)) return null;
-  if (!partiePlausible(s)) return null;
-  return { mode: m as GameKey, state: s };
+  // UN LIEN VIEILLIT COMME UNE SAUVEGARDE. Exiger la version exacte faisait
+  // mourir tout lien ou QR partagé la veille d'une mise à jour qui monte le
+  // schéma : celui qui le reçoit a déjà la nouvelle version, l'autre non. La
+  // même migration que la reprise locale s'applique donc ici - et elle refuse
+  // de même une version plus récente que l'app.
+  const etat = migrerPartie(m as GameKey, v, s);
+  if (!partiePlausible(etat)) return null;
+  return { mode: m as GameKey, state: etat };
 }
 
 /** L'URL à partager ou à mettre en QR. */

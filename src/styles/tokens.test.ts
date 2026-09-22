@@ -109,6 +109,52 @@ describe('tokens.css - contrastes', () => {
 });
 
 /**
+ * LA PAIRE QUE LIT LE SOCLE, mesurée comme les autres.
+ *
+ * `--dwc-primary` a deux emplois dans `components.css` : couleur de lien et de
+ * liseré le plus souvent, aplat sous `--dwc-primary-contrast` parfois (bouton
+ * primaire, confirmation, initiale de repli). Le pont pointait `--accent` et
+ * son encre blanche : 3,01 en feutrine sombre, 2,67 en braise sombre - un
+ * défaut que rien n'affichait encore, puisque la seule section importée qui
+ * peint cet aplat est redessinée par l'app, mais qui serait apparu à la
+ * première section du socle ajoutée.
+ *
+ * `--accent-strong` n'aurait pas suffi : plus sombre, il porte le blanc mais
+ * tombe à 3,24 en TEXTE sur fond sombre. D'où une paire par bloc, tenue aux
+ * deux seuils à la fois.
+ */
+describe('tokens.css - la primaire du socle', () => {
+  it('le pont lit la paire dédiée, et non un accent de l’app', () => {
+    const feuille = tokensCss.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(feuille).toMatch(/--dwc-primary:\s*var\(--accent-bridge\);/);
+    expect(feuille).toMatch(
+      /--dwc-primary-contrast:\s*var\(--accent-bridge-ink\);/
+    );
+  });
+
+  it.each([...BLOCS.keys()])(
+    '%s tient la primaire en aplat ET en texte',
+    selecteur => {
+      const j = BLOCS.get(selecteur)!;
+      const primaire = resolu(j, '--accent-bridge');
+      const encre = resolu(j, '--accent-bridge-ink');
+      // Un bloc qui ne pose pas la paire HÉRITERAIT de celle du violet sombre,
+      // écrite en dur : la palette croirait avoir sa primaire et aurait celle
+      // d'une autre. Exiger la déclaration dans chaque bloc l'interdit.
+      expect(primaire).not.toBe('');
+      expect(encre).not.toBe('');
+      expect(contraste(primaire, encre)).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contraste(primaire, resolu(j, '--bg-elevated'))
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(
+        contraste(primaire, resolu(j, '--surface'))
+      ).toBeGreaterThanOrEqual(3);
+    }
+  );
+});
+
+/**
  * DEUX ACCENTS, ET UN SEUL PORTE DU TEXTE.
  *
  * `--accent` est le repère visuel : il lui suffit de 3:1 sur le fond. Dès
