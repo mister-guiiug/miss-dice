@@ -17,8 +17,10 @@ import {
 import {
   canRoll,
   canScore,
+  categoriesAutorisees,
   createYahtzee,
   isCategoryFilled,
+  jokerActif,
   leaders,
   previewScore,
   rollDiceAction,
@@ -142,14 +144,43 @@ export function YahtzeeGame() {
   const canStopEarly = game.rolledThisTurn && game.rollsLeft > 0;
   const bonusPts = yahtzeeBonusPoints(player);
 
+  /*
+   * LE JOKER RESTREINT LA GRILLE, ET IL FAUT LE DIRE.
+   *
+   * Hors joker, `autorisees` vaut « toute case libre » : rien ne change à
+   * l'écran. Avec un joker, le moteur impose un ordre (case haute de la
+   * figure, puis combinaisons, puis un zéro en haut) et la liste se réduit -
+   * des cases jusque-là cliquables deviennent grises. Sans un mot, ça passe
+   * pour une panne. Le statut explique donc CE QUI est ouvert et POURQUOI.
+   */
+  const autorisees = categoriesAutorisees(game);
+  const permises = new Set(autorisees);
+  const jokerHint = !jokerActif(game)
+    ? null
+    : autorisees.length === 1
+      ? t('yahtzee.jokerForced', { cat: t(CAT_LABEL[autorisees[0]!]) })
+      : autorisees.every(c =>
+            (LOWER_CATEGORIES as readonly Category[]).includes(c)
+          )
+        ? t('yahtzee.jokerLower')
+        : t('yahtzee.jokerZero');
+
   // Une case de la grille. Les deux colonnes - section haute et combinaisons -
   // la rendent à l'identique.
   const scoreRow = (category: Category) => {
     const filled = isCategoryFilled(player, category);
-    const selectable = !filled && canScore(game);
+    const selectable = !filled && canScore(game) && permises.has(category);
+    /*
+     * UN CHIFFRE VEUT DIRE « TU PEUX LE PRENDRE ». C'était vrai tant que toute
+     * case libre était cliquable ; le joker l'a rendu faux. Avec cinq 4 et la
+     * case « Les 4 » ouverte, la grille affichait Full 25, Grande suite 40 -
+     * des scores réels, mais interdits. Lire 40 sur une ligne grise, c'est
+     * croire à un bug plutôt qu'à une règle. On ne chiffre donc que ce qui est
+     * PRENABLE ; une case déjà remplie montre toujours ce qu'elle a rapporté.
+     */
     const value = filled
       ? player.scores[category]
-      : canScore(game)
+      : selectable
         ? previewScore(game, category)
         : null;
     return (
@@ -205,6 +236,11 @@ export function YahtzeeGame() {
       <p className="game-status" aria-live="polite">
         {!game.rolledThisTurn ? (
           t('game.tapToRoll')
+        ) : jokerHint !== null ? (
+          // AVANT « il te reste N lancers » : une contrainte de règle prime
+          // sur un rappel de confort. Le joueur doit savoir pourquoi la grille
+          // s'est fermée avant de décider s'il relance.
+          jokerHint
         ) : canStopEarly ? (
           <>
             <span>

@@ -193,6 +193,9 @@ export interface Messages {
     catLargeStraight: string;
     catYahtzee: string;
     catChance: string;
+    jokerForced: string;
+    jokerLower: string;
+    jokerZero: string;
   };
   game421: {
     pot: string;
@@ -399,6 +402,11 @@ const fr: Messages = {
     catLargeStraight: 'Grande suite',
     catYahtzee: 'Yahtzee',
     catChance: 'Chance',
+    jokerForced: 'Yahtzee ! Une seule case est ouverte : « {cat} ».',
+    jokerLower:
+      'Yahtzee joker : la case haute est prise - choisis une combinaison, elle est payée plein.',
+    jokerZero:
+      'Yahtzee joker : plus aucune combinaison libre, une case haute passera à zéro.',
   },
   game421: {
     pot: 'Pot : {n}',
@@ -605,6 +613,10 @@ const en: Messages = {
     catLargeStraight: 'Large straight',
     catYahtzee: 'Yahtzee',
     catChance: 'Chance',
+    jokerForced: 'Yahtzee! Only one box is open: “{cat}”.',
+    jokerLower:
+      'Yahtzee joker: the upper box is taken - pick any combination, it pays in full.',
+    jokerZero: 'Yahtzee joker: no combination left, an upper box goes to zero.',
   },
   game421: {
     pot: 'Pot: {n}',
@@ -811,6 +823,11 @@ const es: Messages = {
     catLargeStraight: 'Escalera grande',
     catYahtzee: 'Yahtzee',
     catChance: 'Suerte',
+    jokerForced: '¡Yahtzee! Solo hay una casilla abierta: «{cat}».',
+    jokerLower:
+      'Comodín Yahtzee: la casilla superior está ocupada - elige una combinación, se paga completa.',
+    jokerZero:
+      'Comodín Yahtzee: no queda ninguna combinación, una casilla superior irá a cero.',
   },
   game421: {
     pot: 'Bote: {n}',
@@ -1017,6 +1034,11 @@ const de: Messages = {
     catLargeStraight: 'Große Straße',
     catYahtzee: 'Yahtzee',
     catChance: 'Chance',
+    jokerForced: 'Yahtzee! Nur ein Feld ist offen: „{cat}“.',
+    jokerLower:
+      'Yahtzee-Joker: Das obere Feld ist belegt - wähle eine Kombination, sie zählt voll.',
+    jokerZero:
+      'Yahtzee-Joker: Keine Kombination mehr frei, ein oberes Feld wird zur Null.',
   },
   game421: {
     pot: 'Topf: {n}',
@@ -1223,6 +1245,11 @@ const it: Messages = {
     catLargeStraight: 'Scala grande',
     catYahtzee: 'Yahtzee',
     catChance: 'Chance',
+    jokerForced: 'Yahtzee! È aperta una sola casella: «{cat}».',
+    jokerLower:
+      'Jolly Yahtzee: la casella alta è occupata - scegli una combinazione, vale pieno.',
+    jokerZero:
+      'Jolly Yahtzee: nessuna combinazione libera, una casella alta andrà a zero.',
   },
   game421: {
     pot: 'Piatto: {n}',
@@ -1429,6 +1456,11 @@ const pt: Messages = {
     catLargeStraight: 'Sequência grande',
     catYahtzee: 'Yahtzee',
     catChance: 'Sorte',
+    jokerForced: 'Yahtzee! Só há uma casa aberta: «{cat}».',
+    jokerLower:
+      'Joker Yahtzee: a casa superior está ocupada - escolhe uma combinação, vale a pontuação cheia.',
+    jokerZero:
+      'Joker Yahtzee: já não há combinações livres, uma casa superior vai a zero.',
   },
   game421: {
     pot: 'Bolo: {n}',
@@ -1524,6 +1556,7 @@ export interface MessageParams {
   'game421.roundResult': { winner: string; loser: string; tokens: string };
   'pig.turnTotal': { n: number };
   'pig.target': { n: number };
+  'yahtzee.jokerForced': { cat: string };
 }
 
 /** Tuple d'arguments de `t(key, …)` : requis si la clé attend des params. */
