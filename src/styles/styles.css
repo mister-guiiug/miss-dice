@@ -793,26 +793,61 @@ button {
    position. C'est donc ici, et nulle part ailleurs, qu'il est habillé. */
 .sw-update-banner {
   position: fixed;
-  left: 50%;
+  box-sizing: border-box;
   bottom: calc(var(--safe-bottom) + 14px);
-  transform: translateX(-50%);
+  z-index: 20;
+
+  /*
+     CENTRÉ PAR `margin-inline`, PAS PAR `left: 50%`.
+
+     La version d'avant posait `left: 50%` + `transform: translateX(-50%)` avec
+     un simple `max-width`. Mais une boîte `fixed` sans largeur se dimensionne
+     au contenu DANS LA PLACE DISPONIBLE, et `left: 50%` réduit cette place à la
+     MOITIÉ du viewport : mesuré à 393 px de large, le bandeau sortait à 272 px
+     pour 107 px de haut, ses trois éléments cassés en deux ou trois lignes
+     chacun — « Plus tard (4 h) » tenait sur trois lignes.
+
+     Les trois côtés posés (`inset-inline: 0` + largeur + `margin-inline`)
+     donnent la largeur voulue sans dépendre du contenu. C'est ce que fait
+     `components.css` du socle pour le même bandeau, et son commentaire nomme
+     déjà le piège : « un bandeau réduit de moitié ».
+  */
+  inset-inline: 0;
+  width: min(100% - 28px, 26rem);
+  margin-inline: auto;
+
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 10px 12px;
+  padding: 14px 16px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 16px;
   box-shadow: var(--shadow-ui);
-  z-index: 20;
-  max-width: calc(100vw - 28px);
+}
+
+/* Le message prend SA ligne, les deux commandes se partagent la suivante.
+   Sur une seule rangée, à la largeur d'un téléphone, les trois se
+   comprimaient jusqu'à ce que chacun casse son libellé. */
+.sw-update-banner [data-dwc='update-banner-title'] {
+  flex: 1 1 100%;
+  font-weight: 600;
 }
 
 .sw-update-banner button {
+  /* `1 1 0` et non `1 1 auto` : les deux commandes prennent la MÊME largeur,
+     quelle que soit la longueur de leur libellé - un « Plus tard (4 h) » plus
+     long que « Mettre à jour » ne doit pas manger la place de l'action
+     principale. */
+  flex: 1 1 0;
+  white-space: nowrap;
   padding: 8px 14px;
   border: 0;
   border-radius: 11px;
-  background: var(--accent);
+  /* `--accent-strong`, pas `--accent` : voir `tokens.css`, le second ne porte
+     le blanc qu'à 4,45:1 en thème sombre. */
+  background: var(--accent-strong);
   color: var(--accent-contrast);
   font-weight: 600;
   cursor: pointer;
