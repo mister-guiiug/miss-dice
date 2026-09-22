@@ -54,6 +54,16 @@ html[data-theme='dark'] {
      mais tombent sous ce seuil-là (#6a44e8 : 5,83 et 2,80).
   */
   --accent-strong: #7352ee;
+  /*
+     L'ACCENT QUE LIT LE SOCLE, et l'encre qu'il pose dessus - voir le pont en
+     fin de fichier. Ni `--accent` ni `--accent-strong` ne font l'affaire en
+     violet sombre : le premier ne porte ni le blanc (4,45) ni le fond (4,18),
+     le second porte le blanc mais tombe à 3,24 en TEXTE, or le socle s'en
+     sert surtout comme couleur de lien et de liseré. #9580f8 tient les deux :
+     5,96 sous le fond, 5,22 en texte sur `--bg-elevated`.
+  */
+  --accent-bridge: #9580f8;
+  --accent-bridge-ink: var(--bg);
 
   --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
   --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -75,6 +85,8 @@ html[data-theme='light'] {
   --accent-contrast: #ffffff;
   /* En clair, l'accent porte déjà le blanc à 5,83:1 : rien à corriger. */
   --accent-strong: var(--accent);
+  --accent-bridge: var(--accent);
+  --accent-bridge-ink: var(--accent-contrast);
 
   --shadow-die:
     0 16px 34px rgba(20, 23, 40, 0.16), 0 3px 8px rgba(20, 23, 40, 0.1);
@@ -119,6 +131,10 @@ html[data-palette='feutrine'][data-theme='dark'] {
   --accent: #2ea877; /* 5,94 sur le fond */
   --accent-contrast: #ffffff;
   --accent-strong: #0c7d53; /* 5,15 sous du blanc, 3,06 sur bg-elevated */
+  /* L'accent lui-même, avec le fond pour encre : 5,94. Le blanc n'y tenait
+     que 3,01. En texte, l'accent reste à 5,25 sur bg-elevated. */
+  --accent-bridge: var(--accent);
+  --accent-bridge-ink: var(--bg);
 
   --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
   --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -139,6 +155,8 @@ html[data-palette='feutrine'][data-theme='light'] {
   --accent-contrast: #ffffff;
   /* En clair, l'accent porte déjà le blanc à 5,81:1 : rien à corriger. */
   --accent-strong: var(--accent);
+  --accent-bridge: var(--accent);
+  --accent-bridge-ink: var(--accent-contrast);
 
   --shadow-die:
     0 16px 34px rgba(16, 38, 28, 0.16), 0 3px 8px rgba(16, 38, 28, 0.1);
@@ -160,6 +178,10 @@ html[data-palette='braise'][data-theme='dark'] {
   --accent: #f0803a; /* 6,95 sur le fond */
   --accent-contrast: #ffffff;
   --accent-strong: #b34505; /* 5,57 sous du blanc, 3,04 sur bg-elevated */
+  /* L'accent lui-même, avec le fond pour encre : 6,95. Le blanc n'y tenait
+     que 2,67. En texte, l'accent reste à 6,32 sur bg-elevated. */
+  --accent-bridge: var(--accent);
+  --accent-bridge-ink: var(--bg);
 
   --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
   --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -180,6 +202,8 @@ html[data-palette='braise'][data-theme='light'] {
   --accent-contrast: #ffffff;
   /* Même remarque qu'en feutrine clair : 5,81:1 sous du blanc. */
   --accent-strong: var(--accent);
+  --accent-bridge: var(--accent);
+  --accent-bridge-ink: var(--accent-contrast);
 
   --shadow-die:
     0 16px 34px rgba(40, 24, 16, 0.16), 0 3px 8px rgba(40, 24, 16, 0.1);
@@ -215,8 +239,13 @@ html[data-palette='braise'][data-theme='light'] {
      demande 3:1, que `--border` (12 à 14 % d'opacité) ne tient nulle part.
      `--muted` donne 5,9:1 en sombre et 6,0:1 en clair. */
   --dwc-border-strong: var(--muted);
-  --dwc-primary: var(--accent);
-  --dwc-primary-contrast: var(--accent-contrast);
+  /* NI `--accent` NI `--accent-strong` : le socle se sert de la primaire
+     SURTOUT comme couleur de lien et de liseré, et une fois comme aplat sous
+     `--dwc-primary-contrast`. Aucun des deux accents de l'app ne tient les
+     deux rôles dans toutes les palettes - chaque bloc de thème pose donc la
+     paire qui les tient, et `tokens.test.ts` la mesure. */
+  --dwc-primary: var(--accent-bridge);
+  --dwc-primary-contrast: var(--accent-bridge-ink);
   --dwc-primary-soft: color-mix(in srgb, var(--accent) 14%, var(--surface));
   --dwc-success: light-dark(#166534, #4ade80);
   --dwc-warning: light-dark(#854d0e, #fbbf24);
