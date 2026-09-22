@@ -82,6 +82,111 @@ html[data-theme='light'] {
 }
 
 /*
+ * LES PALETTES, SECOND AXE DU THÈME.
+ *
+ * `data-palette` est posé par le même script de pré-peinture que `data-theme`
+ * (cf. `index.html`), et les deux se croisent : une palette existe en clair ET
+ * en sombre, sans quoi choisir « feutrine » forcerait à renoncer à `auto`. La
+ * palette d'origine n'a pas de bloc - elle EST les deux blocs ci-dessus, et
+ * `data-palette="violet"` retombe donc dessus sans rien surcharger.
+ *
+ * CHAQUE COULEUR EST MESURÉE, pas choisie à l'oeil. Les six rapports que les
+ * deux thèmes d'origine tiennent sont tenus ici aussi : texte sur fond >= 7,
+ * `--muted` sur fond >= 4,5 et sur surface >= 3, `--accent-strong` sous du
+ * blanc >= 4,5 (WCAG AA, texte de 16 px) et contre `--bg-elevated` >= 3 (WCAG
+ * 1.4.11, un contrôle doit se distinguer de son fond), `--accent` sur fond
+ * >= 3. Les valeurs sont en commentaire de chaque bloc ; `tokens.test.ts` les
+ * recalcule depuis ce fichier, de sorte qu'un ajustement à l'oeil qui passerait
+ * sous un seuil fasse rougir la CI.
+ *
+ * Les `--dwc-*` plus bas ne connaissent aucune palette : ils pointent des
+ * jetons, et suivent donc les deux axes sans qu'une seule de leurs lignes
+ * change.
+ */
+
+/* Feutrine - le vert d'un tapis de jeu. */
+html[data-palette='feutrine'][data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0d1a14;
+  --bg-elevated: #16261e;
+  --surface: #1d3026;
+  --border: rgba(255, 255, 255, 0.12);
+
+  --text: #eef7f1; /* 16,35 sur le fond */
+  --muted: #93ac9e; /* 7,35 sur le fond, 5,75 sur la surface */
+
+  --accent: #2ea877; /* 5,94 sur le fond */
+  --accent-contrast: #ffffff;
+  --accent-strong: #0c7d53; /* 5,15 sous du blanc, 3,06 sur bg-elevated */
+
+  --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
+  --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+html[data-palette='feutrine'][data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f1f7f3;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --border: rgba(16, 38, 28, 0.14);
+
+  --text: #14241c; /* 14,89 sur le fond */
+  --muted: #4f6659; /* 5,73 sur le fond, 6,22 sur la surface */
+
+  --accent: #07744d; /* 5,35 sur le fond */
+  --accent-contrast: #ffffff;
+  /* En clair, l'accent porte déjà le blanc à 5,81:1 : rien à corriger. */
+  --accent-strong: var(--accent);
+
+  --shadow-die:
+    0 16px 34px rgba(16, 38, 28, 0.16), 0 3px 8px rgba(16, 38, 28, 0.1);
+  --shadow-ui: 0 10px 28px rgba(16, 38, 28, 0.14);
+}
+
+/* Braise - la terre cuite d'un feu qui retombe. */
+html[data-palette='braise'][data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #1a110d;
+  --bg-elevated: #261a16;
+  --surface: #2f211c;
+  --border: rgba(255, 255, 255, 0.12);
+
+  --text: #f9f0ea; /* 16,53 sur le fond */
+  --muted: #b69a8c; /* 7,07 sur le fond, 5,90 sur la surface */
+
+  --accent: #f0803a; /* 6,95 sur le fond */
+  --accent-contrast: #ffffff;
+  --accent-strong: #b34505; /* 5,57 sous du blanc, 3,04 sur bg-elevated */
+
+  --shadow-die: 0 18px 40px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.35);
+  --shadow-ui: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+html[data-palette='braise'][data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #fdf5f0;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --border: rgba(40, 24, 16, 0.14);
+
+  --text: #241710; /* 16,18 sur le fond */
+  --muted: #6b5245; /* 6,68 sur le fond, 7,20 sur la surface */
+
+  --accent: #ab460b; /* 5,40 sur le fond */
+  --accent-contrast: #ffffff;
+  /* Même remarque qu'en feutrine clair : 5,81:1 sous du blanc. */
+  --accent-strong: var(--accent);
+
+  --shadow-die:
+    0 16px 34px rgba(40, 24, 16, 0.16), 0 3px 8px rgba(40, 24, 16, 0.1);
+  --shadow-ui: 0 10px 28px rgba(40, 24, 16, 0.14);
+}
+
+/*
  * LE CONTRAT `--dwc-*`, BRANCHÉ SUR LES JETONS CI-DESSUS.
  *
  * Les feuilles du socle lisent quinze variables et n'en définissent aucune :

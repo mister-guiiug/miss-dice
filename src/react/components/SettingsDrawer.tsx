@@ -14,6 +14,7 @@ import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
 import { LOCALE_LABELS } from '../../i18n/messages';
 import { useAppTheme } from '../hooks/useTheme';
+import { setPalette, usePalette } from '../../settings/palette';
 import {
   SPONSOR_URL,
   repoUrl,
@@ -104,6 +105,19 @@ const THEME_KEYS = [
 ] as const;
 
 /**
+ * Les palettes, dans l'ordre du sélecteur. `violet` en tête : c'est celle
+ * d'origine, donc celle qu'on retrouve en cas de doute.
+ *
+ * L'ordre suit `PALETTES` de `settings/palette.ts` - un test les compare, pour
+ * qu'une palette ajoutée là-bas ne reste pas invisible ici.
+ */
+const PALETTE_KEYS = [
+  { value: 'violet', label: 'settings.paletteViolet' },
+  { value: 'feutrine', label: 'settings.paletteFeutrine' },
+  { value: 'braise', label: 'settings.paletteBraise' },
+] as const;
+
+/**
  * L'URL d'un signalement, gabarit `bug.yml` du compte PRÉREMPLI avec ce que
  * la page sait et que l'utilisateur ne sait jamais dire : la version et le
  * commit qui tournent (posés par `versionPlugin`), l'écran, le navigateur et
@@ -125,6 +139,7 @@ const issueUrl = () => currentIssueReportUrl({ repoUrl: repoUrl('miss-dice') });
 export function SettingsDrawer() {
   const { t, locale, setLocale, locales } = useI18n();
   const { theme, setTheme } = useAppTheme();
+  const palette = usePalette();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const {
@@ -242,6 +257,32 @@ export function SettingsDrawer() {
                 aria-checked={theme === item.value}
                 className={`segmented__item${theme === item.value ? ' segmented__item--active' : ''}`}
                 onClick={() => setTheme(item.value)}
+              >
+                {t(item.label)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Palette - SOUS le thème, et c'est l'ordre qui l'explique : on
+            choisit d'abord clair/sombre/auto, puis la couleur que ce choix
+            portera. Les deux se croisent, aucun ne remplace l'autre. */}
+        <div className="setting-row setting-row--stack">
+          <span className="setting-row__label">{t('settings.palette')}</span>
+          <span className="setting-row__hint">{t('settings.paletteHint')}</span>
+          <div
+            className="segmented segmented--wide"
+            role="radiogroup"
+            aria-label={t('settings.palette')}
+          >
+            {PALETTE_KEYS.map(item => (
+              <button
+                key={item.value}
+                type="button"
+                role="radio"
+                aria-checked={palette === item.value}
+                className={`segmented__item${palette === item.value ? ' segmented__item--active' : ''}`}
+                onClick={() => setPalette(item.value)}
               >
                 {t(item.label)}
               </button>

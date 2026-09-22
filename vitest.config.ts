@@ -27,6 +27,20 @@ export default defineConfig({
   },
   test: {
     ...baseTestOptions,
+    /*
+     * UNE SEULE FEUILLE EST TRAITÉE, ET C'EST EXPRÈS.
+     *
+     * Vitest stube les imports CSS (`css: false` par défaut) : un
+     * `import tokens from './tokens.css?raw'` rend alors la chaîne VIDE, sans
+     * erreur - `src/styles/tokens.test.ts` passait donc en ne vérifiant rien.
+     * `?raw` n'y échappe pas, le stub s'applique avant.
+     *
+     * `css: true` réglerait le cas et ferait bien plus : toutes les feuilles
+     * seraient traitées et appliquées dans jsdom, pour tous les tests. On
+     * n'ouvre donc que les deux dont un test lit le TEXTE - les jetons de
+     * thème, et les règles qui peignent du texte sur l'accent.
+     */
+    css: { include: [/tokens\.css/, /styles\.css/] },
     coverage: {
       ...coveragePreset,
       // Le .d.ts du preset élargit `provider` à `string` ; on le re-fixe au

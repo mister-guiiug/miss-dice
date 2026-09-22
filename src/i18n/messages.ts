@@ -53,6 +53,11 @@ export interface Messages {
     themeAuto: string;
     themeLight: string;
     themeDark: string;
+    palette: string;
+    paletteHint: string;
+    paletteViolet: string;
+    paletteFeutrine: string;
+    paletteBraise: string;
     sounds: string;
     soundsHint: string;
     tts: string;
@@ -268,6 +273,12 @@ const fr: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Clair',
     themeDark: 'Sombre',
+    palette: 'Palette',
+    paletteHint:
+      'Se combine avec le thème : chaque palette existe en clair et en sombre.',
+    paletteViolet: 'Violet',
+    paletteFeutrine: 'Feutrine',
+    paletteBraise: 'Braise',
     sounds: 'Sons',
     soundsHint: 'Petit retour audio au lancer',
     tts: 'Annonce vocale',
@@ -485,6 +496,12 @@ const en: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Light',
     themeDark: 'Dark',
+    palette: 'Palette',
+    paletteHint:
+      'Combines with the theme: every palette comes in light and dark.',
+    paletteViolet: 'Violet',
+    paletteFeutrine: 'Baize',
+    paletteBraise: 'Ember',
     sounds: 'Sounds',
     soundsHint: 'Small audio feedback on roll',
     tts: 'Spoken result',
@@ -701,6 +718,12 @@ const es: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Claro',
     themeDark: 'Oscuro',
+    palette: 'Paleta',
+    paletteHint:
+      'Se combina con el tema: cada paleta existe en claro y en oscuro.',
+    paletteViolet: 'Violeta',
+    paletteFeutrine: 'Tapete',
+    paletteBraise: 'Brasa',
     sounds: 'Sonidos',
     soundsHint: 'Pequeño sonido al lanzar',
     tts: 'Resultado hablado',
@@ -918,6 +941,12 @@ const de: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Hell',
     themeDark: 'Dunkel',
+    palette: 'Palette',
+    paletteHint:
+      'Lässt sich mit dem Design kombinieren: jede Palette gibt es hell und dunkel.',
+    paletteViolet: 'Violett',
+    paletteFeutrine: 'Filz',
+    paletteBraise: 'Glut',
     sounds: 'Töne',
     soundsHint: 'Kleines Audio-Feedback beim Wurf',
     tts: 'Ergebnis vorlesen',
@@ -1135,6 +1164,12 @@ const it: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Chiaro',
     themeDark: 'Scuro',
+    palette: 'Tavolozza',
+    paletteHint:
+      'Si combina con il tema: ogni tavolozza esiste chiara e scura.',
+    paletteViolet: 'Viola',
+    paletteFeutrine: 'Panno',
+    paletteBraise: 'Brace',
     sounds: 'Suoni',
     soundsHint: 'Piccolo feedback audio al lancio',
     tts: 'Risultato vocale',
@@ -1352,6 +1387,12 @@ const pt: Messages = {
     themeAuto: 'Auto',
     themeLight: 'Claro',
     themeDark: 'Escuro',
+    palette: 'Paleta',
+    paletteHint:
+      'Combina-se com o tema: cada paleta existe em claro e em escuro.',
+    paletteViolet: 'Violeta',
+    paletteFeutrine: 'Feltro',
+    paletteBraise: 'Brasa',
     sounds: 'Sons',
     soundsHint: 'Pequeno som ao lançar',
     tts: 'Resultado falado',
