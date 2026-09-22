@@ -8,10 +8,12 @@ import { defaultRng, type Rng } from '../../dice/random';
 import { freshDice, freshHeld, reroll, toggleAt } from '../diceTurn';
 import {
   CATEGORIES,
+  LOWER_CATEGORIES,
   UPPER_CATEGORIES,
   UPPER_BONUS,
   UPPER_BONUS_THRESHOLD,
   scoreCategory,
+  scoreCategoryAsJoker,
   type Category,
 } from './scoring';
 
@@ -99,9 +101,68 @@ export function isCategoryFilled(
   return player.scores[category] !== undefined;
 }
 
+/**
+ * La main courante joue-t-elle en JOKER ?
+ *
+ * Condition officielle : cinq dés identiques ALORS QUE la case Yahtzee est
+ * déjà remplie - à 50 comme à 0. Le zéro compte : il ne donne pas les +100,
+ * mais il impose exactement le même placement. Beaucoup d'implémentations
+ * l'oublient et n'appliquent le joker qu'après un Yahtzee réussi ; c'est la
+ * moitié de la règle.
+ *
+ * ⚠️ `rolledThisTurn` N'EST PAS UNE PRÉCAUTION D'USAGE. `freshDice` remplit le
+ * tour de cinq 1 (`../diceTurn.ts`) : avant le premier lancer, l'état PORTE
+ * un Yahtzee de 1 qui n'a jamais été lancé. Sans cette garde, un joueur ayant
+ * déjà sa case Yahtzee verrait, en arrivant sur son tour, la grille se
+ * restreindre à la case « Les 1 ».
+ */
+export function jokerActif(state: YahtzeeState): boolean {
+  if (!state.rolledThisTurn) return false;
+  const player = state.players[state.current]!;
+  return (
+    player.scores.yahtzee !== undefined &&
+    scoreCategory('yahtzee', state.dice) === 50
+  );
+}
+
+/**
+ * Les cases où le joueur courant PEUT inscrire la main courante.
+ *
+ * Hors joker, c'est toute case libre - le joueur choisit, y compris de sacrifier
+ * une case à zéro. Le joker, lui, IMPOSE un ordre, et c'est la partie de la
+ * règle qui se perd le plus souvent :
+ *
+ *  1. la case haute de la figure (cinq 4 → « Les 4 ») si elle est libre : elle
+ *     seule, sans discussion ;
+ *  2. sinon, n'importe quelle combinaison basse libre, payée plein
+ *     (`scoreCategoryAsJoker`) ;
+ *  3. sinon seulement, une case haute libre - qui passera forcément à zéro.
+ *
+ * L'ordre n'est pas décoratif : il empêche de garder la meilleure main du jeu
+ * pour bourrer une case haute pendant qu'une grande suite attend. Rendre la
+ * liste plutôt qu'un booléen laisse l'IHM griser ce qui est interdit au lieu
+ * de refuser le clic après coup.
+ */
+export function categoriesAutorisees(state: YahtzeeState): Category[] {
+  const player = state.players[state.current]!;
+  const libres = CATEGORIES.filter(c => !isCategoryFilled(player, c));
+  if (!jokerActif(state)) return libres;
+
+  // Cinq dés identiques : la première face suffit à nommer la figure.
+  const haute = UPPER_CATEGORIES[state.dice[0]! - 1];
+  if (haute !== undefined && libres.includes(haute)) return [haute];
+
+  const basses = libres.filter(c =>
+    (LOWER_CATEGORIES as readonly Category[]).includes(c)
+  );
+  return basses.length > 0 ? basses : libres;
+}
+
 /** Score que rapporterait la catégorie avec la main courante. */
 export function previewScore(state: YahtzeeState, category: Category): number {
-  return scoreCategory(category, state.dice);
+  return jokerActif(state)
+    ? scoreCategoryAsJoker(category, state.dice)
+    : scoreCategory(category, state.dice);
 }
 
 /** La main courante est-elle un Yahtzee bonus pour le joueur courant ? */
@@ -123,7 +184,10 @@ export function scoreCategoryAction(
 ): YahtzeeState {
   if (!canScore(state)) return state;
   const player = state.players[state.current]!;
-  if (isCategoryFilled(player, category)) return state;
+  // Une case remplie était déjà refusée ; `categoriesAutorisees` l'exclut et
+  // ajoute l'ordre imposé par le joker. Le moteur garde donc la règle même si
+  // l'IHM laisse passer un clic - c'est lui qui fait foi, pas le bouton.
+  if (!categoriesAutorisees(state).includes(category)) return state;
 
   const bonus = earnsYahtzeeBonus(state) ? 1 : 0;
   const players = state.players.slice();
@@ -131,7 +195,7 @@ export function scoreCategoryAction(
     ...player,
     scores: {
       ...player.scores,
-      [category]: scoreCategory(category, state.dice),
+      [category]: previewScore(state, category),
     },
     bonusYahtzees: player.bonusYahtzees + bonus,
   };

@@ -191,6 +191,16 @@ bonus supérieur (+35 si la somme des « 1…6 » atteint 63). Chaque joueur
 remplit sa propre grille ; le plus haut total l'emporte. Logique :
 `src/games/yahtzee/`.
 
+**Yahtzee supplémentaire : bonus ET joker.** Un second Yahtzee vaut **+100**
+quand la case Yahtzee porte déjà 50 - et, dans tous les cas où elle est
+**remplie** (50 comme 0), le placement devient **imposé** : la case haute de la
+figure si elle est libre (cinq 4 → « Les 4 »), sinon n'importe quelle
+combinaison libre payée **plein** (full 25, petite suite 30, grande suite 40,
+même si les dés n'en forment pas la figure), sinon seulement un zéro dans une
+case haute. Le zéro dans la case Yahtzee compte : il ne donne pas les +100 mais
+impose le même ordre. La grille grise ce qui est interdit et le statut dit
+pourquoi.
+
 **421** - 3 dés, jeu à jetons (version classique simplifiée, assumée et
 documentée dans `src/games/dice421/scoring.ts`) :
 
@@ -221,9 +231,9 @@ quitte efface la sauvegarde : il demande donc **confirmation** par défaut, et
 ne s'en passe qu'en fin de partie, où il n'y a plus rien à perdre. Les icônes
 de la barre sont **dessinées**, pas des glyphes `←` `↶` `↺` dont le rendu
 dépendait de la police de l'appareil. Le Yahtzee gère le **bonus
-Yahtzee** (+100) et rappelle dans son statut qu'on peut inscrire une case
-dès le 1er lancer ; le 421 reconnaît **suites** et **nénette** et laisse
-choisir la **taille du pot**.
+Yahtzee** (+100) et la **règle du joker** (ci-dessus), et rappelle dans son
+statut qu'on peut inscrire une case dès le 1er lancer ; le 421 reconnaît
+**suites** et **nénette** et laisse choisir la **taille du pot**.
 
 ## 4. Choix techniques
 
@@ -379,9 +389,10 @@ exportable en CSV**, **reprise de partie**, **annuler**, rejouer, partage de
 résultat, **wake lock**. Côté technique : jeux en **lazy-load**, **error
 boundary**, **feuilles modales accessibles** (focus trap + Échap), habillage
 du socle importé **par section**, husky/lint-staged/commitlint, Lighthouse CI,
-**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Pistes
-restantes : thèmes additionnels, règles 421 avancées (décideur), joker Yahtzee
-complet, synchronisation multi-appareils.
+**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Le
+**joker Yahtzee** est complet depuis le 22/09/2026 : bonus +100 ET placement
+imposé (§ 3). Pistes restantes : thèmes additionnels, règles 421 avancées
+(décideur), synchronisation multi-appareils.
 
 ## Licence
 

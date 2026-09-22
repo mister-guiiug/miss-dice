@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  categoriesAutorisees,
   createYahtzee,
+  jokerActif,
+  previewScore,
   rollDiceAction,
   toggleHold,
   scoreCategoryAction,
@@ -11,6 +14,7 @@ import {
   isCategoryFilled,
   yahtzeeBonusPoints,
   ROLLS_PER_TURN,
+  type YahtzeeState,
 } from './engine';
 import { CATEGORIES } from './scoring';
 import type { Rng } from '../../dice/random';
@@ -157,5 +161,136 @@ describe('yahtzee engine - score et tours', () => {
       expect(d).toBeGreaterThanOrEqual(1);
       expect(d).toBeLessThanOrEqual(6);
     }
+  });
+});
+
+/**
+ * LE JOKER, C'EST LA MOITIÉ DE LA RÈGLE QUI MANQUAIT.
+ *
+ * Le bonus des +100 était là ; le PLACEMENT ne l'était pas. Or c'est lui qui
+ * fait le jeu : après un Yahtzee supplémentaire, on ne choisit pas librement,
+ * on suit un ordre - la case haute de la figure, sinon une combinaison payée
+ * plein, sinon un zéro en haut. Sans cet ordre, la main la plus rare du jeu
+ * servait à bourrer la case la plus commode.
+ */
+describe('yahtzee engine - joker', () => {
+  /*
+   * LE PIÈGE D'ABORD, parce qu'il ne se voit pas. `freshDice` remplit le tour
+   * de cinq 1 : l'état d'un tour NEUF porte donc un Yahtzee de 1 qui n'a
+   * jamais été lancé. Sans la garde `rolledThisTurn`, un joueur ayant déjà sa
+   * case Yahtzee verrait sa grille se réduire à « Les 1 » en arrivant sur son
+   * tour, avant d'avoir touché un dé.
+   */
+  it('aucun joker avant le premier lancer, malgré les cinq 1 de l’état neuf', () => {
+    const state = createYahtzee(['A']);
+    expect(state.dice).toEqual([1, 1, 1, 1, 1]);
+    expect(jokerActif(state)).toBe(false);
+    expect(categoriesAutorisees(state)).toHaveLength(13);
+  });
+
+  it('case Yahtzee libre : un Yahtzee ne contraint rien', () => {
+    let state = createYahtzee(['A']);
+    state = rollDiceAction(state, fixedFace(4));
+    expect(jokerActif(state)).toBe(false);
+    expect(categoriesAutorisees(state)).toHaveLength(13);
+    // Et le barème reste ordinaire : cinq 4 ne sont pas un full.
+    expect(previewScore(state, 'fullHouse')).toBe(0);
+  });
+
+  it('case Yahtzee remplie : la case haute de la figure est IMPOSÉE', () => {
+    let state = createYahtzee(['A']);
+    state = rollDiceAction(state, fixedFace(5));
+    state = scoreCategoryAction(state, 'yahtzee');
+    state = rollDiceAction(state, fixedFace(4));
+
+    expect(jokerActif(state)).toBe(true);
+    expect(categoriesAutorisees(state)).toEqual(['fours']);
+    // Le moteur fait foi, pas le bouton : une autre case libre est refusée.
+    expect(scoreCategoryAction(state, 'chance')).toBe(state);
+  });
+
+  it('case haute prise : les combinaisons s’ouvrent, payées plein', () => {
+    let state = createYahtzee(['A']);
+    state = rollDiceAction(state, fixedFace(5));
+    state = scoreCategoryAction(state, 'yahtzee');
+    state = rollDiceAction(state, fixedFace(4));
+    state = scoreCategoryAction(state, 'fours');
+    state = rollDiceAction(state, fixedFace(4));
+
+    expect(categoriesAutorisees(state)).toEqual([
+      'threeKind',
+      'fourKind',
+      'fullHouse',
+      'smallStraight',
+      'largeStraight',
+      'chance',
+    ]);
+    expect(previewScore(state, 'fullHouse')).toBe(25);
+    expect(previewScore(state, 'largeStraight')).toBe(40);
+
+    state = scoreCategoryAction(state, 'fullHouse');
+    expect(state.players[0]!.scores.fullHouse).toBe(25);
+  });
+
+  /*
+   * UN ZÉRO COMPTE AUTANT QU'UN 50. La règle officielle attache le placement à
+   * une case Yahtzee REMPLIE, pas à un Yahtzee réussi : le joueur qui a sacrifié
+   * sa case suit le même ordre, sans toucher les +100. C'est la partie que les
+   * implémentations sautent le plus souvent.
+   */
+  it('un zéro dans la case Yahtzee impose le même ordre, sans les +100', () => {
+    let state = createYahtzee(['A']);
+    state = rollDiceAction(state, seqRng([0.0, 0.2, 0.4, 0.6, 0.8]));
+    expect(state.dice).toEqual([1, 2, 3, 4, 5]);
+    state = scoreCategoryAction(state, 'yahtzee');
+    expect(state.players[0]!.scores.yahtzee).toBe(0);
+
+    state = rollDiceAction(state, fixedFace(3));
+    expect(jokerActif(state)).toBe(true);
+    expect(categoriesAutorisees(state)).toEqual(['threes']);
+
+    state = scoreCategoryAction(state, 'threes');
+    expect(state.players[0]!.bonusYahtzees).toBe(0);
+    expect(yahtzeeBonusPoints(state.players[0]!)).toBe(0);
+  });
+
+  /*
+   * LE DERNIER CRAN. Case haute prise ET plus une combinaison libre : il ne
+   * reste qu'à sacrifier une case haute. L'état est posé à la main - le
+   * rejouer coûterait douze tours pour vérifier une branche de trois lignes.
+   */
+  it('plus aucune combinaison libre : une case haute passe à zéro', () => {
+    const state: YahtzeeState = {
+      ...createYahtzee(['A']),
+      rolledThisTurn: true,
+      dice: [6, 6, 6, 6, 6],
+      players: [
+        {
+          name: 'A',
+          bonusYahtzees: 0,
+          scores: {
+            sixes: 30,
+            yahtzee: 50,
+            threeKind: 0,
+            fourKind: 0,
+            fullHouse: 0,
+            smallStraight: 0,
+            largeStraight: 0,
+            chance: 0,
+          },
+        },
+      ],
+    };
+
+    expect(jokerActif(state)).toBe(true);
+    expect(categoriesAutorisees(state)).toEqual([
+      'ones',
+      'twos',
+      'threes',
+      'fours',
+      'fives',
+    ]);
+    // Une case haute qui ne contient aucun 6 : le sacrifice coûte bien zéro.
+    expect(previewScore(state, 'ones')).toBe(0);
   });
 });

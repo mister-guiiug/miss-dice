@@ -109,3 +109,37 @@ export function scoreCategory(
       return sum(dice);
   }
 }
+
+/**
+ * Score d'une catégorie quand la main est un Yahtzee JOKER.
+ *
+ * LA RÈGLE OFFICIELLE PAIE LA FIGURE QU'ON N'A PAS. Cinq 4 ne forment ni full
+ * ni suite - et valent pourtant 25, 30 ou 40 dans ces cases-là. C'est tout
+ * l'objet du joker : la main la plus rare du jeu ne doit pas devenir un zéro
+ * forcé parce que la case Yahtzee est déjà prise.
+ *
+ * Les autres catégories n'ont besoin de rien : brelan, carré et chance
+ * rendent déjà la somme des dés (cinq identiques valident `>= 3` et `>= 4`),
+ * et une case haute compte ses dés comme d'habitude. Le joker ne les change
+ * pas - il ne débloque QUE les trois figures que cinq dés identiques ne
+ * peuvent pas former.
+ *
+ * Quand ce barème s'applique - et à quelles cases on a le droit - n'est pas
+ * décidé ici : c'est l'affaire du moteur (`./engine.ts`, `jokerActif` et
+ * `categoriesAutorisees`). Ce module reste un barème, sans mémoire de partie.
+ */
+export function scoreCategoryAsJoker(
+  category: Category,
+  dice: readonly number[]
+): number {
+  switch (category) {
+    case 'fullHouse':
+      return FULL_HOUSE_SCORE;
+    case 'smallStraight':
+      return SMALL_STRAIGHT_SCORE;
+    case 'largeStraight':
+      return LARGE_STRAIGHT_SCORE;
+    default:
+      return scoreCategory(category, dice);
+  }
+}

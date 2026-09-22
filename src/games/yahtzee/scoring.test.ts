@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CATEGORIES, scoreCategory } from './scoring';
+import { CATEGORIES, scoreCategory, scoreCategoryAsJoker } from './scoring';
 
 describe('yahtzee scoreCategory', () => {
   it('catégories hautes : somme des dés de la valeur', () => {
@@ -38,5 +38,35 @@ describe('yahtzee scoreCategory', () => {
   it('définit exactement 13 catégories', () => {
     expect(CATEGORIES).toHaveLength(13);
     expect(new Set(CATEGORIES).size).toBe(13);
+  });
+});
+
+describe('yahtzee scoreCategoryAsJoker', () => {
+  /*
+   * LE JOKER PAIE LA FIGURE QU'ON N'A PAS. Cinq dés identiques ne forment ni
+   * full ni suite - la règle officielle les y accepte quand même, à leur
+   * valeur pleine. C'est ce qui empêche la main la plus rare du jeu de devenir
+   * un zéro forcé parce que la case Yahtzee est déjà prise.
+   */
+  it('paie full, petite et grande suite à leur valeur pleine', () => {
+    expect(scoreCategoryAsJoker('fullHouse', [4, 4, 4, 4, 4])).toBe(25);
+    expect(scoreCategoryAsJoker('smallStraight', [4, 4, 4, 4, 4])).toBe(30);
+    expect(scoreCategoryAsJoker('largeStraight', [4, 4, 4, 4, 4])).toBe(40);
+  });
+
+  it('ne change rien aux autres cases : elles comptaient déjà juste', () => {
+    expect(scoreCategoryAsJoker('fours', [4, 4, 4, 4, 4])).toBe(20);
+    expect(scoreCategoryAsJoker('threeKind', [4, 4, 4, 4, 4])).toBe(20);
+    expect(scoreCategoryAsJoker('fourKind', [4, 4, 4, 4, 4])).toBe(20);
+    expect(scoreCategoryAsJoker('chance', [4, 4, 4, 4, 4])).toBe(20);
+  });
+
+  // LE BARÈME ORDINAIRE NE BOUGE PAS. Une main de cinq dés identiques vaut
+  // toujours 0 en full hors joker : c'est le moteur qui décide quand le joker
+  // s'applique, pas la main elle-même.
+  it('laisse le barème ordinaire intact', () => {
+    expect(scoreCategory('fullHouse', [4, 4, 4, 4, 4])).toBe(0);
+    expect(scoreCategory('smallStraight', [4, 4, 4, 4, 4])).toBe(0);
+    expect(scoreCategory('largeStraight', [4, 4, 4, 4, 4])).toBe(0);
   });
 });
