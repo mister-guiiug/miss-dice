@@ -1764,8 +1764,19 @@ a[data-dwc='app-version-value']:hover {
   background: color-mix(in srgb, var(--accent) 9%, var(--surface));
 }
 
+/* LE SCORE PROPOSÉ, MÉLANGÉ VERS LE TEXTE. Il était en `--accent` pur, posé
+   sur la teinte de la case - 9 % d'accent dans la surface. En thème sombre,
+   l'accent éclairci par ce fond ne tenait plus : 3,06:1 en violet, 4,06 en
+   feutrine, sous le 4,5 d'un chiffre de 15 px. Personne ne l'avait vu, parce
+   que le Chrome des tests se déclare en thème CLAIR : jusqu'à
+   `a11y-palettes.spec.ts`, aucune suite n'avait audité un thème sombre.
+
+   60 % d'accent, 40 % de texte garde la teinte et pousse vers le contraste
+   dans les deux thèmes - plus sombre en clair, plus clair en sombre. C'est la
+   formule que le socle a mesurée sur trente-six palettes pour ses pastilles
+   de maturité. Au plus bas, 5,62:1 (violet sombre). */
 .scorecard__row--pick .scorecard__value {
-  color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 60%, var(--text));
   font-weight: 700;
 }
 
@@ -2126,15 +2137,26 @@ a[data-dwc='app-version-value']:hover {
    tactile. Les seize apps qui importent la feuille du socle rendaient `flex`.
 
    EN HAUT, ET PAS EN BAS. Le bas d'écran est déjà disputé par l'invite
-   d'installation et les liens de famille, qui se cachent déjà l'un l'autre. Le
-   haut est libre, et un bandeau posé là ne recouvre pas la surface de lancer -
-   qui est l'interface entière de cette app. */
+   d'installation et les liens de famille, qui se cachent déjà l'un l'autre.
+
+   MAIS SOUS LA RANGÉE DES TROIS BOUTONS, plus au milieu d'elle. Ce bandeau
+   occupait le centre du haut, alors libre ; la pastille « 1 × D6 » y est
+   maintenant. Mesuré par l'e2e des palettes : posé là, le bandeau interceptait
+   le toucher destiné à la pastille - et comme il n'est pas modal, un visiteur
+   qui ne répond pas l'aurait gardée cachée indéfiniment. Sous la rangée, il ne
+   recouvre plus aucune commande. 70 px = 12 de marge + 48 de bouton + 10.
+
+   CENTRÉ PAR `margin-inline`, PAS PAR `left: 50%` - le piège corrigé dans le
+   bandeau de mise à jour et l'invite d'installation (#97, #98) : la place
+   disponible y était réduite de moitié, ce qui écrasait le message sur un
+   téléphone étroit. */
 [data-dwc='consent-banner'] {
   position: absolute;
-  left: 50%;
-  top: calc(var(--safe-top) + 14px);
-  transform: translateX(-50%);
-  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+  top: calc(var(--safe-top) + 70px);
+  inset-inline: 0;
+  width: min(100% - 24px, 40rem);
+  margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -2184,13 +2206,15 @@ a[data-dwc='app-version-value']:hover {
 
 /* `slide-up` ne conviendrait pas : il monte depuis le bas, alors que ce
    bandeau-ci descend du haut. */
+/* Le `-50 %` est parti avec le `left: 50 %`, comme dans `slide-up` : il
+   portait la moitié du centrage, désormais tenu par `margin-inline`. */
 @keyframes consent-in {
   from {
     opacity: 0;
-    transform: translate(-50%, -12px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
 }
