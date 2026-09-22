@@ -726,10 +726,18 @@ button {
    seulement des mots. D'où un bloc, et non plus une rangée. */
 [data-dwc='pwa-install-prompt'] {
   position: absolute;
-  left: 50%;
+  box-sizing: border-box;
   bottom: calc(var(--safe-bottom) + 14px);
-  transform: translateX(-50%);
-  max-width: calc(100% - 24px);
+
+  /* MÊME PIÈGE QUE LE BANDEAU DE MISE À JOUR, ET MÊME REMÈDE. `left: 50%` sur
+     une boîte sans largeur réduit la place disponible à la MOITIÉ du viewport,
+     et la boîte s'y ajuste au contenu : mesurée à 197 px de large sur un écran
+     de 393, alors que `max-width` en autorisait 369. Les trois côtés posés
+     donnent la largeur voulue sans dépendre du contenu. */
+  inset-inline: 0;
+  width: min(100% - 24px, 26rem);
+  margin-inline: auto;
+
   padding: 10px 12px;
   background: color-mix(in srgb, var(--surface) 86%, transparent);
   border: 1px solid var(--border);
@@ -780,7 +788,9 @@ button {
 [data-dwc='pwa-install-prompt'][data-method='prompt']
   [data-dwc='pwa-install-actions']
   button:first-child {
-  background: var(--accent);
+  /* `--accent-strong`, comme le bouton du bandeau de mise à jour : `--accent`
+     ne porte le blanc qu'à 4,45:1 en thème sombre, sous le 4,5:1 de WCAG AA. */
+  background: var(--accent-strong);
   color: var(--accent-contrast);
   border-color: transparent;
   font-weight: 600;
@@ -881,14 +891,19 @@ button {
   }
 }
 
+/* LE `-50 %` EST PARTI AVEC LE `left: 50 %`. Ces images-clés portaient la
+   moitié du centrage de l'invite d'installation, son unique cliente : sans ce
+   retrait, l'entrée repartait de 184 px hors du cadre, puisque le centrage
+   vient maintenant de `margin-inline: auto`. Ne reste que ce que l'animation
+   doit vraiment faire - monter de 18 px en apparaissant. */
 @keyframes slide-up {
   from {
     opacity: 0;
-    transform: translate(-50%, 18px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
 }
 
