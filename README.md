@@ -49,6 +49,7 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Jeu 421                    | `src/games/dice421/{scoring,engine}.ts`                | Classement des mains + manches à jetons (charge/décharge)              |
 | Jeu Cochon (Pig)           | `src/games/pig/engine.ts`                              | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque         |
 | Aiguillage écrans          | `src/app/appMode.ts`                                   | Lancer libre / Yahtzee / 421 / Cochon / notation / décider             |
+| Reprise ailleurs           | `src/games/transfer.ts`                                | La partie en cours dans une URL : encodage, compression, validation    |
 | PWA                        | `vite.config.ts`, `src/main.tsx`                       | Manifest, service worker, base path GH Pages                           |
 | Thème                      | `src/styles/tokens.css`, `src/react/hooks/useTheme.ts` | Trois palettes x clair/sombre **et** le pont `--dwc-*` lu par le socle |
 | Palette                    | `src/settings/palette.ts`                              | Le second axe du thème : choix, persistance, barre système             |
@@ -88,6 +89,8 @@ miss-dice/
     ├── i18n/{messages,useI18n}.ts   # 6 langues + clés typées + tests
     ├── app/appMode.ts               # écran actif (lancer libre / jeux)
     ├── games/                       # moteurs purs + tests
+    │   ├── persistence.ts           # sauvegarde locale versionnée
+    │   ├── transfer.ts              # la partie en cours, en lien ou en QR
     │   ├── yahtzee/{scoring,engine}.ts
     │   ├── dice421/{scoring,engine}.ts
     │   └── pig/engine.ts
@@ -249,6 +252,19 @@ statut qu'on peut inscrire une case dès le 1er lancer ; le 421 reconnaît
 **suites** et **nénette**, et laisse choisir la **taille du pot** ainsi que la
 **règle du décideur**.
 
+**Continuer ailleurs** (lien ou QR) : depuis la barre d'un jeu, la partie en
+cours s'emballe dans une URL - l'autre appareil scanne le QR, ou reçoit le
+lien, et reprend exactement où on en était. Ce n'est PAS une synchronisation :
+pas de serveur, pas de session partagée, pas de va-et-vient. On transmet un
+**instantané**, une fois ; l'appareil de départ garde le sien, figé à l'instant
+de l'envoi, et l'écran le dit. L'état est compressé quand le navigateur sait le
+faire (`CompressionStream`) - une partie de Yahtzee à quatre joueurs tient
+alors en 354 caractères au lieu de 1 410, ce qui fait la différence entre un QR
+qui demande une main sûre et un QR qui se scanne du premier coup. À l'arrivée,
+un lien d'une autre version de schéma, tronqué ou fantaisiste est **refusé avec
+un message** ; et s'il existe déjà une partie en cours pour ce jeu sur
+l'appareil, la reprise **demande** avant de la remplacer.
+
 ## 4. Choix techniques
 
 - **Animation CSS/React, pas Rive.** Pour un D6, l'animation CSS est
@@ -373,6 +389,8 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/settings/legacyMigration.test.ts` - reprise des anciennes clés de réglages.
 - `src/store/createStore.test.ts` - abonnement, émission, isolation entre stores.
 - `src/log/rollLog.test.ts` - journal borné, export CSV.
+- `src/games/transfer.test.ts` - aller-retour d'une partie par URL, repli sans
+  `CompressionStream`, et tout ce qu'un lien d'ailleurs ne doit PAS pouvoir faire.
 - `src/audio/sounds.test.ts` - silence garanti quand l'API WebAudio manque.
 - `src/decide/decisions.test.ts` - pièce, oui/non, tirage, mélange.
 - `src/react/ThemeProvider.test.tsx` - thème auto/clair/sombre, pas de flash.
@@ -408,8 +426,12 @@ boundary**, **feuilles modales accessibles** (focus trap + Échap), habillage
 du socle importé **par section**, husky/lint-staged/commitlint, Lighthouse CI,
 **second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Livrés le
 22/09/2026 : le **joker Yahtzee** complet (bonus +100 ET placement imposé), la
-**règle du décideur** au 421 et **deux palettes**, feutrine et braise - les
-trois décrits au § 3. Piste restante : synchronisation multi-appareils.
+**règle du décideur** au 421, **deux palettes** (feutrine et braise) et la
+**reprise d'une partie sur un autre appareil**, par lien ou par QR - tous
+décrits au § 3. Cette dernière était listée « synchronisation
+multi-appareils » : la synchronisation continue demanderait un serveur, donc
+une refonte ; le transfert d'un instantané couvre le cas réel sans rien ajouter
+d'infrastructure. Plus de piste ouverte.
 
 ## Licence
 

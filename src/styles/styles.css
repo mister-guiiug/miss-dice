@@ -986,6 +986,43 @@ button {
   color: #5b3d00;
 }
 
+/* ─────────── Continuer ailleurs (lien + QR) ─────────── */
+
+.reprise__lead {
+  margin: 0 0 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/*
+ * LE QR EST POSÉ SUR DU BLANC, QUEL QUE SOIT LE THÈME.
+ *
+ * Le dessin, lui, suit le thème (modules blancs en sombre, noirs en clair,
+ * fond transparent), mais un lecteur cherche d'abord les trois cibles
+ * d'angle sur un fond CLAIR et UNI. Les rendre en blanc sur une surface
+ * sombre marche sur un écran net et échoue dès que l'appareil qui scanne
+ * ajuste mal son exposition. Le cadre blanc lève la question, et la marge
+ * qui l'entoure est la « quiet zone » de la norme, sans laquelle le lecteur
+ * ne trouve pas les bords.
+ */
+.reprise__qr {
+  display: block;
+  width: min(230px, 62vw);
+  height: auto;
+  margin: 0 auto 6px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.reprise__note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
 .about__feedback {
   margin: 8px 0 0;
   min-height: 1.2em;

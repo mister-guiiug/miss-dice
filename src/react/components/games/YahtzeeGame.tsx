@@ -221,6 +221,7 @@ export function YahtzeeGame() {
       onNewGame={newGame}
       onUndo={undo}
       canUndo={canUndo}
+      reprise={{ mode: 'yahtzee', state: game }}
       footer={footer}
     >
       <p className="game-turn">{t('game.turnOf', { name: player.name })}</p>

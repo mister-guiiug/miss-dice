@@ -3,6 +3,8 @@ import { useWakeLock } from '@mister-guiiug/dev-pwa-config/react/use-wake-lock';
 import { ConfirmDialog } from '@mister-guiiug/dev-pwa-config/react/confirm-dialog';
 import { appModeStore } from '../../../app/appMode';
 import { useI18n } from '../../../i18n/useI18n';
+import { RepriseSheet } from './RepriseSheet';
+import type { GameKey } from '../../../games/persistence';
 
 /* Icônes de la barre, au gabarit des deux autres de l'app (ModeMenu,
    SettingsDrawer) : 22 px dans un viewBox 24, `currentColor`. Elles
@@ -48,6 +50,27 @@ function UndoIcon() {
   );
 }
 
+/** Continuer la partie sur un autre appareil. Deux appareils, une flèche. */
+function RepriseIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2.5" y="4" width="8" height="12" rx="1.5" />
+      <rect x="14" y="8" width="7.5" height="12" rx="1.5" />
+      <path d="M11.5 6.5h2.5M12.5 5.2l1.8 1.3-1.8 1.3" />
+    </svg>
+  );
+}
+
 /** Nouvelle partie. */
 function NewGameIcon() {
   return (
@@ -77,6 +100,16 @@ interface GameShellProps {
   confirmNewGame?: boolean;
   onUndo?: () => void;
   canUndo?: boolean;
+  /**
+   * La partie à transmettre pour une reprise ailleurs (lien + QR).
+   *
+   * PORTÉE PAR LE CADRE, ET NON PAR CHAQUE JEU : les trois écrans ont déjà
+   * leur mode et leur état sous la main, et l'action est la même pour tous.
+   * La poser ici, c'est un bouton au même endroit dans les trois jeux, et une
+   * feuille à tenir plutôt que trois. Absente - écran de fin de partie,
+   * notamment - le bouton ne s'affiche pas : il n'y a plus rien à continuer.
+   */
+  reprise?: { mode: GameKey; state: unknown };
   footer?: ReactNode;
   children: ReactNode;
 }
@@ -91,11 +124,13 @@ export function GameShell({
   confirmNewGame = true,
   onUndo,
   canUndo = false,
+  reprise,
   footer,
   children,
 }: GameShellProps) {
   const { t } = useI18n();
   const [confirmation, setConfirmation] = useState(false);
+  const [partage, setPartage] = useState(false);
   // Empêche l'écran de s'éteindre pendant une partie (pass-and-play).
   useWakeLock(true);
 
@@ -128,6 +163,16 @@ export function GameShell({
           </button>
         )}
         <h1 className="game-shell__title">{title}</h1>
+        {reprise && (
+          <button
+            type="button"
+            className="icon-button"
+            aria-label={t('reprise.title')}
+            onClick={() => setPartage(true)}
+          >
+            <RepriseIcon />
+          </button>
+        )}
         {onNewGame ? (
           <button
             type="button"
@@ -183,6 +228,15 @@ export function GameShell({
           onNewGame?.();
         }}
       />
+
+      {reprise && (
+        <RepriseSheet
+          open={partage}
+          onClose={() => setPartage(false)}
+          mode={reprise.mode}
+          state={reprise.state}
+        />
+      )}
     </div>
   );
 }

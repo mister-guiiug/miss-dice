@@ -143,6 +143,7 @@ export function PigGame() {
       onNewGame={newGame}
       onUndo={undo}
       canUndo={canUndo}
+      reprise={{ mode: 'pig', state: game }}
       footer={footer}
     >
       <p className="game-turn">{t('game.turnOf', { name: player.name })}</p>
