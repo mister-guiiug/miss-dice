@@ -36,6 +36,10 @@ export const LOCALE_LABELS: Record<Locale, string> = {
 export interface Messages {
   settings: {
     title: string;
+    /** Intertitres du tiroir : les réglages y sont regroupés par usage. */
+    groupDisplay: string;
+    groupRoll: string;
+    groupAccessibility: string;
     language: string;
     dieType: string;
     diceCount: string;
@@ -111,6 +115,12 @@ export interface Messages {
   };
   dice: {
     name: string;
+  };
+  /** La pastille de l’écran principal qui change le type et le nombre de dés. */
+  dicePicker: {
+    title: string;
+    /** Préfixe LU, visuellement masqué : le nom accessible contient le texte visible. */
+    open: string;
   };
   colors: {
     red: string;
@@ -269,6 +279,9 @@ export interface Messages {
 const fr: Messages = {
   settings: {
     title: 'Réglages',
+    groupDisplay: 'Affichage',
+    groupRoll: 'Lancer',
+    groupAccessibility: 'Accessibilité',
     language: 'Langue',
     dieType: 'Type de dé',
     diceCount: 'Nombre de dés',
@@ -345,6 +358,7 @@ const fr: Messages = {
     faceResult: '{die}, résultat {value} ({color})',
   },
   dice: { name: 'dé à {sides} faces' },
+  dicePicker: { title: 'Dés', open: 'Changer de dés :' },
   colors: {
     red: 'rouge',
     orange: 'orange',
@@ -508,6 +522,9 @@ const fr: Messages = {
 const en: Messages = {
   settings: {
     title: 'Settings',
+    groupDisplay: 'Display',
+    groupRoll: 'Rolling',
+    groupAccessibility: 'Accessibility',
     language: 'Language',
     dieType: 'Die type',
     diceCount: 'Number of dice',
@@ -584,6 +601,7 @@ const en: Messages = {
     faceResult: '{die}, result {value} ({color})',
   },
   dice: { name: '{sides}-sided die' },
+  dicePicker: { title: 'Dice', open: 'Change dice:' },
   colors: {
     red: 'red',
     orange: 'orange',
@@ -745,6 +763,9 @@ const en: Messages = {
 const es: Messages = {
   settings: {
     title: 'Ajustes',
+    groupDisplay: 'Pantalla',
+    groupRoll: 'Lanzamiento',
+    groupAccessibility: 'Accesibilidad',
     language: 'Idioma',
     dieType: 'Tipo de dado',
     diceCount: 'Número de dados',
@@ -821,6 +842,7 @@ const es: Messages = {
     faceResult: '{die}, resultado {value} ({color})',
   },
   dice: { name: 'dado de {sides} caras' },
+  dicePicker: { title: 'Dados', open: 'Cambiar dados:' },
   colors: {
     red: 'rojo',
     orange: 'naranja',
@@ -985,6 +1007,9 @@ const es: Messages = {
 const de: Messages = {
   settings: {
     title: 'Einstellungen',
+    groupDisplay: 'Anzeige',
+    groupRoll: 'Wurf',
+    groupAccessibility: 'Barrierefreiheit',
     language: 'Sprache',
     dieType: 'Würfeltyp',
     diceCount: 'Anzahl Würfel',
@@ -1061,6 +1086,7 @@ const de: Messages = {
     faceResult: '{die}, Ergebnis {value} ({color})',
   },
   dice: { name: '{sides}-seitiger Würfel' },
+  dicePicker: { title: 'Würfel', open: 'Würfel ändern:' },
   colors: {
     red: 'rot',
     orange: 'orange',
@@ -1225,6 +1251,9 @@ const de: Messages = {
 const it: Messages = {
   settings: {
     title: 'Impostazioni',
+    groupDisplay: 'Aspetto',
+    groupRoll: 'Lancio',
+    groupAccessibility: 'Accessibilità',
     language: 'Lingua',
     dieType: 'Tipo di dado',
     diceCount: 'Numero di dadi',
@@ -1301,6 +1330,7 @@ const it: Messages = {
     faceResult: '{die}, risultato {value} ({color})',
   },
   dice: { name: 'dado a {sides} facce' },
+  dicePicker: { title: 'Dadi', open: 'Cambia dadi:' },
   colors: {
     red: 'rosso',
     orange: 'arancione',
@@ -1465,6 +1495,9 @@ const it: Messages = {
 const pt: Messages = {
   settings: {
     title: 'Definições',
+    groupDisplay: 'Aparência',
+    groupRoll: 'Lançamento',
+    groupAccessibility: 'Acessibilidade',
     language: 'Idioma',
     dieType: 'Tipo de dado',
     diceCount: 'Número de dados',
@@ -1541,6 +1574,7 @@ const pt: Messages = {
     faceResult: '{die}, resultado {value} ({color})',
   },
   dice: { name: 'dado de {sides} faces' },
+  dicePicker: { title: 'Dados', open: 'Mudar dados:' },
   colors: {
     red: 'vermelho',
     orange: 'laranja',

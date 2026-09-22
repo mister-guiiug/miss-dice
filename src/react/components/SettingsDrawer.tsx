@@ -1,16 +1,10 @@
 import { useState } from 'react';
 import { FamilyApps } from '@mister-guiiug/dev-pwa-config/react';
-import {
-  MAX_DICE,
-  MIN_DICE,
-  settingsStore,
-  useSettings,
-} from '../../settings/settingsStore';
+import { settingsStore, useSettings } from '../../settings/settingsStore';
 import { useSystemReducedMotion } from '../hooks/useReducedMotion';
 import { useVoices } from '../hooks/useVoices';
 import { useSpeak } from '../hooks/useSpeak';
 import { requestMotionPermission } from '../hooks/useShakeToRoll';
-import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
 import { LOCALE_LABELS } from '../../i18n/messages';
 import { useAppTheme } from '../hooks/useTheme';
@@ -135,24 +129,15 @@ const PALETTE_KEYS = [
  */
 const issueUrl = () => currentIssueReportUrl({ repoUrl: repoUrl('miss-dice') });
 
-/** Réglages locaux : langue, thème, sons, type de dé, nombre, secousse… */
+/** Réglages locaux, par usage : affichage, lancer, accessibilité, données. */
 export function SettingsDrawer() {
   const { t, locale, setLocale, locales } = useI18n();
   const { theme, setTheme } = useAppTheme();
   const palette = usePalette();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const {
-    haptics,
-    motion,
-    sides,
-    diceCount,
-    shake,
-    sounds,
-    tts,
-    ttsVoice,
-    colorblind,
-  } = useSettings();
+  const { haptics, motion, sides, shake, sounds, tts, ttsVoice, colorblind } =
+    useSettings();
   const voices = useVoices(locale);
   const speak = useSpeak();
   const systemReduced = useSystemReducedMotion();
@@ -218,168 +203,168 @@ export function SettingsDrawer() {
           </button>
         }
       >
-        {/* Langue */}
-        <div className="setting-row setting-row--stack">
-          <span className="setting-row__label">{t('settings.language')}</span>
-          <div
-            className="segmented segmented--wide"
-            role="radiogroup"
-            aria-label={t('settings.language')}
-          >
-            {locales.map(code => (
-              <button
-                key={code}
-                type="button"
-                role="radio"
-                aria-checked={locale === code}
-                className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
-                onClick={() => setLocale(code)}
-              >
-                {LOCALE_LABELS[code]}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/*
+          LES RÉGLAGES SONT REGROUPÉS PAR USAGE. Ils formaient une seule liste
+          de onze lignes sans intertitre, où la palette voisinait avec les sons
+          et le mode daltonien avec la secousse. Chaque groupe porte un vrai
+          titre `<h3>` - sous le `<h2>` de la feuille - que la navigation par
+          titres d'un lecteur d'écran sait parcourir.
 
-        {/* Thème */}
-        <div className="setting-row setting-row--stack">
-          <span className="setting-row__label">{t('settings.theme')}</span>
-          <div
-            className="segmented segmented--wide"
-            role="radiogroup"
-            aria-label={t('settings.theme')}
-          >
-            {THEME_KEYS.map(item => (
-              <button
-                key={item.value}
-                type="button"
-                role="radio"
-                aria-checked={theme === item.value}
-                className={`segmented__item${theme === item.value ? ' segmented__item--active' : ''}`}
-                onClick={() => setTheme(item.value)}
-              >
-                {t(item.label)}
-              </button>
-            ))}
+          Le type et le nombre de dés ne sont plus ici : ils sont derrière la
+          pastille de l'écran principal (`DicePicker`), à deux gestes au lieu
+          de six.
+        */}
+        <div className="settings-group">
+          <h3 className="settings-group__title">
+            {t('settings.groupDisplay')}
+          </h3>
+          {/* Langue */}
+          <div className="setting-row setting-row--stack">
+            <span className="setting-row__label">{t('settings.language')}</span>
+            <div
+              className="segmented segmented--wide"
+              role="radiogroup"
+              aria-label={t('settings.language')}
+            >
+              {locales.map(code => (
+                <button
+                  key={code}
+                  type="button"
+                  role="radio"
+                  aria-checked={locale === code}
+                  className={`segmented__item${locale === code ? ' segmented__item--active' : ''}`}
+                  onClick={() => setLocale(code)}
+                >
+                  {LOCALE_LABELS[code]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Palette - SOUS le thème, et c'est l'ordre qui l'explique : on
+          {/* Thème */}
+          <div className="setting-row setting-row--stack">
+            <span className="setting-row__label">{t('settings.theme')}</span>
+            <div
+              className="segmented segmented--wide"
+              role="radiogroup"
+              aria-label={t('settings.theme')}
+            >
+              {THEME_KEYS.map(item => (
+                <button
+                  key={item.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={theme === item.value}
+                  className={`segmented__item${theme === item.value ? ' segmented__item--active' : ''}`}
+                  onClick={() => setTheme(item.value)}
+                >
+                  {t(item.label)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Palette - SOUS le thème, et c'est l'ordre qui l'explique : on
             choisit d'abord clair/sombre/auto, puis la couleur que ce choix
             portera. Les deux se croisent, aucun ne remplace l'autre. */}
-        <div className="setting-row setting-row--stack">
-          <span className="setting-row__label">{t('settings.palette')}</span>
-          <span className="setting-row__hint">{t('settings.paletteHint')}</span>
-          <div
-            className="segmented segmented--wide"
-            role="radiogroup"
-            aria-label={t('settings.palette')}
-          >
-            {PALETTE_KEYS.map(item => (
-              <button
-                key={item.value}
-                type="button"
-                role="radio"
-                aria-checked={palette === item.value}
-                className={`segmented__item${palette === item.value ? ' segmented__item--active' : ''}`}
-                onClick={() => setPalette(item.value)}
-              >
-                {t(item.label)}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Type de dé */}
-        <div className="setting-row setting-row--stack">
-          <span className="setting-row__label">{t('settings.dieType')}</span>
-          <div
-            className="segmented"
-            role="radiogroup"
-            aria-label={t('settings.dieType')}
-          >
-            {DICE_TYPES.map(type => (
-              <button
-                key={type.sides}
-                type="button"
-                role="radio"
-                aria-checked={sides === type.sides}
-                aria-label={t('dice.name', { sides: type.sides })}
-                className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
-                onClick={() => settingsStore.setSides(type.sides)}
-              >
-                {type.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Nombre de dés */}
-        <div className="setting-row">
-          <span>
-            <span className="setting-row__label">
-              {t('settings.diceCount')}
-            </span>
+          <div className="setting-row setting-row--stack">
+            <span className="setting-row__label">{t('settings.palette')}</span>
             <span className="setting-row__hint">
-              {t('settings.diceCountHint')}
+              {t('settings.paletteHint')}
             </span>
-          </span>
-          <div className="stepper" aria-label={t('settings.diceCount')}>
-            <button
-              type="button"
-              className="stepper__btn"
-              aria-label={t('a11y.removeDie')}
-              disabled={diceCount <= MIN_DICE}
-              onClick={() => settingsStore.setDiceCount(diceCount - 1)}
+            <div
+              className="segmented segmented--wide"
+              role="radiogroup"
+              aria-label={t('settings.palette')}
             >
-              −
-            </button>
-            <span className="stepper__value" aria-live="polite">
-              {diceCount}
-            </span>
-            <button
-              type="button"
-              className="stepper__btn"
-              aria-label={t('a11y.addDie')}
-              disabled={diceCount >= MAX_DICE}
-              onClick={() => settingsStore.setDiceCount(diceCount + 1)}
-            >
-              +
-            </button>
+              {PALETTE_KEYS.map(item => (
+                <button
+                  key={item.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={palette === item.value}
+                  className={`segmented__item${palette === item.value ? ' segmented__item--active' : ''}`}
+                  onClick={() => setPalette(item.value)}
+                >
+                  {t(item.label)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Sons */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">{t('settings.sounds')}</span>
-            <span className="setting-row__hint">
-              {t('settings.soundsHint')}
+        <div className="settings-group">
+          <h3 className="settings-group__title">{t('settings.groupRoll')}</h3>
+          {/* Secouer pour lancer */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">{t('settings.shake')}</span>
+              <span className="setting-row__hint">
+                {t('settings.shakeHint')}
+              </span>
             </span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={sounds}
-            onChange={event => settingsStore.setSounds(event.target.checked)}
-          />
-        </label>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={shake}
+              onChange={event => void onToggleShake(event.target.checked)}
+            />
+          </label>
 
-        {/* Annonce vocale du résultat */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">{t('settings.tts')}</span>
-            <span className="setting-row__hint">{t('settings.ttsHint')}</span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={tts}
-            onChange={event => settingsStore.setTts(event.target.checked)}
-          />
-        </label>
+          {/* Sons */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">{t('settings.sounds')}</span>
+              <span className="setting-row__hint">
+                {t('settings.soundsHint')}
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={sounds}
+              onChange={event => settingsStore.setSounds(event.target.checked)}
+            />
+          </label>
 
-        {/*
+          {/* Vibration */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">
+                {t('settings.vibration')}
+              </span>
+              <span className="setting-row__hint">
+                {t('settings.vibrationHint')}
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={haptics}
+              onChange={event => settingsStore.setHaptics(event.target.checked)}
+            />
+          </label>
+        </div>
+
+        <div className="settings-group">
+          <h3 className="settings-group__title">
+            {t('settings.groupAccessibility')}
+          </h3>
+          {/* Annonce vocale du résultat */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">{t('settings.tts')}</span>
+              <span className="setting-row__hint">{t('settings.ttsHint')}</span>
+            </span>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={tts}
+              onChange={event => settingsStore.setTts(event.target.checked)}
+            />
+          </label>
+
+          {/*
           Choix de la voix - affiché seulement quand l'annonce est active ET
           qu'il y a réellement un choix à faire.
 
@@ -390,121 +375,92 @@ export function SettingsDrawer() {
           démonstration quelconque ne l'aurait pas fait entendre, puisque ce
           sont précisément les chiffres après une ponctuation qui achoppent.
         */}
-        {tts && voices.length > 1 && (
-          <div className="setting-row setting-row--stack">
-            <label className="setting-row__label" htmlFor="tts-voice">
-              {t('settings.ttsVoice')}
-            </label>
-            <span className="setting-row__hint">
-              {t('settings.ttsVoiceHint')}
-            </span>
-            <div className="voice-picker">
-              <select
-                id="tts-voice"
-                className="voice-picker__select"
-                value={ttsVoice}
-                onChange={event =>
-                  settingsStore.setTtsVoice(event.target.value)
-                }
-              >
-                <option value="">{t('settings.ttsVoiceAuto')}</option>
-                {voices.map(voice => (
-                  <option key={voice.name} value={voice.name}>
-                    {voice.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="voice-picker__try"
-                onClick={() =>
-                  speak(t('a11y.resultOne', { value: Math.min(5, sides) }))
-                }
-              >
-                {t('settings.ttsVoiceTry')}
-              </button>
+          {tts && voices.length > 1 && (
+            <div className="setting-row setting-row--stack">
+              <label className="setting-row__label" htmlFor="tts-voice">
+                {t('settings.ttsVoice')}
+              </label>
+              <span className="setting-row__hint">
+                {t('settings.ttsVoiceHint')}
+              </span>
+              <div className="voice-picker">
+                <select
+                  id="tts-voice"
+                  className="voice-picker__select"
+                  value={ttsVoice}
+                  onChange={event =>
+                    settingsStore.setTtsVoice(event.target.value)
+                  }
+                >
+                  <option value="">{t('settings.ttsVoiceAuto')}</option>
+                  {voices.map(voice => (
+                    <option key={voice.name} value={voice.name}>
+                      {voice.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="voice-picker__try"
+                  onClick={() =>
+                    speak(t('a11y.resultOne', { value: Math.min(5, sides) }))
+                  }
+                >
+                  {t('settings.ttsVoiceTry')}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Mode daltonien */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">
-              {t('settings.colorblind')}
+          {/* Mode daltonien */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">
+                {t('settings.colorblind')}
+              </span>
+              <span className="setting-row__hint">
+                {t('settings.colorblindHint')}
+              </span>
             </span>
-            <span className="setting-row__hint">
-              {t('settings.colorblindHint')}
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={colorblind}
-            onChange={event =>
-              settingsStore.setColorblind(event.target.checked)
-            }
-          />
-        </label>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={colorblind}
+              onChange={event =>
+                settingsStore.setColorblind(event.target.checked)
+              }
+            />
+          </label>
 
-        {/* Secouer pour lancer */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">{t('settings.shake')}</span>
-            <span className="setting-row__hint">{t('settings.shakeHint')}</span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={shake}
-            onChange={event => void onToggleShake(event.target.checked)}
-          />
-        </label>
-
-        {/* Vibration */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">
-              {t('settings.vibration')}
+          {/* Mouvement réduit */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">
+                {t('settings.reduceMotion')}
+              </span>
+              <span className="setting-row__hint">
+                {systemReduced
+                  ? t('settings.reduceMotionAuto')
+                  : t('settings.reduceMotionHint')}
+              </span>
             </span>
-            <span className="setting-row__hint">
-              {t('settings.vibrationHint')}
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={haptics}
-            onChange={event => settingsStore.setHaptics(event.target.checked)}
-          />
-        </label>
-
-        {/* Mouvement réduit */}
-        <label className="setting-row">
-          <span>
-            <span className="setting-row__label">
-              {t('settings.reduceMotion')}
-            </span>
-            <span className="setting-row__hint">
-              {systemReduced
-                ? t('settings.reduceMotionAuto')
-                : t('settings.reduceMotionHint')}
-            </span>
-          </span>
-          <input
-            type="checkbox"
-            className="switch"
-            checked={motion === 'reduced' || systemReduced}
-            disabled={systemReduced}
-            onChange={event =>
-              settingsStore.setMotion(event.target.checked ? 'reduced' : 'auto')
-            }
-          />
-        </label>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={motion === 'reduced' || systemReduced}
+              disabled={systemReduced}
+              onChange={event =>
+                settingsStore.setMotion(
+                  event.target.checked ? 'reduced' : 'auto'
+                )
+              }
+            />
+          </label>
+        </div>
 
         {/* Statistiques du lancer libre */}
         <div className="about">
-          <span className="about__label">{t('settings.stats')}</span>
+          <h3 className="about__label">{t('settings.stats')}</h3>
           {stats.rolls === 0 ? (
             <p className="setting-row__hint">{t('settings.statsEmpty')}</p>
           ) : (
@@ -542,7 +498,7 @@ export function SettingsDrawer() {
         {/* Historique des lancers libres + export CSV */}
         {log.length > 0 && (
           <div className="about">
-            <span className="about__label">{t('settings.history')}</span>
+            <h3 className="about__label">{t('settings.history')}</h3>
             <ul className="rolllog">
               {log.slice(0, 8).map((entry, i) => (
                 <li className="rolllog__row" key={i}>
@@ -571,7 +527,7 @@ export function SettingsDrawer() {
 
         {/* À propos : partage, code source, sponsor */}
         <div className="about">
-          <span className="about__label">{t('settings.about')}</span>
+          <h3 className="about__label">{t('settings.about')}</h3>
           <div className="about__links">
             <button
               type="button"
@@ -661,7 +617,7 @@ export function SettingsDrawer() {
             La carte code source + sponsor existe déjà ci-dessus, on n'affiche
             donc que la grille. */}
         <div className="about family-apps">
-          <span className="about__label">{t('settings.otherApps')}</span>
+          <h3 className="about__label">{t('settings.otherApps')}</h3>
           <FamilyApps
             currentAppId="miss-dice"
             showSource={false}

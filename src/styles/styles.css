@@ -341,6 +341,43 @@ button {
   right: calc(var(--safe-right) + 12px);
 }
 
+/*
+   La pastille « 2 × D20 », entre les deux boutons d'angle et à leur hauteur.
+   Même matière qu'eux - surface voilée, filet, flou - pour se lire comme un
+   troisième bouton, pas comme un texte.
+
+   CENTRÉE PAR `margin-inline`, PAS PAR `left: 50%`. C'est le piège qu'ont eu
+   le bandeau de mise à jour et l'invite d'installation (#97, #98) : sans
+   largeur, une boîte positionnée s'ajuste au contenu dans la place disponible,
+   et `left: 50%` en retire la moitié. Ici le contenu est court, donc le défaut
+   ne se verrait pas - raison de plus pour ne pas le réintroduire.
+*/
+.dice-chip {
+  position: absolute;
+  top: calc(var(--safe-top) + 12px);
+  inset-inline: 0;
+  width: max-content;
+  margin-inline: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  font-weight: 700;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.dice-chip:active {
+  transform: scale(0.96);
+}
+
 /* ─────────────────────── Feuille de réglages ───────────────────────
    HABILLAGE DU `Sheet` DU SOCLE. miss-dice n'importe pas `components.css`
    (design maison assumé) : le composant partagé arriverait donc entièrement
@@ -596,9 +633,12 @@ button {
   flex: 0 0 auto;
 }
 
+/* 44 px, la cible tactile minimale : 40 suffisaient tant que ces boutons
+   vivaient au fond du tiroir. Derrière la pastille de l'écran principal, ils
+   deviennent le geste le plus fréquent après le lancer. */
 .stepper__btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--border);
   border-radius: 11px;
   background: var(--surface);
@@ -917,19 +957,42 @@ button {
 }
 
 /* ───────────────── À propos : partage / source / sponsor ───────────────── */
-.about {
+/* Les groupes du tiroir et les blocs « À propos » partagent une seule
+   allure : un filet, puis un intertitre discret en capitales. */
+.about,
+.settings-group {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
 }
 
-.about__label {
+/* Le tout premier groupe ouvre la feuille : un filet au-dessus doublerait
+   celui de l'en-tête. */
+.settings-group:first-child {
+  margin-top: 0;
+  border-top: 0;
+}
+
+/* DES `<h3>`, PAS DES `<span>`. Ces libellés titrent chacun un groupe, et un
+   lecteur d'écran ne sait sauter de groupe en groupe que par les titres. Le
+   `margin` et le `font-weight` sont posés ici parce qu'un `<h3>` en arrive
+   chargé par le navigateur. */
+.about__label,
+.settings-group__title {
   display: block;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
   color: var(--muted);
   font-size: 0.8rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Sous un intertitre, le premier réglage n'a pas besoin de son filet :
+   l'intertitre sépare déjà. */
+.settings-group__title + .setting-row {
+  border-top: 0;
+  padding-top: 4px;
 }
 
 /* UNE GRILLE, PLUS UNE RANGÉE QUI SE REPLIE OÙ ELLE PEUT.

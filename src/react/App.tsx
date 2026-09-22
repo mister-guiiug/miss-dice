@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { DiceScreen } from './components/DiceScreen';
 import { SettingsDrawer } from './components/SettingsDrawer';
+import { DicePicker } from './components/DicePicker';
 import { PwaInstallPrompt } from '@mister-guiiug/dev-pwa-config/react/pwa-install-prompt';
 import { ConsentBanner } from '@mister-guiiug/dev-pwa-config/react/consent-banner';
 import { usePageViews } from '@mister-guiiug/dev-pwa-config/react/use-page-views';
@@ -116,6 +117,9 @@ export function App() {
       <DiceScreen />
       <div className="app__overlay">
         <ModeMenu />
+        {/* Entre les deux boutons d'angle, dans l'ordre de lecture : jeux,
+            dés, réglages. */}
+        <DicePicker />
         <SettingsDrawer />
         {/* PAS DE `dismissKey` À REPRENDRE : le bandeau maison ne persistait
             rien - un `useState`, donc un refus oublié au rechargement suivant.
