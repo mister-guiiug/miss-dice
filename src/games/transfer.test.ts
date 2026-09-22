@@ -76,15 +76,64 @@ describe('aller-retour', () => {
   });
 });
 
+/**
+ * Un colis brut (marqueur `0`) écrit à la main, version comprise.
+ *
+ * EN UTF-8, COMME LE VRAI. `btoa` sur la chaîne JSON encode en Latin-1, et le
+ * décodeur lit de l'UTF-8 : « Émilien » revenait « �milien ». Les tests de
+ * refus existants ne le voyaient pas, puisqu'ils n'attendaient que `null`.
+ */
+function colisBrut(contenu: unknown): string {
+  let binaire = '';
+  for (const octet of new TextEncoder().encode(JSON.stringify(contenu))) {
+    binaire += String.fromCharCode(octet);
+  }
+  return `0${btoa(binaire)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')}`;
+}
+
+describe('un lien d’une version antérieure', () => {
+  /*
+   * CE TEST EXIGEAIT L'INVERSE. Il fixait qu'un colis de la version
+   * précédente soit REFUSÉ : c'était une limite du code, pas un contrat. Un
+   * lien envoyé la veille d'une mise à jour qui monte le schéma arrivait
+   * mort chez qui l'avait déjà reçue. Le contrat est de ne rien reprendre
+   * qu'on ne sache pas lire - donc de refuser l'AVENIR, pas le passé.
+   */
+  it('un 421 en version 2 arrive migré', async () => {
+    const recue = await decoderPartie(
+      colisBrut({ v: 2, m: 'dice421', s: PARTIE })
+    );
+    expect(recue).toEqual({
+      mode: 'dice421',
+      state: { ...PARTIE, decideur: false, rollsAllowed: 3 },
+    });
+  });
+
+  it('un Cochon en version 2 arrive tel quel : sa forme n’a pas changé', async () => {
+    await expect(
+      decoderPartie(colisBrut({ v: 2, m: 'pig', s: PARTIE }))
+    ).resolves.toEqual({ mode: 'pig', state: PARTIE });
+  });
+});
+
 describe('ce qui est refusé', () => {
-  it('un colis d’une autre version de schéma', async () => {
-    const perime = btoa(
-      JSON.stringify({ v: GAME_SCHEMA_VERSION - 1, m: 'pig', s: PARTIE })
-    )
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-    await expect(decoderPartie(`0${perime}`)).resolves.toBeNull();
+  it('un colis d’une version PLUS RÉCENTE que l’app', async () => {
+    await expect(
+      decoderPartie(
+        colisBrut({ v: GAME_SCHEMA_VERSION + 1, m: 'pig', s: PARTIE })
+      )
+    ).resolves.toBeNull();
+  });
+
+  it('un colis d’avant le versionnement, ou sans version', async () => {
+    for (const v of [1, undefined, '3', 2.5]) {
+      await expect(
+        decoderPartie(colisBrut({ v, m: 'pig', s: PARTIE }))
+      ).resolves.toBeNull();
+    }
   });
 
   it('un jeu qui n’existe pas', async () => {
