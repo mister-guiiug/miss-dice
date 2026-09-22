@@ -15,6 +15,7 @@ import {
   canValidate,
   createDice421,
   currentHand,
+  isDecideur,
   rollDiceAction,
   toggleHold,
   validateTurn,
@@ -52,6 +53,9 @@ export function Dice421Game() {
   const { game, canUndo, start, apply, undo, quit } =
     useUndoableGame<Dice421State>('dice421', isOver);
   const [pot, setPot] = useState(STARTING_POT);
+  // Décoché par défaut : c'est une règle EN PLUS, et la partie d'hier se
+  // rejoue à l'identique sans avoir à la décocher.
+  const [decideur, setDecideur] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -81,15 +85,40 @@ export function Dice421Game() {
               </button>
             ))}
           </div>
+
+          {/* La règle du décideur se choisit ICI, avec le pot : c'est une
+              règle de partie, pas un réglage d'appareil. Elle n'a donc rien à
+              faire dans le tiroir des réglages, qui survit d'une partie à
+              l'autre. */}
+          <label className="setting-row">
+            <span>
+              <span className="setting-row__label">
+                {t('game421.decideurRule')}
+              </span>
+              <span className="setting-row__hint">
+                {t('game421.decideurRuleHint')}
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              className="switch"
+              checked={decideur}
+              onChange={event => setDecideur(event.target.checked)}
+            />
+          </label>
         </div>
-        <PlayerSetup onStart={names => start(createDice421(names, pot))} />
+        <PlayerSetup
+          onStart={names => start(createDice421(names, pot, decideur))}
+        />
       </GameShell>
     );
   }
 
   const names = game.players.map(p => p.name);
   const newGame = () => quit();
-  const replay = () => start(createDice421(names, pot));
+  // « Rejouer » reprend la partie telle qu'elle était : même pot, même règle.
+  // Relire la case cochée à l'écran serait faux - elle n'existe plus ici.
+  const replay = () => start(createDice421(names, pot, game.decideur));
 
   if (game.phase === 'over') {
     const winner = game.players[game.winner!]!;
@@ -231,6 +260,20 @@ export function Dice421Game() {
           ? t('game421.yourHand', { hand: handLabel(t, hand) })
           : t('game.tapToRoll')}
       </p>
+
+      {/* UN PLAFOND INVISIBLE N'EST PAS UNE RÈGLE, C'EST UNE PANNE. Le bouton
+          « Relancer » se désactive plus tôt que d'habitude : sans cette ligne,
+          le joueur croit à un bug. En solo, personne ne plafonne personne -
+          on se tait. */}
+      {game.decideur && multiplayer && (
+        <p className="round-note">
+          {isDecideur(game)
+            ? t('game421.decideurOpens')
+            : game.rollsAllowed === 1
+              ? t('game421.decideurCapOne')
+              : t('game421.decideurCap', { n: game.rollsAllowed })}
+        </p>
+      )}
 
       {game.lastRound && multiplayer && (
         <p className="round-note">

@@ -213,6 +213,11 @@ export interface Messages {
     handNenette: string;
     handPlain: string;
     roundResult: string;
+    decideurRule: string;
+    decideurRuleHint: string;
+    decideurOpens: string;
+    decideurCap: string;
+    decideurCapOne: string;
   };
   pig: {
     turnTotal: string;
@@ -424,6 +429,12 @@ const fr: Messages = {
     handNenette: 'Nénette (2-2-1)',
     handPlain: 'Main simple',
     roundResult: '{winner} remporte la manche, {loser} prend {tokens}',
+    decideurRule: 'Règle du décideur',
+    decideurRuleHint:
+      'Le premier de la manche fixe le nombre de lancers pour tous.',
+    decideurOpens: 'Tu ouvres la manche : tes lancers plafonnent les autres.',
+    decideurCap: '{n} lancers au plus dans cette manche',
+    decideurCapOne: '1 seul lancer dans cette manche',
   },
   pig: {
     turnTotal: 'Cumul du tour : {n}',
@@ -634,6 +645,12 @@ const en: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Plain hand',
     roundResult: '{winner} wins the round, {loser} takes {tokens}',
+    decideurRule: 'Decider rule',
+    decideurRuleHint:
+      'Whoever opens the round sets how many rolls everyone gets.',
+    decideurOpens: 'You open the round: your rolls cap the others.',
+    decideurCap: '{n} rolls at most this round',
+    decideurCapOne: 'Only one roll this round',
   },
   pig: {
     turnTotal: 'Turn total: {n}',
@@ -845,6 +862,12 @@ const es: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mano simple',
     roundResult: '{winner} gana la ronda, {loser} toma {tokens}',
+    decideurRule: 'Regla del que decide',
+    decideurRuleHint:
+      'Quien abre la ronda fija cuántas tiradas tienen los demás.',
+    decideurOpens: 'Abres la ronda: tus tiradas limitan a los demás.',
+    decideurCap: '{n} tiradas como máximo en esta ronda',
+    decideurCapOne: 'Solo una tirada en esta ronda',
   },
   pig: {
     turnTotal: 'Acumulado del turno: {n}',
@@ -1056,6 +1079,12 @@ const de: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Einfache Hand',
     roundResult: '{winner} gewinnt die Runde, {loser} nimmt {tokens}',
+    decideurRule: 'Entscheider-Regel',
+    decideurRuleHint:
+      'Wer die Runde eröffnet, legt die Anzahl der Würfe für alle fest.',
+    decideurOpens: 'Du eröffnest die Runde: deine Würfe begrenzen die anderen.',
+    decideurCap: 'Höchstens {n} Würfe in dieser Runde',
+    decideurCapOne: 'Nur ein Wurf in dieser Runde',
   },
   pig: {
     turnTotal: 'Zug-Summe: {n}',
@@ -1267,6 +1296,12 @@ const it: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mano semplice',
     roundResult: '{winner} vince il round, {loser} prende {tokens}',
+    decideurRule: 'Regola del decisore',
+    decideurRuleHint:
+      'Chi apre il turno stabilisce quanti lanci hanno tutti gli altri.',
+    decideurOpens: 'Apri il turno: i tuoi lanci limitano gli altri.',
+    decideurCap: 'Al massimo {n} lanci in questo turno',
+    decideurCapOne: 'Un solo lancio in questo turno',
   },
   pig: {
     turnTotal: 'Totale del turno: {n}',
@@ -1478,6 +1513,11 @@ const pt: Messages = {
     handNenette: 'Nenette (2-2-1)',
     handPlain: 'Mão simples',
     roundResult: '{winner} vence a ronda, {loser} recebe {tokens}',
+    decideurRule: 'Regra do decisor',
+    decideurRuleHint: 'Quem abre a ronda define quantos lançamentos todos têm.',
+    decideurOpens: 'Abres a ronda: os teus lançamentos limitam os outros.',
+    decideurCap: 'No máximo {n} lançamentos nesta ronda',
+    decideurCapOne: 'Apenas um lançamento nesta ronda',
   },
   pig: {
     turnTotal: 'Total do turno: {n}',
@@ -1554,6 +1594,7 @@ export interface MessageParams {
   'game421.yourHand': { hand: string };
   'game421.handTrips': { value: number };
   'game421.roundResult': { winner: string; loser: string; tokens: string };
+  'game421.decideurCap': { n: number };
   'pig.turnTotal': { n: number };
   'pig.target': { n: number };
   'yahtzee.jokerForced': { cat: string };

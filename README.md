@@ -212,6 +212,12 @@ documentée dans `src/games/dice421/scoring.ts`) :
 - **Décharge** : quand le pot est vide, le perdant prend désormais ses
   jetons au gagnant de la manche. Le premier à n'avoir **plus aucun
   jeton** gagne la partie.
+- **Règle du décideur** (option, à la mise en place) : le premier de la manche
+  ne fait pas que commencer, **le nombre de lancers qu'il prend plafonne les
+  autres**. S'il s'arrête au premier jet, personne n'en aura deux. Le plafond
+  vaut pour la manche seule ; à la suivante, le perdant qui entame décide à son
+  tour. Décochée par défaut, pour que la version simplifiée reste celle qu'on
+  connaît.
 
 **Cochon** (« Pig ») - 1 dé, jeu de _stop-ou-encore_ : à son tour, on relance
 autant qu'on veut, chaque face 2–6 s'ajoute au **cumul du tour** ; un **1**
@@ -233,7 +239,8 @@ de la barre sont **dessinées**, pas des glyphes `←` `↶` `↺` dont le rendu
 dépendait de la police de l'appareil. Le Yahtzee gère le **bonus
 Yahtzee** (+100) et la **règle du joker** (ci-dessus), et rappelle dans son
 statut qu'on peut inscrire une case dès le 1er lancer ; le 421 reconnaît
-**suites** et **nénette** et laisse choisir la **taille du pot**.
+**suites** et **nénette**, et laisse choisir la **taille du pot** ainsi que la
+**règle du décideur**.
 
 ## 4. Choix techniques
 
@@ -389,10 +396,10 @@ exportable en CSV**, **reprise de partie**, **annuler**, rejouer, partage de
 résultat, **wake lock**. Côté technique : jeux en **lazy-load**, **error
 boundary**, **feuilles modales accessibles** (focus trap + Échap), habillage
 du socle importé **par section**, husky/lint-staged/commitlint, Lighthouse CI,
-**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Le
-**joker Yahtzee** est complet depuis le 22/09/2026 : bonus +100 ET placement
-imposé (§ 3). Pistes restantes : thèmes additionnels, règles 421 avancées
-(décideur), synchronisation multi-appareils.
+**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Livrés le
+22/09/2026 : le **joker Yahtzee** complet (bonus +100 ET placement imposé) et
+la **règle du décideur** au 421, tous deux décrits au § 3. Pistes restantes :
+thèmes additionnels, synchronisation multi-appareils.
 
 ## Licence
 

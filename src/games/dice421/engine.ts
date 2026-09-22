@@ -11,6 +11,17 @@
  *
  * À 1 joueur, pas de jetons : mode entraînement, on affiche la valeur de
  * la main à chaque manche.
+ *
+ * LA RÈGLE DU DÉCIDEUR, EN OPTION. Dans le 421 tel qu'on y joue, le premier
+ * de la manche ne se contente pas de commencer : le nombre de lancers qu'il
+ * PREND devient le plafond des autres. S'il s'arrête au premier jet, personne
+ * n'en aura deux. C'est ce qui fait du 421 autre chose que trois tirages
+ * parallèles - on annonce la cadence, et on l'assume avec une main moyenne.
+ *
+ * Elle est désactivée par défaut. La version servie jusqu'ici donnait trois
+ * lancers à tout le monde, et l'activer d'office changerait le jeu sous les
+ * pieds de qui y joue déjà. On la propose à la mise en place, comme la taille
+ * du pot.
  */
 import { defaultRng, type Rng } from '../../dice/random';
 import { freshDice, freshHeld, reroll, toggleAt } from '../diceTurn';
@@ -46,23 +57,34 @@ export interface Dice421State {
   roundHands: (HandValue | null)[];
   lastRound: RoundSummary | null;
   winner: number | null;
+  /** Règle du décideur active pour cette partie (choisie à la mise en place). */
+  decideur: boolean;
+  /**
+   * Plafond de lancers de la manche EN COURS.
+   *
+   * Vaut `ROLLS_PER_TURN` tant que personne n'a validé : le décideur joue
+   * librement. Il tombe au nombre qu'il a réellement pris dès qu'il valide, et
+   * remonte à `ROLLS_PER_TURN` à la manche suivante. Sans la règle, il ne
+   * bouge jamais.
+   */
+  rollsAllowed: number;
 }
 
-function freshTurn(): Pick<
-  Dice421State,
-  'dice' | 'held' | 'rollsLeft' | 'rolledThisTurn'
-> {
+function freshTurn(
+  rollsAllowed: number = ROLLS_PER_TURN
+): Pick<Dice421State, 'dice' | 'held' | 'rollsLeft' | 'rolledThisTurn'> {
   return {
     dice: freshDice(DICE_PER_TURN),
     held: freshHeld(DICE_PER_TURN),
-    rollsLeft: ROLLS_PER_TURN,
+    rollsLeft: rollsAllowed,
     rolledThisTurn: false,
   };
 }
 
 export function createDice421(
   names: string[],
-  pot: number = STARTING_POT
+  pot: number = STARTING_POT,
+  decideur = false
 ): Dice421State {
   const players = (names.length > 0 ? names : ['Joueur 1']).map(name => ({
     name,
@@ -78,7 +100,21 @@ export function createDice421(
     roundHands: players.map(() => null),
     lastRound: null,
     winner: null,
+    decideur,
+    rollsAllowed: ROLLS_PER_TURN,
   };
+}
+
+/**
+ * Le joueur courant ouvre-t-il la manche - autrement dit, est-il le décideur ?
+ *
+ * Aucun champ ne le retient : `roundHands` le dit déjà. Tant qu'aucune main
+ * n'y est inscrite, personne n'a encore joué cette manche, donc celui qui est
+ * devant les dés l'ouvre. Un index de plus dans l'état, c'est un index de plus
+ * à tenir juste à travers la résolution, l'annulation et la reprise.
+ */
+export function isDecideur(state: Dice421State): boolean {
+  return state.decideur && state.roundHands.every(hand => hand === null);
 }
 
 export function canRoll(state: Dice421State): boolean {
@@ -149,6 +185,7 @@ function resolveRound(
         fromPot: state.phase === 'charge',
       },
       current: 0,
+      rollsAllowed: ROLLS_PER_TURN,
       ...freshTurn(),
     };
   }
@@ -185,6 +222,8 @@ function resolveRound(
     roundHands: players.map(() => null),
     lastRound: { winner: best, loser: worst, tokens: amount, fromPot },
     current: worst, // le perdant entame la manche suivante
+    // Nouvelle manche, plafond rendu : le perdant qui entame décide à son tour.
+    rollsAllowed: ROLLS_PER_TURN,
     ...freshTurn(),
   };
 }
@@ -192,6 +231,9 @@ function resolveRound(
 /** Valide la main du joueur courant ; résout la manche si tous ont joué. */
 export function validateTurn(state: Dice421State): Dice421State {
   if (!canValidate(state)) return state;
+  // LU AVANT D'INSCRIRE : une fois la main posée, `roundHands` n'est plus vide
+  // et le décideur ne se reconnaît plus.
+  const ouvreLaManche = isDecideur(state);
   const hands = state.roundHands.slice();
   hands[state.current] = classify(state.dice);
 
@@ -199,11 +241,19 @@ export function validateTurn(state: Dice421State): Dice421State {
     return resolveRound(state, hands);
   }
 
+  // Le décideur vient de jouer : ce qu'il a PRIS devient le plafond. On compte
+  // les lancers consommés, pas ceux qu'il avait le droit de prendre - s'arrêter
+  // tôt est justement le coup qu'on joue.
+  const rollsAllowed = ouvreLaManche
+    ? ROLLS_PER_TURN - state.rollsLeft
+    : state.rollsAllowed;
+
   return {
     ...state,
     roundHands: hands,
+    rollsAllowed,
     current: (state.current + 1) % state.players.length,
     lastRound: null,
-    ...freshTurn(),
+    ...freshTurn(rollsAllowed),
   };
 }
