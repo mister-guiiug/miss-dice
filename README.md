@@ -69,6 +69,7 @@ miss-dice/
 ├── eslint.config.js          # @mister-guiiug/dev-pwa-config/eslint-react
 ├── prettier.config.js
 ├── scripts/generate-pwa-icons.mjs
+├── scripts/captures-prepare.mjs   # met l'écran en scène avant chaque capture
 ├── public/
 │   ├── favicon.svg
 │   ├── robots.txt
@@ -352,6 +353,7 @@ npm run format          # Prettier --write
 npm run type-check      # tsc -b (TypeScript 6)
 npm run type-check:7    # second avis TypeScript 7 (portage natif Go)
 npm run icons           # régénère public/icons/ (dé procédural)
+npm run captures        # reconstruit, puis refait les captures du manifeste
 npm run test:e2e        # e2e Playwright (après `npx playwright install`)
 npm run build:analyze   # build + visualisation du poids des chunks
 ```

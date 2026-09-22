@@ -255,20 +255,24 @@ export default defineConfig(({ command }) => {
               purpose: 'maskable',
             },
           ],
+          // Produites par `npm run captures` (`pwa-screenshots` du socle et
+          // `scripts/captures-prepare.mjs`). Les TAILLES doivent être celles
+          // des fichiers : Chrome ignore sans un mot une capture dont la
+          // taille déclarée ne correspond pas.
           screenshots: [
             {
-              src: 'screenshots/mobile.png',
-              sizes: '824x1830',
+              src: 'screenshots/narrow.png',
+              sizes: '540x1170',
               type: 'image/png',
               form_factor: 'narrow',
-              label: 'Écran d’accueil sur mobile',
+              label: 'Trois dés lancés, et leur total',
             },
             {
               src: 'screenshots/wide.png',
-              sizes: '2560x1600',
+              sizes: '1280x720',
               type: 'image/png',
               form_factor: 'wide',
-              label: 'Écran d’accueil sur ordinateur',
+              label: 'Une partie de Yahtzee en cours',
             },
           ],
         },
