@@ -1,17 +1,44 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { ThemeProvider as DwcThemeProvider } from '@mister-guiiug/dev-pwa-config/react/theme-provider';
 import {
   migrateLegacySettings,
   THEME_STORAGE_KEY,
 } from '../settings/legacyMigration';
+import {
+  appliquerPalette,
+  PALETTE_THEME_COLOR,
+  usePalette,
+  type Palette,
+} from '../settings/palette';
+import { useAppTheme } from './hooks/useTheme';
 import { LOCALES } from '../i18n/messages';
-
-/** Couleur de la barre système, par thème effectif. */
-const THEME_COLOR = { light: '#f4f5fb', dark: '#0f1220' } as const;
 
 // Le hook du socle lit `localStorage` à son montage : le pont depuis le blob
 // de réglages doit être posé avant.
 migrateLegacySettings(LOCALES);
+
+/**
+ * La barre système, tenue sur les DEUX axes.
+ *
+ * LE FOURNISSEUR DU SOCLE NE REPEINT QU'AU CHANGEMENT DE THÈME. Il reçoit
+ * bien `themeColor` à jour, mais son effet ne se rejoue pas quand SEULE la
+ * palette change : mesuré dans le navigateur le 22/09/2026, passer de violet à
+ * feutrine virait tous les jetons au vert en laissant `#0f1220` dans la
+ * balise - le bandeau du navigateur restait violet sur une app verte.
+ *
+ * Ce composant vit SOUS le fournisseur, faute de quoi il ne pourrait pas lire
+ * le thème résolu. Il n'entre pas en concurrence avec lui : les deux écrivent
+ * la même valeur, tirée de la même table, et celui-ci couvre simplement le cas
+ * que l'autre ne voit pas.
+ */
+function BarreSysteme({ palette }: { palette: Palette }) {
+  const { resolved } = useAppTheme();
+  useEffect(() => {
+    const meta = globalThis.document?.querySelector('meta[name="theme-color"]');
+    meta?.setAttribute('content', PALETTE_THEME_COLOR[palette][resolved]);
+  }, [palette, resolved]);
+  return null;
+}
 
 /**
  * Le thème de l'app, bâti sur `react/theme-provider` du socle.
@@ -37,6 +64,13 @@ migrateLegacySettings(LOCALES);
  * fournisseur ne peint aucune variable `--dwc-*` et ne charge pas le catalogue
  * des dix-sept thèmes - il ne sert qu'à unifier l'état et la barre système.
  *
+ * ⚠️ `palette` DÉSIGNE ICI LA PROP DU SOCLE, pas les palettes de l'app. Depuis
+ * le 22/09/2026, miss-dice en a trois à lui (`../settings/palette.ts`), posées
+ * en `data-palette` et servies par ses propres blocs de `tokens.css`. Ce sont
+ * deux mécanismes distincts, et ne pas passer la prop reste le bon choix : le
+ * catalogue du socle peint des `--dwc-*` que ce fichier branche déjà à la
+ * main, dans les deux sens du thème.
+ *
  * ON RESTE SUR `defaultTheme: 'system'` (le défaut, donc non passé) - mais
  * pas pour la raison qui était écrite ici.
  *
@@ -57,14 +91,27 @@ migrateLegacySettings(LOCALES);
  * inopérante. C'est `migrateLegacySettings` qui fait le pont.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  /*
+   * LA PALETTE PASSE PAR ICI, alors que le fournisseur du socle n'en sait
+   * rien. `data-palette` doit suivre le choix de l'utilisateur, et c'est le
+   * seul composant monté une fois pour toute l'app. Le script de pré-peinture
+   * a posé l'attribut avant le premier rendu ; cet effet le tient à jour
+   * ensuite, sans jamais devenir un second écrivain concurrent.
+   */
+  const palette = usePalette();
+  useEffect(() => {
+    appliquerPalette(palette);
+  }, [palette]);
+
   return (
     <DwcThemeProvider
       storageKey={THEME_STORAGE_KEY}
-      themeColor={THEME_COLOR}
+      themeColor={PALETTE_THEME_COLOR[palette]}
       // Sans palette il n'y a rien à peindre ; explicite, pour que l'absence
       // se lise comme un choix.
       paint={false}
     >
+      <BarreSysteme palette={palette} />
       {children}
     </DwcThemeProvider>
   );

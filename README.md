@@ -50,7 +50,8 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Jeu Cochon (Pig)           | `src/games/pig/engine.ts`                              | Stop-ou-encore à un dé : cumul du tour, perte sur le 1, banque         |
 | Aiguillage écrans          | `src/app/appMode.ts`                                   | Lancer libre / Yahtzee / 421 / Cochon / notation / décider             |
 | PWA                        | `vite.config.ts`, `src/main.tsx`                       | Manifest, service worker, base path GH Pages                           |
-| Thème                      | `src/styles/tokens.css`, `src/react/hooks/useTheme.ts` | Palette claire/sombre **et** le pont `--dwc-*` lu par le socle         |
+| Thème                      | `src/styles/tokens.css`, `src/react/hooks/useTheme.ts` | Trois palettes x clair/sombre **et** le pont `--dwc-*` lu par le socle |
+| Palette                    | `src/settings/palette.ts`                              | Le second axe du thème : choix, persistance, barre système             |
 
 La logique pure (`src/dice/**`) ne connaît ni React ni le DOM : elle est
 testable seule et couverte à ≥ 90 % (seuil CI).
@@ -79,7 +80,7 @@ miss-dice/
     │   ├── pips.ts            rollSchedule.ts notation.ts
     │   └── *.test.ts
     ├── store/createStore.ts         # micro-store réactif, base de tous les autres
-    ├── settings/{settingsStore,legacyMigration}.ts
+    ├── settings/{settingsStore,legacyMigration,palette}.ts
     ├── stats/rollStats.ts           # distribution des faces
     ├── log/rollLog.ts               # historique local + export CSV
     ├── audio/sounds.ts              # WebAudio, sans asset
@@ -128,6 +129,12 @@ miss-dice/
 - **Thème** : auto (suit le système), clair ou sombre. Posé avant le 1er
   rendu (script de pré-peinture, pas de flash) et synchronisé avec la
   barre système (`theme-color`).
+- **Palette** : violet (d'origine), **feutrine** (le vert d'un tapis de jeu)
+  ou **braise** (terre cuite). C'est un axe SÉPARÉ du thème, pas un thème de
+  plus dans la liste : chaque palette existe en clair et en sombre, donc
+  choisir feutrine ne fait pas renoncer à `auto`. Chaque couleur est mesurée
+  (WCAG AA), et `src/styles/tokens.test.ts` refait le calcul depuis la feuille
+  à chaque exécution des tests.
 - **Sons** : petit retour audio synthétisé (WebAudio, aucun asset) au
   lancer et au résultat, activable.
 - **Annonce vocale** : le résultat énoncé à voix haute par la synthèse du
@@ -369,6 +376,9 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/audio/sounds.test.ts` - silence garanti quand l'API WebAudio manque.
 - `src/decide/decisions.test.ts` - pièce, oui/non, tirage, mélange.
 - `src/react/ThemeProvider.test.tsx` - thème auto/clair/sombre, pas de flash.
+- `src/settings/palette.test.ts` - palette relue au démarrage, valeur inconnue écartée.
+- `src/styles/tokens.test.ts` - contrastes recalculés depuis `tokens.css`, et les
+  trois copies de la table des fonds (CSS, TS, script de pré-peinture) tenues ensemble.
 - `src/react/AppUpdatesProvider.test.tsx` - bandeau de mise à jour, dans la bonne langue.
 - `src/react/a11y.test.tsx` - axe-core sur les écrans clés (hors contraste : jsdom ne
   calcule pas la mise en page).
@@ -397,9 +407,9 @@ résultat, **wake lock**. Côté technique : jeux en **lazy-load**, **error
 boundary**, **feuilles modales accessibles** (focus trap + Échap), habillage
 du socle importé **par section**, husky/lint-staged/commitlint, Lighthouse CI,
 **second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Livrés le
-22/09/2026 : le **joker Yahtzee** complet (bonus +100 ET placement imposé) et
-la **règle du décideur** au 421, tous deux décrits au § 3. Pistes restantes :
-thèmes additionnels, synchronisation multi-appareils.
+22/09/2026 : le **joker Yahtzee** complet (bonus +100 ET placement imposé), la
+**règle du décideur** au 421 et **deux palettes**, feutrine et braise - les
+trois décrits au § 3. Piste restante : synchronisation multi-appareils.
 
 ## Licence
 

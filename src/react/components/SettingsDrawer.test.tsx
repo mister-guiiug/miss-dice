@@ -1,8 +1,13 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { SettingsDrawer } from './SettingsDrawer';
 import { renderWithProviders } from '../../test/renderWithProviders';
 import { settingsStore } from '../../settings/settingsStore';
+import {
+  PALETTES,
+  PALETTE_ATTRIBUTE,
+  paletteStore,
+} from '../../settings/palette';
 
 /**
  * LE CANAL DE RETOUR. Au relevé du 06/09/2026, zéro issue était ouverte sur
@@ -269,5 +274,48 @@ describe('SettingsDrawer - choix de la voix d’annonce', () => {
 
     poseVoix(VOIX_MESUREES);
     expect(await screen.findByLabelText(/voix de l/i)).toBeTruthy();
+  });
+});
+
+/**
+ * LA PALETTE N'EST PAS UN THÈME DE PLUS DANS LA LISTE.
+ *
+ * Ces deux réglages se CROISENT : « feutrine » existe en clair comme en
+ * sombre, et l'utilisateur qui suit son système veut que feutrine suive aussi.
+ * Les fondre en un seul sélecteur ferait disparaître `auto` - d'où deux
+ * groupes de boutons radio, et ce test qui vérifie qu'ils restent deux.
+ */
+describe('SettingsDrawer - palette', () => {
+  afterEach(() => {
+    paletteStore.set('violet');
+    document.documentElement.removeAttribute(PALETTE_ATTRIBUTE);
+  });
+
+  it('offre une option par palette servie, sans toucher au thème', () => {
+    openSettings();
+
+    const groupe = screen.getByRole('radiogroup', { name: /palette/i });
+    expect(within(groupe).getAllByRole('radio')).toHaveLength(PALETTES.length);
+
+    // Le sélecteur de thème est resté un groupe à part, avec son « Auto ».
+    const theme = screen.getByRole('radiogroup', { name: /thème/i });
+    expect(within(theme).getByRole('radio', { name: /auto/i })).toBeDefined();
+  });
+
+  it('un clic change la palette, et la coche suit', () => {
+    openSettings();
+
+    const groupe = screen.getByRole('radiogroup', { name: /palette/i });
+    const feutrine = within(groupe).getByRole('radio', { name: /feutrine/i });
+    expect(feutrine.getAttribute('aria-checked')).toBe('false');
+
+    fireEvent.click(feutrine);
+
+    expect(paletteStore.get()).toBe('feutrine');
+    expect(
+      within(screen.getByRole('radiogroup', { name: /palette/i }))
+        .getByRole('radio', { name: /feutrine/i })
+        .getAttribute('aria-checked')
+    ).toBe('true');
   });
 });

@@ -43,10 +43,28 @@
           var theme = dark ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', theme);
           document.documentElement.style.colorScheme = theme;
+
+          /* LA PALETTE SE POSE ICI AUSSI, et pour la même raison que le
+             thème : laissée à React, elle arriverait après la première
+             peinture et l'app s'ouvrirait en violet avant de virer au vert.
+             Les six fonds doublent `--bg` de `tokens.css` - la balise
+             theme-color se remplit avant qu'une feuille de style existe.
+             `src/settings/palette.ts` porte la même table, et son test la
+             compare au CSS pour que les deux copies ne divergent pas. */
+          var FONDS = {
+            violet: { light: '#f4f5fb', dark: '#0f1220' },
+            feutrine: { light: '#f1f7f3', dark: '#0d1a14' },
+            braise: { light: '#fdf5f0', dark: '#1a110d' },
+          };
+          var palette = localStorage.getItem('miss-dice_palette');
+          if (!FONDS[palette]) palette = 'violet';
+          document.documentElement.setAttribute('data-palette', palette);
+
           var m = document.querySelector('meta[name="theme-color"]');
-          if (m) m.setAttribute('content', dark ? '#0f1220' : '#f4f5fb');
+          if (m) m.setAttribute('content', FONDS[palette][theme]);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.setAttribute('data-palette', 'violet');
         }
       })();
     </script>
