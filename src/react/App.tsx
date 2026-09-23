@@ -9,6 +9,7 @@ import { ModeMenu } from './components/ModeMenu';
 import { FamilyLinks } from './components/FamilyLinks';
 import { useAppMode } from '../app/appMode';
 import { colisRecu } from '../games/transfer';
+import { useI18n } from '../i18n/useI18n';
 
 // Les jeux sont chargés à la demande : le lancer libre (écran par défaut)
 // garde un bundle initial minimal et un accès au dé immédiat.
@@ -80,6 +81,7 @@ const LAZY = {
  */
 export function App() {
   const mode = useAppMode();
+  const { t } = useI18n();
 
   /*
    * CETTE APP N'A PAS DE ROUTEUR : un seul écran, un seul chemin. Le hook est
@@ -113,6 +115,12 @@ export function App() {
 
   return (
     <div className="app">
+      {/* LE SEUL TITRE DE L'ÉCRAN, et il manquait : relevé du 23/09/2026 dans
+          un navigateur vierge, l'écran de lancer n'avait AUCUN h1 - ni pour un
+          lecteur d'écran, ni pour Google, qui indexe la page rendue. Masqué à
+          l'écran : la surface de lancer occupe tout, et un titre visible la
+          couperait. Les jeux, eux, portent déjà le leur. */}
+      <h1 className="sr-only">{t('screen.heading')}</h1>
       <AccueilReprise />
       <DiceScreen />
       <div className="app__overlay">
