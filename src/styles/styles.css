@@ -855,7 +855,7 @@ button {
      au contenu DANS LA PLACE DISPONIBLE, et `left: 50%` réduit cette place à la
      MOITIÉ du viewport : mesuré à 393 px de large, le bandeau sortait à 272 px
      pour 107 px de haut, ses trois éléments cassés en deux ou trois lignes
-     chacun — « Plus tard (4 h) » tenait sur trois lignes.
+     chacun - « Plus tard (4 h) » tenait sur trois lignes.
 
      Les trois côtés posés (`inset-inline: 0` + largeur + `margin-inline`)
      donnent la largeur voulue sans dépendre du contenu. C'est ce que fait
