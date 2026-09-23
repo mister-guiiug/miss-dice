@@ -126,7 +126,7 @@ export default defineConfig(({ command }) => {
         themeColor: { light: '#f4f5fb', dark: '#0f1220' },
         siteName: 'Miss Dice',
         basePath,
-        logoPath: '/favicon.svg',
+        logoPath: '/icons/icon-512.png',
       }),
       // CSP durcie : script-src par hash SHA-256 de l'IIFE anti-FOUC inline
       // (plus de 'unsafe-inline' en prod). Placé après pwaSeoPlugin pour hasher
