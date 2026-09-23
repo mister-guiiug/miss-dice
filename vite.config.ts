@@ -30,7 +30,7 @@ export default defineConfig(({ command }) => {
       rollupOptions: {
         output: {
           /*
-           * LE MORCEAU SENTRY GARDE SON NOM, SANS EMPREINTE — parce qu'il est
+           * LE MORCEAU SENTRY GARDE SON NOM, SANS EMPREINTE - parce qu'il est
            * exclu du précache (`globIgnores` plus bas) et qu'une URL empreintée
            * y meurt à chaque déploiement.
            *
@@ -40,7 +40,7 @@ export default defineConfig(({ command }) => {
            * `assets/`. Mesuré en production sur mister-qowa le 22/09/2026 :
            * HTTP 404, « Échec du chargement pour le module » dans la console.
            * `initSentry` avale l'échec (son `try/catch`), donc l'application ne
-           * casse pas — elle rapporte ses erreurs à personne, sans le dire.
+           * casse pas - elle rapporte ses erreurs à personne, sans le dire.
            *
            * Rien n'est perdu au cache : GitHub Pages répond
            * `Cache-Control: max-age=600` sur TOUS les fichiers, empreinte ou pas.
