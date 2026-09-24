@@ -34,7 +34,7 @@
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "@eslint/js": "^10.0.1",
-    "@mister-guiiug/dev-pwa-config": "^6.13.0",
+    "@mister-guiiug/dev-pwa-config": "^6.15.1",
     "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
@@ -62,7 +62,7 @@
     "vitest": "^5.0.1"
   },
   "dependencies": {
-    "@sentry/react": "^10.75.3",
+    "@sentry/react": "^11.0.0",
     "posthog-js": "^1.434.11",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -71,6 +71,11 @@
   "overrides": {
     "eslint-plugin-jsx-a11y": {
       "eslint": "$eslint"
+    }
+  },
+  "pwaDoctor": {
+    "refus": {
+      "liens-famille": "La règle est tenue ; le contrôle ne peut pas le voir. L'application n'a pas de routeur : src/react/App.tsx est à la fois la coquille et l'accueil. Les jeux sortent par un garde (if (mode !== 'roll') return …) ; FamilyLinks n'est rendu que dans la branche qui suit, celle de l'écran de lancer - l'accueil -, jamais sur un jeu. Les Réglages sont le tiroir SettingsDrawer. Deux écrans, comme la règle du 06/09/2026 le demande ; pwa-doctor, qui lit du texte, ne sait pas attribuer un rendu conditionnel de la coquille à un écran."
     }
   }
 }
