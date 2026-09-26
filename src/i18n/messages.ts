@@ -342,7 +342,7 @@ const fr: Messages = {
     maturityStable: 'Stable',
   },
   screen: {
-    heading: 'Miss Dice - lanceur de dés et jeux de dés',
+    heading: 'Miss Dice - lanceur de dés et jeux de dés hors ligne',
     hintIdleOne: 'Touche l’écran pour lancer un {die}',
     hintIdleMany: 'Touche l’écran pour lancer {count} {die}',
     rolling: 'Les dés roulent…',
@@ -586,7 +586,7 @@ const en: Messages = {
     maturityStable: 'Stable',
   },
   screen: {
-    heading: 'Miss Dice - dice roller and dice games',
+    heading: 'Miss Dice - free offline dice roller and dice games',
     hintIdleOne: 'Tap the screen to roll a {die}',
     hintIdleMany: 'Tap the screen to roll {count} {die}',
     rolling: 'Rolling…',
@@ -828,7 +828,7 @@ const es: Messages = {
     maturityStable: 'Estable',
   },
   screen: {
-    heading: 'Miss Dice - lanzador de dados y juegos de dados',
+    heading: 'Miss Dice - lanzador de dados y juegos sin conexión',
     hintIdleOne: 'Toca la pantalla para lanzar un {die}',
     hintIdleMany: 'Toca la pantalla para lanzar {count} {die}',
     rolling: 'Lanzando…',
@@ -1073,7 +1073,7 @@ const de: Messages = {
     maturityStable: 'Stabil',
   },
   screen: {
-    heading: 'Miss Dice - Würfel werfen und Würfelspiele',
+    heading: 'Miss Dice - Offline-Würfelroller und Würfelspiele',
     hintIdleOne: 'Tippe auf den Bildschirm für einen {die}',
     hintIdleMany: 'Tippe auf den Bildschirm für {count} {die}',
     rolling: 'Würfeln…',
@@ -1318,7 +1318,7 @@ const it: Messages = {
     maturityStable: 'Stabile',
   },
   screen: {
-    heading: 'Miss Dice - lancio di dadi e giochi di dadi',
+    heading: 'Miss Dice - lancio di dadi e giochi di dadi offline',
     hintIdleOne: 'Tocca lo schermo per lanciare un {die}',
     hintIdleMany: 'Tocca lo schermo per lanciare {count} {die}',
     rolling: 'Lancio…',
@@ -1563,7 +1563,7 @@ const pt: Messages = {
     maturityStable: 'Estável',
   },
   screen: {
-    heading: 'Miss Dice - lançador de dados e jogos de dados',
+    heading: 'Miss Dice - lançador de dados e jogos de dados offline',
     hintIdleOne: 'Toca no ecrã para lançar um {die}',
     hintIdleMany: 'Toca no ecrã para lançar {count} {die}',
     rolling: 'A lançar…',
