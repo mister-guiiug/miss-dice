@@ -115,12 +115,11 @@ export function App() {
 
   return (
     <div className="app">
-      {/* LE SEUL TITRE DE L'ÉCRAN, et il manquait : relevé du 23/09/2026 dans
-          un navigateur vierge, l'écran de lancer n'avait AUCUN h1 - ni pour un
-          lecteur d'écran, ni pour Google, qui indexe la page rendue. Masqué à
-          l'écran : la surface de lancer occupe tout, et un titre visible la
-          couperait. Les jeux, eux, portent déjà le leur. */}
-      <h1 className="sr-only">{t('screen.heading')}</h1>
+      {/* LE SEUL TITRE DE L'ÉCRAN. Un h1 en `sr-only` (clip 1×1) était déjà
+          là pour l'a11y (#110), mais Bing SEO/GEO le comptait comme absent —
+          relevé du 26/09/2026. Visible, petit, en haut : la surface de lancer
+          reste entière (`pointer-events: none`). Les jeux portent déjà le leur. */}
+      <h1 className="app__brand">{t('screen.heading')}</h1>
       <AccueilReprise />
       <DiceScreen />
       <div className="app__overlay">

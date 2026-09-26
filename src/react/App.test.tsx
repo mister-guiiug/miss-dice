@@ -6,10 +6,9 @@ import { renderWithProviders } from '../test/renderWithProviders';
 /**
  * L'ÉCRAN DE LANCER A UN TITRE.
  *
- * Relevé du 23/09/2026 dans un navigateur vierge : l'écran par défaut n'avait
- * AUCUN h1. Ni un lecteur d'écran ni Google - qui indexe la page rendue - ne
- * savaient ce qu'était la page. Il est masqué à l'écran (`sr-only`), la
- * surface de lancer occupant tout ; il n'en compte pas moins.
+ * Relevé du 23/09/2026 : l'écran par défaut n'avait AUCUN h1. Relevé du
+ * 26/09/2026 : un h1 en `sr-only` (clip) était ignoré par Bing SEO/GEO —
+ * d'où la marque visible `.app__brand`.
  */
 afterEach(cleanup);
 
@@ -19,5 +18,6 @@ describe('App - écran de lancer', () => {
     const titres = screen.getAllByRole('heading', { level: 1 });
     expect(titres).toHaveLength(1);
     expect(titres[0]).toHaveTextContent(/Miss Dice - lanceur de dés/);
+    expect(titres[0]).toHaveClass('app__brand');
   });
 });

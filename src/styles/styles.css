@@ -79,6 +79,30 @@ button {
   inset: 0;
 }
 
+/*
+ * Marque visible en haut : Bing (SEO/GEO) ignore un h1 clipé en `sr-only`.
+ * `pointer-events: none` : les taps traversent vers la zone de lancer.
+ * Les boutons d'angle (jeux / dés / réglages) restent au-dessus (z-index 2).
+ */
+.app__brand {
+  position: absolute;
+  top: max(0.65rem, var(--safe-top));
+  left: 50%;
+  z-index: 1;
+  margin: 0;
+  max-width: min(22rem, calc(100% - 7rem));
+  padding: 0 0.35rem;
+  transform: translateX(-50%);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  text-align: center;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .app__overlay {
   position: absolute;
   inset: 0;
