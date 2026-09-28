@@ -7,8 +7,17 @@ Lanceur de dés **D4 à D20**, _mobile-first_, 100 % offline, installable.
 Toute la surface de l'écran est une zone de tap : on touche, le dé roule,
 une face se pose. Autour du lancer libre : trois jeux en _pass-and-play_
 (Yahtzee, 421, Cochon), un lanceur en **notation JDR** (`4d6kh3`) et un
-écran **Décider**. Sans pub, sans tracking, sans backend - seules les
-préférences locales sont stockées dans le navigateur.
+écran **Décider**.
+
+Sans pub et sans serveur propre : réglages, parties en cours, statistiques et
+historique restent dans le navigateur (`localStorage`). Deux services tiers
+sont branchés au déploiement :
+
+- **Sentry** (région UE) démarre à l'ouverture, sans consentement, et ne
+  reçoit un rapport technique que lorsqu'une erreur survient ;
+- **PostHog** (nuage européen) ne mesure la fréquentation (vues de page,
+  parties démarrées ou terminées, sans noms ni scores) qu'après accord dans le
+  bandeau de consentement ; sans cet accord, rien ne lui est envoyé.
 
 Membre de la famille PWA `miss-*` / `mister-*`, bâti sur les conventions
 partagées de [`@mister-guiiug/dev-pwa-config`](https://github.com/mister-guiiug/dev-pwa-config)
@@ -44,7 +53,7 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Reprise des anciennes clés | `src/settings/legacyMigration.ts`                      | Extrait `locale` et `theme` du blob historique vers les clés du socle  |
 | Statistiques               | `src/stats/rollStats.ts`                               | Distribution des faces du lancer libre, réinitialisable                |
 | Journal des lancers        | `src/log/rollLog.ts`                                   | Historique local borné, exportable en CSV ; rien ne sort de l'appareil |
-| Traductions                | `src/i18n/messages.ts`, `useI18n.ts`                   | Six langues, clés typées, détection navigateur, `translate` pur        |
+| Traductions                | `src/i18n/messages.ts`, `useI18n.ts`                   | Six langues, clés typées, mécanique `createI18n` du socle              |
 | Liens famille              | `src/links.ts`, `src/react/components/FamilyLinks.tsx` | URL à partager (locale) ; source et soutien dès le PREMIER écran       |
 | Jeu Yahtzee                | `src/games/yahtzee/{scoring,engine}.ts`                | Score des 13 cases + machine d'état pure (pass-and-play)               |
 | Jeu 421                    | `src/games/dice421/{scoring,engine}.ts`                | Classement des mains + manches à jetons (charge/décharge)              |
@@ -52,6 +61,8 @@ Séparation stricte **métier / animation / rendu / config**, comme demandé :
 | Aiguillage écrans          | `src/app/appMode.ts`                                   | Lancer libre / Yahtzee / 421 / Cochon / notation / décider             |
 | Reprise ailleurs           | `src/games/transfer.ts`                                | La partie en cours dans une URL : encodage, compression, validation    |
 | PWA                        | `vite.config.ts`, `src/main.tsx`                       | Manifest, service worker, base path GH Pages                           |
+| Observabilité              | `src/main.tsx`                                         | Sentry dès l'ouverture, sans consentement : rapports d'erreur          |
+| Mesure d'audience          | `src/react/App.tsx`, `useUndoableGame.ts`              | PostHog après accord (`ConsentBanner`) : vues de page, parties         |
 | Thème                      | `src/styles/tokens.css`, `src/react/hooks/useTheme.ts` | Trois palettes x clair/sombre **et** le pont `--dwc-*` lu par le socle |
 | Palette                    | `src/settings/palette.ts`                              | Le second axe du thème : choix, persistance, barre système             |
 
@@ -63,17 +74,20 @@ testable seule et couverte à ≥ 90 % (seuil CI).
 ```
 miss-dice/
 ├── index.html
-├── vite.config.ts            # React + PWA + base path + 404 SPA
+├── vite.config.ts            # React + PWA + base path + 404 SPA + SEO (robots.txt, sitemap.xml)
 ├── vitest.config.ts
-├── tsconfig*.json            # strict (conventions dev-pwa-config inlinées)
+├── tsconfig*.json            # strict, étend tsconfig-app-react et tsconfig-node du socle
 ├── eslint.config.js          # @mister-guiiug/dev-pwa-config/eslint-react
 ├── prettier.config.js
 ├── scripts/generate-pwa-icons.mjs
 ├── scripts/captures-prepare.mjs   # met l'écran en scène avant chaque capture
+├── content/pages/regles-du-yahtzee.md   # page de contenu, rendue en HTML statique au build
+├── e2e/                      # Playwright : fumée, entrée, a11y, palettes
 ├── public/
 │   ├── favicon.svg
-│   ├── robots.txt
-│   └── icons/                # PNG 192/512/180/64 (générés)
+│   ├── og-image.jpg          # image de partage (aperçus de liens)
+│   ├── screenshots/          # captures du manifeste (npm run captures)
+│   └── icons/                # PNG 192/512/maskable/180/64 (générés)
 └── src/
     ├── main.tsx              # racine React + enregistrement du SW
     ├── types.ts
@@ -93,16 +107,17 @@ miss-dice/
     ├── games/                       # moteurs purs + tests
     │   ├── persistence.ts           # sauvegarde locale versionnée
     │   ├── transfer.ts              # la partie en cours, en lien ou en QR
+    │   ├── diceTurn.ts              # tour de dés partagé par Yahtzee et 421
     │   ├── yahtzee/{scoring,engine}.ts
     │   ├── dice421/{scoring,engine}.ts
     │   └── pig/engine.ts
     ├── styles/{tokens,styles}.css   # tokens + pont --dwc-* + sections du socle
     ├── react/
-    │   ├── App.tsx
+    │   ├── {App,ErrorBoundary,ThemeProvider,AppUpdatesProvider}.tsx
     │   ├── components/{DiceScreen,DiceTray,DiceFace,SettingsDrawer,ModeMenu}.tsx
-    │   ├── components/{NotationRoller,DecideScreen,FamilyLinks,Sheet}.tsx
+    │   ├── components/{NotationRoller,DecideScreen,FamilyLinks,Sheet,RepriseRecue}.tsx
     │   ├── components/{DicePicker,DiceControls}.tsx
-    │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game,PigGame}.tsx
+    │   ├── components/games/{GameShell,PlayerSetup,GameDice,YahtzeeGame,Dice421Game,PigGame,RepriseSheet}.tsx
     │   ├── hooks/{useDiceRoll,useDiceReveal,useShakeToRoll,useKeyboardRoll,useReducedMotion}.ts
     │   ├── hooks/{useSpeak,useVoices,useSound,useTheme,useUndoableGame}.ts
     │   └── feedback/haptics.ts
@@ -133,8 +148,9 @@ miss-dice/
 
 ### Réglages (engrenage, en haut à droite)
 
-Regroupés sous quatre intertitres - **Affichage**, **Lancer**,
-**Accessibilité**, puis les données et « À propos » :
+Regroupés sous trois intertitres, **Affichage**, **Lancer** et
+**Accessibilité**, suivis des blocs **Statistiques**, **Historique** (dès le
+premier lancer libre), **À propos** et **Nos autres applications** :
 
 - **Langue** : Français, English, Español, Deutsch, Italiano, Português.
   Détectée depuis le navigateur au premier lancement, puis mémorisée ; tout
@@ -163,7 +179,8 @@ Regroupés sous quatre intertitres - **Affichage**, **Lancer**,
   le seul juge. Le choix est retenu par `name`, pas par `voiceURI` - Chrome
   et Firefox ne nomment pas la même voix pareil.
 - **Mode daltonien** : une pastille chiffrée redondante dans un coin de
-  chaque face. La valeur ne dépend jamais de la couleur seule.
+  chaque face à points (D6) ; les autres dés affichent déjà leur chiffre. La
+  valeur ne dépend jamais de la couleur seule.
 - **Statistiques** : distribution des faces du lancer libre + total,
   réinitialisable.
 - **Historique** : les derniers lancers libres, conservés localement et
@@ -173,12 +190,16 @@ Regroupés sous quatre intertitres - **Affichage**, **Lancer**,
 - **Vibration** et **réduire les animations** (déjà présents).
 - **Nos autres applications** : la grille `FamilyApps` du socle, alimentée par
   son catalogue. Elle est rendue **en une colonne** (`layout="list"`, le
-  tiroir est étroit) et **groupée par catégorie** (`groupBy="category"`) -
-  dix-neuf cartes d'affilée faisaient un mur, il en reste sept lignes.
+  tiroir est étroit) et **groupée par catégorie** (`groupBy="category"`) :
+  dix-neuf cartes d'affilée faisaient un mur, elles sont rangées sous sept
+  catégories. Les groupes s'ouvrent dépliés ; un groupe replié le reste, dans
+  toute la famille (clé `dwc_family_groups`).
 - **À propos** : partager le lien de l'app (Web Share API, repli
   presse-papiers), lien vers le **code source** (GitHub), **Buy me a coffee**
-  (sponsor) et **Signaler un problème** - cf. `src/links.ts` ; le partage et
-  le signalement viennent des modules `share` et `issue-report` du socle.
+  (sponsor) et **Signaler un problème**. L'URL partagée vient de
+  `src/links.ts`, les liens source et soutien du catalogue du socle
+  (`repoUrl`, `SPONSOR_URL`) ; le partage et le signalement viennent des
+  modules `share` et `issue-report` du socle.
 - **Signaler un problème** ouvre le gabarit d'anomalie du compte
   (`issues/new?template=bug.yml`) **prérempli** avec la version, le commit,
   l'écran et le navigateur : l'utilisateur n'a plus qu'à décrire ce qui ne va
@@ -187,7 +208,7 @@ Regroupés sous quatre intertitres - **Affichage**, **Lancer**,
 
 Toutes ces préférences sont persistées localement (`localStorage`).
 
-### Modes (bouton « dés », en haut à gauche)
+### Modes (bouton « Jeux », en haut à gauche)
 
 Plusieurs écrans, accessibles depuis le lanceur ; on revient au lancer
 libre par la flèche **ou le bouton retour du navigateur/Android** (intégré
@@ -223,10 +244,12 @@ pourquoi.
 documentée dans `src/games/dice421/scoring.ts`) :
 
 - Valeur des mains : `4-2-1` = 10 jetons (la meilleure), `1-1-1` = 7,
-  autre brelan `d-d-d` = `d` (2…6), toute autre main = 1.
-- **Charge** : un pot de 21 jetons. Chaque manche, le joueur à la plus
-  petite main prend au pot un nombre de jetons = valeur de la meilleure
-  main de la manche.
+  autre brelan `d-d-d` = `d` (2…6), suite de trois faces consécutives = 2,
+  nénette `2-2-1` = 2 (et pourtant la plus faible main du classement), toute
+  autre main = 1.
+- **Charge** : un pot de 21 jetons par défaut (11 ou 31 au choix à la mise en
+  place). Chaque manche, le joueur à la plus petite main prend au pot un
+  nombre de jetons = valeur de la meilleure main de la manche.
 - **Décharge** : quand le pot est vide, le perdant prend désormais ses
   jetons au gagnant de la manche. Le premier à n'avoir **plus aucun
   jeton** gagne la partie.
@@ -269,9 +292,11 @@ de l'envoi, et l'écran le dit. L'état est compressé quand le navigateur sait 
 faire (`CompressionStream`) - une partie de Yahtzee à quatre joueurs tient
 alors en 354 caractères au lieu de 1 410, ce qui fait la différence entre un QR
 qui demande une main sûre et un QR qui se scanne du premier coup. À l'arrivée,
-un lien d'une autre version de schéma, tronqué ou fantaisiste est **refusé avec
-un message** ; et s'il existe déjà une partie en cours pour ce jeu sur
-l'appareil, la reprise **demande** avant de la remplacer.
+un lien d'une version de schéma antérieure est migré comme une sauvegarde
+locale ; un lien d'une version plus récente que l'app, d'avant le
+versionnement, tronqué ou fantaisiste est **refusé avec un message** ; et s'il
+existe déjà une partie en cours pour ce jeu sur l'appareil, la reprise
+**demande** avant de la remplacer.
 
 ## 4. Choix techniques
 
@@ -291,9 +316,10 @@ l'appareil, la reprise **demande** avant de la remplacer.
 - **Le CSS du socle, par SECTION.** L'app n'importait aucune feuille du
   paquet, donc ses composants partagés sortaient en couleurs système - c'est
   ce qui faisait rendre l'indice du bouton de rechargement en texte de page
-  nue. Elle importe maintenant `components/base.css` et
-  `components/app-footer.css`, **pas** la feuille entière : rien d'autre que
-  le pied de page et la grille famille n'est touché. Tout est en
+  nue. Elle importe maintenant `components/base.css` (les bases communes à tous
+  les composants du socle : cible tactile, focus, animations, contraste forcé,
+  impression) et `components/app-footer.css` (pied de page et grille famille),
+  **pas** la feuille entière. Tout est en
   `@layer components`, donc chaque règle de `styles.css` continue de gagner.
   Le contrat `--dwc-*` qu'elles lisent est un **pont** posé dans
   `src/styles/tokens.css` : il pointe les jetons déjà déclarés au-dessus, et
@@ -361,13 +387,16 @@ npm run build:analyze   # build + visualisation du poids des chunks
 ## 7. Build & déploiement GitHub Pages
 
 ```bash
-npm run build           # tsc -b && vite build  ->  dist/
+npm run build           # tsc -b && vite build && pwa-bundle-budget  ->  dist/
 npm run preview         # prévisualise sous /miss-dice/
 ```
 
 Déploiement automatique via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) :
-push sur `main` → build avec `VITE_BASE_PATH=/<repo>/` → publication sur
-GitHub Pages. Un `404.html` identique à `index.html` est émis pour que les
+push sur `main` → build avec `VITE_BASE_PATH=/<repo>/`, plus `VITE_SENTRY_DSN`
+et `VITE_POSTHOG_KEY` lues dans les variables du dépôt → publication sur
+GitHub Pages. Sans ces deux variables, ni Sentry ni PostHog ne se chargent.
+`pwa-bundle-budget` fait échouer le build si le poids dépasse le budget de
+`package.json`. Un `404.html` identique à `index.html` est émis pour que les
 rafraîchissements de liens profonds bootent l'app shell. Le `base` Vite et
 le `scope` du service worker sont alignés sur ce chemin.
 
@@ -381,10 +410,12 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/dice/colors.test.ts` - teintes valides, distinctes, palette cyclée.
 - `src/dice/rollSchedule.test.ts` - courbe accélère/décélère, robustesse.
 - `src/react/components/DiceFace.test.tsx` - points (D6) et chiffre (autres) + a11y.
+- `src/react/components/DicePicker.test.tsx` - la pastille, sa feuille (type et nombre de
+  dés, bornes) et le tiroir regroupé sous de vrais titres.
 - `src/react/hooks/useDiceRoll.test.ts` - états, multi-dés, callbacks, anti-double-tap.
 - `src/react/hooks/useShakeToRoll.test.ts` - seuil de secousse + temporisation.
 - `src/dice/notation.test.ts` - parseur de notation (avantage, drop, Fudge).
-- `src/i18n/messages.test.ts` - parité des clés des six langues, interpolation, détection.
+- `src/i18n/messages.test.ts` - parité des clés des six langues, valeurs non vides, interpolation.
 - `src/i18n/useI18n.test.tsx` - bascule de langue, `<html lang>`, persistance.
 - `src/games/yahtzee/{scoring,engine}.test.ts` - 13 combinaisons, bonus, tours, fin.
 - `src/games/dice421/{scoring,engine}.test.ts` - classement des mains, charge/décharge, victoire.
@@ -409,14 +440,18 @@ Activer une fois dans **Settings → Pages → Source : GitHub Actions**.
 - `src/react/AppUpdatesProvider.test.tsx` - bandeau de mise à jour, dans la bonne langue.
 - `src/react/a11y.test.tsx` - axe-core sur les écrans clés (hors contraste : jsdom ne
   calcule pas la mise en page).
+- `src/react/App.test.tsx` - un seul h1 sur l'écran de lancer, qui dit ce qu'est l'app.
 - `src/readme.test.ts` - ce document ne cite aucun fichier de `src/` disparu.
-- `e2e/smoke.spec.ts` - fumée Playwright (lancer, menu des jeux).
+- `e2e/smoke.spec.ts` - fumée Playwright (lancer, menu des jeux, partie de Cochon,
+  statut du Yahtzee jamais rogné).
 - `e2e/a11y.spec.ts` - axe-core dans un VRAI navigateur : là, le contraste est
   réellement évalué (WCAG 2.0/2.1 A + AA).
+- `e2e/a11y-palettes.spec.ts` - le même contrôle pour chacune des trois palettes, en
+  clair et en sombre, sur quatre écrans (lancer, choix des dés, réglages, Yahtzee).
 - `e2e/entree.spec.ts` - l'écran d'entrée, vérifié là où il casse : rien à effet de
   bord ne doit se monter derrière la porte.
 
-**Couverture : 98,5 % d'instructions**, seuil CI ≥ 90 %. La porte ne mesure
+**Couverture : 98,65 % d'instructions** (CI du 27/09/2026), seuil CI ≥ 90 %. La porte ne mesure
 que les domaines PURS - `src/dice/**`, `src/games/**`, `src/decide/**`,
 `src/log/**` et `src/store/createStore.ts` (cf. `vitest.config.ts`). La
 surface d'interface en est volontairement exclue : l'y verser diluerait le
@@ -433,7 +468,7 @@ exportable en CSV**, **reprise de partie**, **annuler**, rejouer, partage de
 résultat, **wake lock**. Côté technique : jeux en **lazy-load**, **error
 boundary**, **feuilles modales accessibles** (focus trap + Échap), habillage
 du socle importé **par section**, husky/lint-staged/commitlint, Lighthouse CI,
-**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y). Livrés le
+**second avis TypeScript 7** et e2e Playwright (fumée, entrée, a11y, palettes). Livrés le
 22/09/2026 : le **joker Yahtzee** complet (bonus +100 ET placement imposé), la
 **règle du décideur** au 421, **deux palettes** (feutrine et braise) et la
 **reprise d'une partie sur un autre appareil**, par lien ou par QR - tous
