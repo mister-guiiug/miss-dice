@@ -28,6 +28,13 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+
+  /* La rangée du haut de l'écran de lancer : trois boutons de 48 px à 12 px
+     du bord (jeux, dés, réglages). Le titre visible se pose 8 px dessous, sur
+     une ligne (~1 rem), et la zone de lancer commence 8 px plus bas encore :
+     ni le titre ni le dé ne passent sous un bouton. */
+  --top-row: 60px;
+  --top-clear: calc(var(--top-row) + 8px + 1rem + 8px);
 }
 
 /* Thème sombre (par défaut, sans data-theme aussi pour éviter tout flash) */
