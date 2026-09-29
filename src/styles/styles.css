@@ -82,17 +82,27 @@ button {
 /*
  * Marque visible en haut : Bing (SEO/GEO) ignore un h1 clipé en `sr-only`.
  * `pointer-events: none` : les taps traversent vers la zone de lancer.
- * Les boutons d'angle (jeux / dés / réglages) restent au-dessus (z-index 2).
+ *
+ * SOUS LA RANGÉE DE BOUTONS, PAS DERRIÈRE. Posée à 0,65 rem du haut, elle
+ * tombait pile sous la pastille « 1 × D6 », centrée à la même hauteur : son
+ * texte transparaissait des deux côtés à travers le fond voilé, et se lisait
+ * « Miss Dice - lanceur [1 × D6] x de dés hors ligne ». La rangée fait 48 px à
+ * 12 px du haut (`--top-row`) : le titre commence 8 px plus bas, et la zone de
+ * lancer lui laisse sa place (`--top-clear`). Sans boutons d'angle à cette
+ * hauteur, il prend toute la largeur utile au lieu de se replier entre eux.
  */
 .app__brand {
   position: absolute;
-  top: max(0.65rem, var(--safe-top));
-  left: 50%;
+  top: calc(var(--safe-top) + var(--top-row) + 8px);
+  /* Centrée comme la pastille (voir `.dice-chip`), pas par `left: 50%` :
+     sans largeur, une boîte positionnée s'ajuste à la place qui RESTE, et
+     `left: 50%` en retire la moitié — le titre se repliait pour rien. */
+  inset-inline: 0;
   z-index: 1;
-  margin: 0;
-  max-width: min(22rem, calc(100% - 7rem));
+  width: max-content;
+  max-width: min(28rem, calc(100% - 2rem));
+  margin: 0 auto;
   padding: 0 0.35rem;
-  transform: translateX(-50%);
   color: var(--text);
   font-size: 0.78rem;
   font-weight: 600;
@@ -139,7 +149,10 @@ button {
   gap: clamp(28px, 7vh, 64px);
   width: 100%;
   height: 100%;
-  padding: calc(var(--safe-top) + 16px) var(--safe-right)
+  /* Le haut est RÉSERVÉ à la rangée de boutons et au titre : centré dans tout
+     l'écran, le dé remontait dessous dès que la fenêtre était basse (onglet
+     en paysage, fenêtre de bureau réduite). */
+  padding: calc(var(--safe-top) + var(--top-clear)) var(--safe-right)
     calc(var(--safe-bottom) + 16px) var(--safe-left);
   background: transparent;
   border: 0;
@@ -196,7 +209,11 @@ button {
   justify-content: center;
   gap: clamp(10px, 3vw, 22px);
   max-width: 92vw;
-  --tile: clamp(180px, min(64vw, 52vh), 380px);
+  /* `100vh - 200px` : la hauteur qui reste une fois ôtés le haut réservé,
+     l'écart, la ligne du total et les liens du bas. Sans ce terme, un
+     plancher de 180 px débordait d'une fenêtre de 360 px de haut ; le dé
+     rapetisse plutôt que de passer sous le titre. */
+  --tile: clamp(140px, min(64vw, 52vh, 100vh - 200px), 380px);
   /* Le rayon suit la tuile, y compris quand un `[data-count]` la redéfinit
      plus bas : `var()` lit la valeur calculée de `--tile` sur l'élément. */
   --die-radius: calc(var(--tile) * var(--die-radius-ratio));
