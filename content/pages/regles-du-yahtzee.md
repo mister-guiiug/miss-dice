@@ -1,6 +1,9 @@
 ---
-title: Règles du Yahtzee : combinaisons, points et bonus
+title: Règles du Yahtzee : combinaisons, points, bonus et joker
 description: Les règles du Yahtzee expliquées : 5 dés, 3 lancers, les 13 cases et leurs points, le bonus de 35 points, le Yahtzee bonus et le joker. Avec des exemples.
+date: 2026-09-25
+updated: 2026-09-29
+answer: Le Yahtzee se joue avec cinq dés : à chaque tour, jusqu'à trois lancers, puis une case à remplir parmi les treize de la feuille. Le full vaut 25 points, la petite suite 30, la grande suite 40 et le Yahtzee 50. Au moins 63 points en section haute rapportent 35 points de bonus.
 ---
 
 # Règles du Yahtzee : la feuille de score expliquée
@@ -50,6 +53,8 @@ Cinq dés identiques d'un seul lancer, c'est 1 chance sur 1 296. Mais une partie
 2. sinon, n'importe quelle case libre de la section basse. Full, Petite suite et Grande suite rapportent alors leur valeur pleine : 25, 30 ou 40 ;
 3. sinon, une case libre de la section haute, où vous inscrivez 0.
 
+Cet ordre est celui de la règle dite du joker forcé, que Miss Dice applique. Les éditions varient sur le deuxième point : la notice actuelle de Hasbro fait d'abord remplir le Brelan ou le Carré, puis seulement la Chance ou une autre combinaison. Convenez de la règle avant la partie.
+
 ## Le calcul final
 
 Votre total additionne la section haute, le bonus de 35 points s'il est atteint, la section basse et les éventuels bonus Yahtzee. Le plus grand total gagne.
@@ -69,7 +74,7 @@ Quelques repères :
 - **La grille affiche ce que chaque case libre rapporterait** avec les dés en cours : plus besoin de calculer.
 - **Bonus et joker appliqués** : le bonus de 35 points, les 100 points des Yahtzee suivants et l'ordre imposé du joker. L'app explique quelles cases sont ouvertes et pourquoi.
 - **Une action de travers s'annule**, et la partie se reprend plus tard. Un QR code ou un lien permet aussi de la continuer sur un autre appareil.
-- **D'autres jeux** : 421, Cochon, et un lanceur libre de dés à 4, 6, 8, 10, 12 ou 20 faces.
+- **D'autres jeux** : le [421](regles-du-421.html), le Cochon, et un lanceur libre de dés à 4, 6, 8, 10, 12 ou 20 faces.
 
 Yahtzee est une marque de Hasbro. Miss Dice est une application indépendante, sans lien avec Hasbro.
 
@@ -94,3 +99,9 @@ Oui. Si aucune combinaison ne convient, vous inscrivez 0 dans la case de votre c
 ### Le Yahtzee et le Yams, est-ce le même jeu ?
 
 Ce sont deux jeux de la même famille : cinq dés, trois lancers et une grille à remplir. Dans le Yams, les cases et leurs valeurs varient selon les éditions et les familles : convenez de la grille avant de commencer.
+
+## Sources
+
+- [Hasbro : notice officielle du Yahtzee, en anglais](https://instructions.hasbro.com/en-us/instruction/yahtzee)
+- [Wikipédia : Yahtzee](https://fr.wikipedia.org/wiki/Yahtzee)
+- [Wikipedia, en anglais : le bonus Yahtzee et les règles du joker](https://en.wikipedia.org/wiki/Yahtzee#Yahtzee_bonuses_and_Joker_rules)
