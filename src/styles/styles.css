@@ -2242,3 +2242,20 @@ a[data-dwc='app-version-value']:hover {
     transform: translateY(0);
   }
 }
+
+/* ── Mesure d'audience (`ConsentSection` du socle), dans le tiroir ──────────
+   Même cas que le bandeau : sans `components.css`, la section arrive NUE, et
+   ses deux paragraphes gardaient les marges du navigateur au milieu d'un
+   tiroir serré. Le texte prend l'allure des indications des réglages ; le
+   bouton porte `.link-btn` (passé en `actionClassName`) et garde la cible
+   tactile de 44 px que `base.css` lui donne. */
+[data-dwc='consent-section-text'] {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+[data-dwc='consent-section-state'] {
+  margin: 8px 0 10px;
+  font-size: 0.9rem;
+}
