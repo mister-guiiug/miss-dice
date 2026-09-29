@@ -112,3 +112,23 @@ describe('le tiroir de réglages', () => {
     ]);
   });
 });
+
+describe('la forme en 3D sous chaque type', () => {
+  it('dessine la forme sous le nom, sans changer ce que lit le lecteur d’écran', () => {
+    renderWithProviders(<DicePicker />);
+    fireEvent.click(pastille());
+    const types = within(
+      screen.getByRole('dialog', { name: /dés/i })
+    ).getAllByRole('radio');
+
+    expect(types).toHaveLength(6);
+    for (const type of types) {
+      const forme = type.querySelector('svg.die-shape');
+      expect(forme).not.toBeNull();
+      expect(forme).toHaveAttribute('aria-hidden', 'true');
+      expect(forme?.querySelectorAll('path').length).toBeGreaterThanOrEqual(2);
+    }
+    // Le nom accessible reste celui du dé, la forme n'y ajoute rien.
+    expect(types[5]).toHaveAccessibleName(/dé à 20 faces/i);
+  });
+});
