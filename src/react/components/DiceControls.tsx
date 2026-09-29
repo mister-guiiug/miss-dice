@@ -6,6 +6,7 @@ import {
 } from '../../settings/settingsStore';
 import { DICE_TYPES } from '../../dice/diceTypes';
 import { useI18n } from '../../i18n/useI18n';
+import { DieShape3D } from './DieShape3D';
 
 /**
  * Le type de dé et leur nombre - les deux réglages du lancer libre.
@@ -38,10 +39,13 @@ export function DieTypePicker() {
             role="radio"
             aria-checked={sides === type.sides}
             aria-label={t('dice.name', { sides: type.sides })}
-            className={`segmented__item${sides === type.sides ? ' segmented__item--active' : ''}`}
+            className={`segmented__item segmented__item--die${sides === type.sides ? ' segmented__item--active' : ''}`}
             onClick={() => settingsStore.setSides(type.sides)}
           >
             {type.label}
+            {/* Sous le nom, la forme : « D12 » ne se lit que des joueurs de
+                rôle, un dodécaèdre se reconnaît. */}
+            <DieShape3D sides={type.sides} />
           </button>
         ))}
       </div>

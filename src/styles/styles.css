@@ -666,6 +666,38 @@ button {
   color: var(--accent-contrast);
 }
 
+/* Type de dé : le nom, puis la forme en 3D (`DieShape3D`). Tout est en
+   `currentColor` : la forme suit l'état du bouton, le thème et la palette. */
+.segmented__item--die {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 10px;
+}
+
+.die-shape {
+  width: min(34px, 80%);
+  aspect-ratio: 1;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-opacity: 0.85;
+  overflow: visible;
+}
+
+/* Le dé qu'on vient de choisir se pose, d'un petit rebond. */
+.segmented__item--active .die-shape {
+  animation: die-shape-pose 360ms var(--ease-pop);
+}
+
+@keyframes die-shape-pose {
+  from {
+    transform: scale(0.7) rotate(-12deg);
+  }
+}
+
 /* Incrément/décrément (nombre de dés). */
 .stepper {
   display: inline-flex;
