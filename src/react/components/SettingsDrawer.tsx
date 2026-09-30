@@ -17,6 +17,7 @@ import { appUrl } from '../../links';
 import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { currentIssueReportUrl } from '@mister-guiiug/dev-pwa-config/issue-report';
 import { UpdateButton } from '@mister-guiiug/dev-pwa-config/react/update-button';
+import { ConsentSection } from '@mister-guiiug/dev-pwa-config/react/consent-section';
 import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
@@ -612,6 +613,20 @@ export function SettingsDrawer() {
               partir dans le rapport de bug, préremplis par `issueUrl`
               ci-dessus - c'est le canal pour lequel ils existent. */}
         </div>
+
+        {/* Revenir sur son choix de mesure d'audience : le retrait se fait ici,
+            en un clic (RGPD, art. 7.3). Mêmes clé et chargeur que le bandeau.
+            « Modifier mon choix » ferme le tiroir : le bandeau qui repose la
+            question est dessous, sur l'écran de lancer. */}
+        <ConsentSection
+          posthogKey={import.meta.env.VITE_POSTHOG_KEY}
+          loader={() => import('posthog-js/dist/module.slim.js')}
+          className="about"
+          titleClassName="about__label"
+          headingLevel={3}
+          actionClassName="link-btn"
+          onReopen={() => setOpen(false)}
+        />
 
         {/* Nos autres applications : cross-promotion de la famille miss/mister.
             La carte code source + sponsor existe déjà ci-dessus, on n'affiche
