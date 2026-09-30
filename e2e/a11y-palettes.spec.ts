@@ -106,8 +106,10 @@ async function montrerBandeau(page: Page): Promise<void> {
     d.setAttribute('data-dwc', 'update-banner');
     d.innerHTML =
       '<span data-dwc="update-banner-title">Mise à jour disponible</span>' +
+      '<div data-dwc="update-banner-actions">' +
       '<button type="button" data-dwc="update-banner-update">Mettre à jour</button>' +
-      '<button type="button" data-dwc="update-banner-dismiss">Plus tard (4 h)</button>';
+      '<button type="button" data-dwc="update-banner-dismiss">Plus tard (4 h)</button>' +
+      '</div>';
     document.body.appendChild(d);
   });
   await expect(page.locator('[data-dwc="update-banner"]')).toBeVisible();

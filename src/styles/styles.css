@@ -958,6 +958,16 @@ button {
   font-weight: 600;
 }
 
+/* Le socle groupe les deux commandes dans `update-banner-actions` depuis la
+   6.21.0. Miss Dice n'importe pas la section qui dispose ce conteneur : sans
+   cette règle, il restait un bloc, et les commandes n'étaient plus des
+   éléments du bandeau (plus de `flex: 1 1 0`, plus d'écart). `contents` le
+   rend transparent à la mise en page : elles se partagent la ligne sous le
+   message, comme avant. Un `div` sans rôle, rien ne change à l'écoute. */
+.sw-update-banner [data-dwc='update-banner-actions'] {
+  display: contents;
+}
+
 .sw-update-banner button {
   /* `1 1 0` et non `1 1 auto` : les deux commandes prennent la MÊME largeur,
      quelle que soit la longueur de leur libellé - un « Plus tard (4 h) » plus
