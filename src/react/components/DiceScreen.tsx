@@ -105,11 +105,17 @@ export function DiceScreen() {
         className="dice-screen__zone"
         data-status={status}
         onClick={roll}
-        aria-label={buttonLabel}
       >
+        {/* LE NOM VIENT DU CONTENU, PAS D'UN aria-label. Un nom à part
+            (« Lancer le dé. Dernier résultat : 1 ») laissait hors de lui
+            l'indication que la zone affiche (« Touche l'écran pour lancer un
+            D6 ») : WCAG 2.5.3, axe 4.14, le 29/10/2026. L'action et le
+            résultat passent en texte réservé, en tête ; l'indication et le
+            total, lisibles, suivent. Les faces restent décoratives. */}
+        <span className="sr-only">{`${buttonLabel}. `}</span>
         <DiceTray values={displayValues} sides={sides} status={status} />
 
-        <p className="dice-screen__meta" aria-hidden="true">
+        <p className="dice-screen__meta">
           {showTotal && (
             <span className="dice-screen__total">
               {t('screen.total', { total })}
