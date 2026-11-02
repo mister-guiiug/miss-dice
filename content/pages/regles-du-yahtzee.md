@@ -2,7 +2,7 @@
 title: Règles du Yahtzee : combinaisons, points, bonus et joker
 description: Les règles du Yahtzee expliquées : 5 dés, 3 lancers, les 13 cases et leurs points, le bonus de 35 points, le Yahtzee bonus et le joker. Avec des exemples.
 date: 2026-09-25
-updated: 2026-09-29
+updated: 2026-11-02
 answer: Le Yahtzee se joue avec cinq dés : à chaque tour, jusqu'à trois lancers, puis une case à remplir parmi les treize de la feuille. Le full vaut 25 points, la petite suite 30, la grande suite 40 et le Yahtzee 50. Au moins 63 points en section haute rapportent 35 points de bonus.
 ---
 
@@ -54,6 +54,25 @@ Cinq dés identiques d'un seul lancer, c'est 1 chance sur 1 296. Mais une partie
 3. sinon, une case libre de la section haute, où vous inscrivez 0.
 
 Cet ordre est celui de la règle dite du joker forcé, que Miss Dice applique. Les éditions varient sur le deuxième point : la notice actuelle de Hasbro fait d'abord remplir le Brelan ou le Carré, puis seulement la Chance ou une autre combinaison. Convenez de la règle avant la partie.
+
+## Vos chances en trois lancers
+
+Voici la probabilité d'obtenir chaque combinaison, d'abord d'un seul lancer, puis en trois lancers quand vous gardez à chaque fois les dés qui maximisent vos chances de l'obtenir. Ces chiffres sont calculés exactement, sur toutes les combinaisons de dés possibles.
+
+- **Brelan** (au moins trois dés identiques) : 21,3 % en un lancer, 74,3 % en trois.
+- **Petite suite** : 15,4 % en un lancer, 61,5 % en trois.
+- **Full** (trois et deux, Yahtzee non compris) : 3,9 % en un lancer, 36,3 % en trois.
+- **Carré** (au moins quatre dés identiques) : 2,0 % en un lancer, 29,1 % en trois.
+- **Grande suite** : 3,1 % en un lancer, 26,1 % en trois.
+- **Yahtzee** : 0,08 % en un lancer, 4,6 % en trois.
+
+Ce qu'on en retient :
+
+- un Yahtzee visé dès le premier lancer n'arrive qu'environ une fois sur 22 : ne sacrifiez pas une partie pour lui ;
+- la petite suite sort plus d'une fois sur deux quand on la cherche : on peut la garder pour plus tard ;
+- la grande suite et le carré sont presque aussi difficiles l'un que l'autre, mais la grande suite rapporte 40 points fixes.
+
+Ces probabilités valent pour un tour où vous ne visez qu'une seule combinaison. En partie, on change souvent d'objectif entre deux lancers, selon les cases encore libres.
 
 ## Le calcul final
 
