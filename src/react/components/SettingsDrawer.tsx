@@ -18,6 +18,7 @@ import { shareOrCopy } from '@mister-guiiug/dev-pwa-config/share';
 import { currentIssueReportUrl } from '@mister-guiiug/dev-pwa-config/issue-report';
 import { UpdateButton } from '@mister-guiiug/dev-pwa-config/react/update-button';
 import { ConsentSection } from '@mister-guiiug/dev-pwa-config/react/consent-section';
+import { PrivacyNotice } from '@mister-guiiug/dev-pwa-config/react/privacy-notice';
 import { downloadText } from '@mister-guiiug/dev-pwa-config/download';
 import { rollStatsStore, useRollStats } from '../../stats/rollStats';
 import { rollLogStore, toCsv, useRollLog } from '../../log/rollLog';
@@ -614,6 +615,12 @@ export function SettingsDrawer() {
               ci-dessus - c'est le canal pour lequel ils existent. */}
         </div>
 
+        <PrivacyNotice
+          env={import.meta.env}
+          headingLevel={3}
+          className="about"
+          titleClassName="about__label"
+        />
         {/* Revenir sur son choix de mesure d'audience : le retrait se fait ici,
             en un clic (RGPD, art. 7.3). Mêmes clé et chargeur que le bandeau.
             « Modifier mon choix » ferme le tiroir : le bandeau qui repose la
