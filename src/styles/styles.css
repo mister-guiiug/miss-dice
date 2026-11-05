@@ -5,16 +5,19 @@
  * sortaient en couleurs système, et c'est ce qui l'a obligée à réécrire
  * dix-neuf règles pour la seule grille famille.
  *
- * Deux sections seulement, pas la feuille entière. `base.css` porte ce que
+ * Trois sections seulement, pas la feuille entière. `base.css` porte ce que
  * toute section suppose - replis, focus, cibles tactiles, contraste forcé,
  * impression. `app-footer.css` porte `AppFooter` et `FamilyApps`, et rien
- * d'autre. Tout est en `@layer components` : chaque règle de ce fichier
- * continue donc de gagner, quelle que soit sa spécificité.
+ * d'autre. `privacy-notice.css` met en page le panneau « Vos données » : un
+ * `<dl>` nu, sans elle, décale chaque description de 40 px. Tout est en
+ * `@layer components` : chaque règle de ce fichier continue donc de gagner,
+ * quelle que soit sa spécificité.
  *
  * Le contrat `--dwc-*` qu'elles lisent est posé dans `tokens.css`.
  */
 @import '@mister-guiiug/dev-pwa-config/components/base.css';
 @import '@mister-guiiug/dev-pwa-config/components/app-footer.css';
+@import '@mister-guiiug/dev-pwa-config/components/privacy-notice.css';
 
 /* ───────────────────────────── Base ───────────────────────────── */
 *,
