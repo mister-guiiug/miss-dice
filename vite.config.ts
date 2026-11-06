@@ -5,7 +5,12 @@ import { pwaSeoPlugin } from '@mister-guiiug/dev-pwa-config/vite-pwa-base';
 import { cspPlugin } from '@mister-guiiug/dev-pwa-config/vite-csp';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { versionPlugin } from '@mister-guiiug/dev-pwa-config/vite-version';
-import { NAVIGATE_FALLBACK_DENY_FILES } from '@mister-guiiug/dev-pwa-config/vite-pwa';
+import {
+  NAVIGATE_FALLBACK_DENY_FILES,
+  SENTRY_CHUNK,
+  sentryChunkFileNames,
+  sentryGlobIgnores,
+} from '@mister-guiiug/dev-pwa-config/vite-pwa';
 
 const analyze = process.env.ANALYZE === '1';
 
@@ -30,29 +35,8 @@ export default defineConfig(({ command }) => {
       sourcemap: true,
       rollupOptions: {
         output: {
-          /*
-           * LE MORCEAU SENTRY GARDE SON NOM, SANS EMPREINTE - parce qu'il est
-           * exclu du précache (`globIgnores` plus bas) et qu'une URL empreintée
-           * y meurt à chaque déploiement.
-           *
-           * Le service worker sert la coquille précachée jusqu'à ce que
-           * l'utilisateur accepte la mise à jour ; cette coquille demande
-           * l'ANCIENNE empreinte, que le déploiement suivant a supprimée de
-           * `assets/`. Mesuré en production sur mister-qowa le 22/09/2026 :
-           * HTTP 404, « Échec du chargement pour le module » dans la console.
-           * `initSentry` avale l'échec (son `try/catch`), donc l'application ne
-           * casse pas - elle rapporte ses erreurs à personne, sans le dire.
-           *
-           * Rien n'est perdu au cache : GitHub Pages répond
-           * `Cache-Control: max-age=600` sur TOUS les fichiers, empreinte ou pas.
-           *
-           * `pwa-doctor` tient l'invariant depuis le socle 6.8.0
-           * (règle `chunk-hors-precache`).
-           */
-          chunkFileNames: chunk =>
-            chunk.name === 'sentry'
-              ? 'assets/sentry.js'
-              : 'assets/[name]-[hash].js',
+          // Le morceau Sentry, nom sans empreinte : socle (`vite-pwa`, 6.32.0).
+          chunkFileNames: sentryChunkFileNames,
           manualChunks(id) {
             if (!id.includes('node_modules')) return;
             const norm = id.replace(/\\/g, '/');
@@ -62,7 +46,7 @@ export default defineConfig(({ command }) => {
             // préchargés au lieu de 227,2 - pour un total gzip identique
             // à 0,1 kB près. Le total ne voit pas la différence,
             // `bundleBudget.preloadGzipKb` si.
-            if (norm.includes('/@sentry/')) return 'sentry';
+            if (norm.includes('/@sentry/')) return SENTRY_CHUNK;
             // ET POSTHOG POUR LA MÊME RAISON, EN PLUS GRAVE. Sentry préchargé
             // coûtait du poids ; PostHog préchargé casse une PROMESSE : l'ADR
             // 0012 dit que rien n'est chargé avant l'accord, et le socle ne
@@ -178,26 +162,8 @@ export default defineConfig(({ command }) => {
           // Un fichier (sitemap.xml, llms.txt…) va au réseau, pas à index.html.
           navigateFallbackDenylist: [NAVIGATE_FALLBACK_DENY_FILES],
           globPatterns: ['**/*.{js,css,html,ico,svg,png,woff2,webmanifest}'],
-          /*
-           * LE MORCEAU SENTRY HORS DU PRÉCACHE, sans quoi le découpage
-           * ci-dessus ne servirait à rien : `globPatterns` ramasse TOUT le
-           * JS émis, `import()` ou pas. Mesuré le 16/09/2026 sur la
-           * production de deux apps du parc, 345 et 463 KiB bruts de SDK
-           * téléchargés par chaque visiteur - sans qu’aucun DSN soit posé.
-           *
-           * Hors précache, il est cherché sur le réseau à la première
-           * erreur, et jamais si l’observabilité reste éteinte. Ne pas
-           * l’avoir hors ligne est sans conséquence : rapporter une erreur
-           * demande le réseau.
-           *
-           * LE MORCEAU `qr` RESTE, LUI, ET C'EST LE MÊME RAISONNEMENT MENÉ
-           * JUSQU'AU BOUT. Ce qui dispense Sentry du précache, c'est qu'il ne
-           * sert à rien hors ligne. Un QR, si : deux appareils posés sur la
-           * même table, sans réseau, c'est précisément le cas où « Continuer
-           * ailleurs » n'a pas d'autre transport. 4,3 kB gzip, une fois, à
-           * l'installation.
-           */
-          globIgnores: ['**/sentry.js', '**/sentry-*.js'],
+          // Le morceau Sentry hors du précache : socle (`vite-pwa`, 6.32.0).
+          globIgnores: sentryGlobIgnores(),
         },
         manifest: {
           id: basePath,
